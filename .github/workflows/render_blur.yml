@@ -25,7 +25,7 @@ on:
 
 jobs:
   render:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,36 +33,20 @@ jobs:
       - name: Set up Environment
         run: |
           mkdir -p workspace
-          mkdir -p bin
-
-      - name: Download blur-cli and installer
-        shell: bash
-        run: |
-          curl -L -o bin/blur-installer.exe https://github.com/f0e/blur/releases/download/v2.45/blur-Windows-Installer-x64.exe
-          curl -L -o bin/blur-cli.exe https://github.com/f0e/blur/releases/download/v2.45/blur-cli-Windows-Release-x64.exe
-          echo "Downloaded tools successfully."
-
-      - name: Install dependencies (silent)
-        shell: bash
-        run: |
-          echo "Setting up Python & dependencies..."
-          python -m pip install --upgrade pip
-          pip install vapoursynth
-          echo "Dependencies ready."
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
 
       - name: Download Target Video
-        shell: bash
         run: |
           curl -L -o workspace/input_video.mp4 "${{ github.event.inputs.video_url }}"
           ls -lh workspace/
 
-      - name: Render Video with PC blur-cli
-        shell: bash
+      - name: Render Real Motion Blur Video
         run: |
           echo "Starting High-Speed Real Motion Blur..."
           ffmpeg -i workspace/input_video.mp4 \
             -vf "tblend=all_mode=average" \
-            -c:v libx264 -crf 17 -preset veryfast -c:a copy workspace/output_blurred.mp4 -y
+            -c:v libx264 -crf 17 -preset ultrafast -c:a copy workspace/output_blurred.mp4 -y
 
       - name: Upload Processed Video Artifact
         uses: actions/upload-artifact@v4
