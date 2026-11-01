@@ -43,10 +43,12 @@ jobs:
           echo "Downloaded tools successfully."
 
       - name: Install dependencies (silent)
-        shell: cmd
+        shell: bash
         run: |
-          start /wait bin\blur-installer.exe /S
-          echo Installed blur dependencies.
+          echo "Setting up Python & dependencies..."
+          python -m pip install --upgrade pip
+          pip install vapoursynth
+          echo "Dependencies ready."
 
       - name: Download Target Video
         shell: bash
@@ -57,20 +59,10 @@ jobs:
       - name: Render Video with PC blur-cli
         shell: bash
         run: |
-          echo "Starting Real PC Blur Render..."
-          ./bin/blur-cli.exe -i workspace/input_video.mp4 -o workspace/output_blurred.mp4 \
-            --blur true \
-            --blur-amount ${{ github.event.inputs.blur_amount }} \
-            --blur-weighting ${{ github.event.inputs.blur_weighting }} \
-            --blur-output-fps ${{ github.event.inputs.output_fps }} \
-            --interpolate true \
-            --interpolated-fps ${{ github.event.inputs.interpolated_fps }} \
-            --verbose || {
-              echo "Falling back to FFmpeg tmix interpolation..."
-              ffmpeg -i workspace/input_video.mp4 \
-                -vf "minterpolate=fps=120:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1,tmix=frames=7:weights='1 2 4 6 4 2 1'" \
-                -c:v libx264 -crf 16 -preset fast -c:a copy workspace/output_blurred.mp4 -y
-            }
+          echo "Starting High-Speed Real Motion Blur..."
+          ffmpeg -i workspace/input_video.mp4 \
+            -vf "tblend=all_mode=average" \
+            -c:v libx264 -crf 17 -preset veryfast -c:a copy workspace/output_blurred.mp4 -y
 
       - name: Upload Processed Video Artifact
         uses: actions/upload-artifact@v4
