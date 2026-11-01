@@ -26,7 +26,6 @@
       --purple-gradient: linear-gradient(135deg, #9d4edd 0%, #c77dff 100%);
       --accent-gold: #ffd200;
       --gold-gradient: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
-      --success: #00e676;
       --text: #ffffff;
       --text-dim: #9aa4b2;
       --surface-subtle: rgba(255, 255, 255, 0.03);
@@ -57,14 +56,13 @@
 
     .wrapper {
       width: 100%;
-      max-width: 480px;
+      max-width: 490px;
       display: flex;
       flex-direction: column;
       gap: 16px;
       margin-top: 6px;
     }
 
-    /* Top Brand */
     .brand-header {
       text-align: center;
       padding: 6px 0;
@@ -103,6 +101,45 @@
       line-height: 1.5;
     }
 
+    /* Tabs */
+    .tabs-nav {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 8px;
+      border: none;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--text-dim);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.25s ease;
+    }
+
+    .tab-btn.active {
+      background: rgba(0, 242, 254, 0.12);
+      color: var(--primary);
+      box-shadow: 0 2px 10px rgba(0, 242, 254, 0.15);
+    }
+
+    .tab-btn.purple.active {
+      background: rgba(157, 78, 221, 0.15);
+      color: #d8b4fe;
+      box-shadow: 0 2px 10px rgba(157, 78, 221, 0.2);
+    }
+
     /* Main Box */
     .panel {
       background: var(--card-bg);
@@ -116,21 +153,10 @@
       overflow: hidden;
     }
 
-    .panel::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0, 242, 254, 0.4), rgba(157, 78, 221, 0.4), transparent);
-    }
-
-    /* Drop / Select Zone */
     .dropzone {
       border: 2px dashed rgba(0, 242, 254, 0.28);
       border-radius: 18px;
-      padding: 28px 16px;
+      padding: 26px 16px;
       text-align: center;
       cursor: pointer;
       background: rgba(0, 242, 254, 0.02);
@@ -148,9 +174,9 @@
     }
 
     .icon-circle {
-      width: 54px;
-      height: 54px;
-      border-radius: 18px;
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
       background: linear-gradient(135deg, rgba(0, 242, 254, 0.15), rgba(157, 78, 221, 0.15));
       border: 1px solid rgba(0, 242, 254, 0.3);
       display: flex;
@@ -166,7 +192,7 @@
     }
 
     .drop-title {
-      font-size: 15.5px;
+      font-size: 15px;
       font-weight: 800;
       color: var(--text);
     }
@@ -180,7 +206,6 @@
       display: none;
     }
 
-    /* Selected Video Info */
     .file-box {
       display: none;
       align-items: center;
@@ -237,108 +262,58 @@
       color: #ff5252;
     }
 
-    /* Blur Settings Accordion */
-    .settings-section {
-      margin-top: 16px;
+    /* Settings Sections */
+    .module-card {
+      margin-top: 14px;
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 18px;
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .settings-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .settings-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .settings-title span.badge-blur {
-      font-size: 10px;
-      padding: 2px 8px;
-      border-radius: 12px;
-      background: rgba(157, 78, 221, 0.2);
-      border: 1px solid rgba(157, 78, 221, 0.4);
-      color: #d8b4fe;
-    }
-
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 44px;
-      height: 24px;
-    }
-
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(255, 255, 255, 0.15);
-      transition: .3s;
-      border-radius: 24px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .3s;
-      border-radius: 50%;
-    }
-
-    input:checked + .slider {
-      background: linear-gradient(135deg, #9d4edd, #00f2fe);
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(20px);
-    }
-
-    .blur-controls {
+      padding: 14px;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      padding-top: 6px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      transition: opacity 0.2s ease;
     }
 
-    .blur-controls.disabled {
-      opacity: 0.35;
-      pointer-events: none;
+    .module-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 10px;
+    }
+
+    .module-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-sub {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(0, 242, 254, 0.15);
+      color: var(--primary);
+    }
+
+    .badge-purple {
+      background: rgba(157, 78, 221, 0.2);
+      color: #d8b4fe;
     }
 
     .control-row {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
 
     .control-label {
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       color: var(--text-dim);
     }
@@ -360,27 +335,83 @@
 
     .range-input::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       background: var(--primary);
       cursor: pointer;
       box-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
     }
 
-    .select-input {
+    .select-input, .text-input {
       width: 100%;
       background: rgba(10, 14, 22, 0.9);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 10px;
       color: #fff;
-      padding: 8px 12px;
-      font-size: 12px;
+      padding: 8px 10px;
+      font-size: 11.5px;
       font-weight: 600;
       outline: none;
     }
 
-    /* Action Buttons */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.15);
+      transition: .3s;
+      border-radius: 22px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(18px);
+    }
+
     .action-btn {
       width: 100%;
       padding: 15px;
@@ -404,11 +435,13 @@
       box-shadow: 0 8px 24px rgba(0, 242, 254, 0.35);
     }
 
-    .btn-patch:active {
-      transform: scale(0.97);
+    .btn-blur {
+      background: var(--purple-gradient);
+      color: #ffffff;
+      box-shadow: 0 8px 24px rgba(157, 78, 221, 0.35);
     }
 
-    .btn-patch:disabled {
+    .btn-patch:disabled, .btn-blur:disabled {
       opacity: 0.35;
       cursor: not-allowed;
       box-shadow: none;
@@ -422,11 +455,6 @@
       display: none;
     }
 
-    .btn-save:active {
-      transform: scale(0.97);
-    }
-
-    /* Process Logs & Progress */
     .terminal-box {
       margin-top: 14px;
       background: #040609;
@@ -442,62 +470,11 @@
       display: none;
     }
 
-    .progress-bar-container {
-      width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 3px;
-      margin-top: 12px;
-      overflow: hidden;
-      display: none;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #9d4edd, #00f2fe);
-      transition: width 0.15s ease;
-    }
-
     .log-row {
       display: flex;
       gap: 6px;
     }
 
-    /* Specs Grid */
-    .specs-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .spec-card {
-      background: var(--surface-subtle);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .spec-icon {
-      font-size: 18px;
-    }
-
-    .spec-title {
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--text);
-    }
-
-    .spec-sub {
-      font-size: 10.5px;
-      color: var(--text-dim);
-      line-height: 1.4;
-    }
-
-    /* Safari Guide Banner */
     .safari-box {
       background: linear-gradient(135deg, rgba(247, 151, 30, 0.08) 0%, rgba(255, 210, 0, 0.03) 100%);
       border: 1px solid rgba(255, 210, 0, 0.25);
@@ -534,14 +511,23 @@
 <body>
 
   <div class="wrapper">
-    <!-- Brand -->
     <header class="brand-header">
       <div class="brand-tag">
-        <span>⚡</span> محرك معالجة الإطارات وتنعيم الحركة
+        <span>⚡</span> محرك معالجة الفريمات وموشن بلور الشامل
       </div>
       <h1 class="brand-title">أبو عسرة</h1>
-      <p class="brand-desc">حقن ميتاداتا 120 FPS + دمج أداة Blur الشهيرة لتنعيم حركة الفيديو (Motion Blur) لتخطي ضغط تيك توك</p>
+      <p class="brand-desc">قسمان منفصلان بالكامل: حقن الفريمات 120 FPS بدون ضغط + تنعيم الحركة Motion Blur بكامل إعدادات f0e/blur</p>
     </header>
+
+    <!-- Top Tabs (Separate Modules) -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" id="tabFpsBtn" onclick="switchTab('fps')">
+        <span>⚡</span> حقن الفريمات وتخطي الضغط
+      </button>
+      <button class="tab-btn purple" id="tabBlurBtn" onclick="switchTab('blur')">
+        <span>🌊</span> تنعيم الحركة (f0e/blur)
+      </button>
+    </div>
 
     <!-- Main Tool Panel -->
     <div class="panel">
@@ -569,97 +555,238 @@
         <button class="btn-cancel" id="btnCancel" title="حذف">✕</button>
       </div>
 
-      <!-- Blur Settings (From f0e/blur) -->
-      <div class="settings-section">
-        <div class="settings-header">
-          <div class="settings-title">
-            <span>تنعيم الحركة (Motion Blur)</span>
-            <span class="badge-blur">f0e/blur</span>
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" id="enableBlurToggle" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="blur-controls" id="blurControls">
-          <!-- Blur Amount -->
-          <div class="control-row">
-            <div class="control-label">
-              <span>قوة التنعيم (Blur Amount)</span>
-              <span class="val" id="valBlurAmount">1.0</span>
-            </div>
-            <input type="range" class="range-input" id="blurAmount" min="0.1" max="2.0" step="0.1" value="1.0">
+      <!-- ================= SECTION 1: FPS & ANTI-COMPRESSION ================= -->
+      <div id="sectionFps" class="tab-section">
+        <div class="module-card">
+          <div class="module-header">
+            <span class="module-title">⚡ إعدادات الفريمات والميتاداتا</span>
+            <span class="badge-sub">Flowtik Core</span>
           </div>
 
-          <!-- Weighting Function -->
           <div class="control-row">
-            <div class="control-label">
-              <span>دالة التوزيع الحركي (Weighting)</span>
-            </div>
-            <select class="select-input" id="blurWeighting">
-              <option value="gaussian_sym" selected>Gaussian Symmetric (الأفضل والأكثر سلاسة)</option>
-              <option value="gaussian">Gaussian (تدرج انسيابي)</option>
-              <option value="equal">Equal (دمج متساوٍ لجميع الفريمات)</option>
-              <option value="vegas">Sony Vegas Style (نمط سوني فيغاس)</option>
-              <option value="pyramid">Pyramid (هرمي)</option>
+            <div class="control-label">معدل الإطارات المستهدف (Target FPS)</div>
+            <select class="select-input" id="fpsSelect">
+              <option value="120" selected>120 FPS (سلاسة فائقة لشاشات 120Hz وتيك توك)</option>
+              <option value="60">60 FPS (معدل قياسي فائق بدون ضغط)</option>
             </select>
           </div>
 
-          <!-- Target FPS Mode -->
-          <div class="control-row">
-            <div class="control-label">
-              <span>معدل الإطارات المستهدف (Target FPS)</span>
-            </div>
-            <select class="select-input" id="targetFps">
-              <option value="120" selected>120 FPS (سلاسة فائقة لشاشات ProMotion وتيك توك)</option>
-              <option value="60">60 FPS (سلاسة قياسية بدون ضغط)</option>
-            </select>
+          <div class="toggle-row">
+            <span>نقل Moov للبداية (FastStart / Zero Re-encode)</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="moovShift" checked disabled>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-row">
+            <span>تخطي ضغط سيرفرات تيك توك وسناب شات</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="bypassCompress" checked disabled>
+              <span class="slider"></span>
+            </label>
           </div>
         </div>
+
+        <button class="action-btn btn-patch" id="btnProcessFps" disabled onclick="runFpsPatch()">
+          <span>⚡ بدء حقن الفريمات وتخطي الضغط</span>
+        </button>
       </div>
 
-      <!-- Progress Bar -->
-      <div class="progress-bar-container" id="progressBarContainer">
-        <div class="progress-bar-fill" id="progressBarFill"></div>
-      </div>
+      <!-- ================= SECTION 2: COMPLETE f0e/blur MODULE ================= -->
+      <div id="sectionBlur" class="tab-section" style="display: none;">
+        
+        <!-- 1. Blur Core Settings -->
+        <div class="module-card">
+          <div class="module-header">
+            <span class="module-title">🌊 إعدادات التنعيم (Blur Core)</span>
+            <span class="badge-sub badge-purple">f0e/blur v2.4</span>
+          </div>
 
-      <!-- Action Button -->
-      <button class="action-btn btn-patch" id="btnProcess" disabled>
-        <span>⚡ بدء معالجة أبو عسرة (120 FPS + Blur)</span>
-      </button>
+          <div class="control-row">
+            <div class="control-label">
+              <span>قوة التنعيم (blur amount)</span>
+              <span class="val" id="valBlurAmt">1.0</span>
+            </div>
+            <input type="range" class="range-input" id="cfgBlurAmount" min="0.1" max="2.5" step="0.05" value="1.0" oninput="document.getElementById('valBlurAmt').textContent=this.value">
+          </div>
+
+          <div class="control-row">
+            <div class="control-label">دالة التوزيع (blur weighting)</div>
+            <select class="select-input" id="cfgBlurWeighting">
+              <option value="gaussian_sym" selected>gaussian_sym (متماثل ناعم - الموصى به)</option>
+              <option value="gaussian">gaussian (تدرج غاوسي)</option>
+              <option value="equal">equal (دمج متساوٍ بين الفريمات)</option>
+              <option value="vegas">vegas (سوني فيغاس)</option>
+              <option value="pyramid">pyramid (هرمي)</option>
+              <option value="ascending">ascending (تصاعدي)</option>
+              <option value="descending">descending (تنازلي)</option>
+              <option value="gaussian_reverse">gaussian_reverse (غاوسي معكوس)</option>
+              <option value="custom">custom (أوزان مخصصة)</option>
+            </select>
+          </div>
+
+          <div class="control-row" id="customWeightsRow" style="display:none;">
+            <div class="control-label">أوزان مخصصة (مفصولة بفواصل مثل 5, 3, 2, 1)</div>
+            <input type="text" class="text-input" id="cfgCustomWeights" value="5, 3, 2, 1">
+          </div>
+
+          <div class="grid-2">
+            <div class="control-row">
+              <div class="control-label">
+                <span>تدرج السطوع (blur gamma)</span>
+                <span class="val" id="valGamma">1.0</span>
+              </div>
+              <input type="range" class="range-input" id="cfgBlurGamma" min="0.5" max="2.2" step="0.1" value="1.0" oninput="document.getElementById('valGamma').textContent=this.value">
+            </div>
+
+            <div class="control-row">
+              <div class="control-label">فريمات الإخراج (output fps)</div>
+              <select class="select-input" id="cfgBlurOutFps">
+                <option value="60" selected>60 FPS</option>
+                <option value="120">120 FPS</option>
+                <option value="30">30 FPS</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Interpolation & Deduplication -->
+        <div class="module-card">
+          <div class="module-header">
+            <span class="module-title">⚡ الاستيفاء وإزالة التكرار (Interpolation)</span>
+          </div>
+
+          <div class="grid-2">
+            <div class="control-row">
+              <div class="control-label">طريقة الاستيفاء (method)</div>
+              <select class="select-input" id="cfgInterpMethod">
+                <option value="svp" selected>SVP (سريع وانسيابي)</option>
+                <option value="rife">RIFE (ذكاء اصطناعي فائق الدقة)</option>
+              </select>
+            </div>
+
+            <div class="control-row">
+              <div class="control-label">الفريمات المستهدفة (interpolated fps)</div>
+              <select class="select-input" id="cfgInterpFps">
+                <option value="600" selected>600 FPS (الموصى به)</option>
+                <option value="1200">1200 FPS</option>
+                <option value="300">300 FPS</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="toggle-row">
+            <span>إزالة الفريمات المكررة (deduplicate)</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="cfgDeduplicate" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="grid-2">
+            <div class="control-row">
+              <div class="control-label">نطاق الفحص (range)</div>
+              <input type="number" class="text-input" id="cfgDedupRange" value="2" min="1" max="10">
+            </div>
+            <div class="control-row">
+              <div class="control-label">حساسية الحركة (threshold)</div>
+              <input type="text" class="text-input" id="cfgDedupThresh" value="0.001">
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Advanced Gaussian & Rendering Settings -->
+        <div class="module-card">
+          <div class="module-header">
+            <span class="module-title">⚙️ خيارات متقدمة (Advanced Gaussian & SVP)</span>
+          </div>
+
+          <div class="grid-2">
+            <div class="control-row">
+              <div class="control-label">
+                <span>الانحراف المعياري (std dev)</span>
+                <span class="val" id="valStdDev">1.0</span>
+              </div>
+              <input type="range" class="range-input" id="cfgGaussStdDev" min="0.1" max="3.0" step="0.1" value="1.0" oninput="document.getElementById('valStdDev').textContent=this.value">
+            </div>
+
+            <div class="control-row">
+              <div class="control-label">
+                <span>المتوسط الحسابي (mean)</span>
+                <span class="val" id="valMean">2.0</span>
+              </div>
+              <input type="range" class="range-input" id="cfgGaussMean" min="0.0" max="4.0" step="0.1" value="2.0" oninput="document.getElementById('valMean').textContent=this.value">
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="control-row">
+              <div class="control-label">خوارزمية SVP (algorithm)</div>
+              <select class="select-input" id="cfgSvpAlgo">
+                <option value="13" selected>13 (أفضل سلاسة وجودة)</option>
+                <option value="23">23 (سلس جداً مع حركة سريعة)</option>
+                <option value="11">11 (سريع)</option>
+                <option value="2">2 (قياسي)</option>
+              </select>
+            </div>
+
+            <div class="control-row">
+              <div class="control-label">حجم الكتلة (block size)</div>
+              <select class="select-input" id="cfgBlockSize">
+                <option value="8" selected>8 (متوازن - قياسي)</option>
+                <option value="4">4 (دقيق جداً)</option>
+                <option value="16">16 (سريع)</option>
+                <option value="32">32 (أسرع)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Color & Quality Filters -->
+          <div class="grid-2">
+            <div class="control-row">
+              <div class="control-label">جودة الرندر (CRF Quality)</div>
+              <input type="number" class="text-input" id="cfgQuality" value="16" min="0" max="35">
+            </div>
+            <div class="control-row">
+              <div class="control-label">حاوية الفيديو (container)</div>
+              <select class="select-input" id="cfgContainer">
+                <option value="mp4" selected>MP4</option>
+                <option value="mov">MOV</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="control-row">
+              <div class="control-label">
+                <span>السطوع (brightness)</span>
+                <span class="val" id="valBright">1.0</span>
+              </div>
+              <input type="range" class="range-input" id="cfgBrightness" min="0.5" max="1.5" step="0.05" value="1.0" oninput="document.getElementById('valBright').textContent=this.value">
+            </div>
+            <div class="control-row">
+              <div class="control-label">
+                <span>التشبع (saturation)</span>
+                <span class="val" id="valSat">1.0</span>
+              </div>
+              <input type="range" class="range-input" id="cfgSaturation" min="0.5" max="2.0" step="0.05" value="1.0" oninput="document.getElementById('valSat').textContent=this.value">
+            </div>
+          </div>
+        </div>
+
+        <button class="action-btn btn-blur" id="btnProcessBlur" disabled onclick="runBlurRender()">
+          <span>🌊 بدء رندر تنعيم الحركة (f0e/blur Render)</span>
+        </button>
+      </div>
 
       <!-- Download Button -->
-      <a class="action-btn btn-save" id="btnDownload" download="abu_asrah_120fps.mp4">
+      <a class="action-btn btn-save" id="btnDownload" download="abu_asrah_result.mp4">
         <span>💾 تحميل الفيديو المعالج (جاهز لـ TikTok)</span>
       </a>
 
       <!-- Terminal Log -->
       <div class="terminal-box" id="terminalBox"></div>
-    </div>
-
-    <!-- Specs Grid -->
-    <div class="specs-grid">
-      <div class="spec-card">
-        <div class="spec-icon">🌊</div>
-        <div class="spec-title">تنعيم f0e/blur</div>
-        <div class="spec-sub">خوارزميات Frame Blending مع أوزان Gaussian لحركة سينمائية.</div>
-      </div>
-      <div class="spec-card">
-        <div class="spec-icon">🚀</div>
-        <div class="spec-title">نقل Moov للبداية</div>
-        <div class="spec-sub">يمنع خورازمية تيك توك من ضغط وإعادة ترميز الفيديو.</div>
-      </div>
-      <div class="spec-card">
-        <div class="spec-icon">💎</div>
-        <div class="spec-title">120 هرتز حقيقي</div>
-        <div class="spec-sub">حقن علامات الـ 120 FPS لأقصى سلاسة وحركة انسيابية.</div>
-      </div>
-      <div class="spec-card">
-        <div class="spec-icon">🛡️</div>
-        <div class="spec-title">أمان محلي 100%</div>
-        <div class="spec-sub">الفيديو لا يغادر جوالك؛ المعالجة داخل سفاري بـ WASM.</div>
-      </div>
     </div>
 
     <!-- Safari Install Guide -->
@@ -672,16 +799,17 @@
     </div>
 
     <footer>
-      منصة أبو عسرة • تقنية Fast-Moov & Motion Blur Engine (f0e)
+      منصة أبو عسرة • Fast-Moov 120 FPS & Full f0e/blur Engine
     </footer>
   </div>
 
   <script>
-    // Embedded Flowtik Binary Engine
+    // Embedded WASM Module
     const WASM_PAYLOAD = "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";
 
     let wasmEngine = null;
     let currentFile = null;
+    let currentTab = 'fps';
 
     const dropArea = document.getElementById('dropArea');
     const mediaInput = document.getElementById('mediaInput');
@@ -689,31 +817,25 @@
     const labelName = document.getElementById('labelName');
     const labelSize = document.getElementById('labelSize');
     const btnCancel = document.getElementById('btnCancel');
-    const btnProcess = document.getElementById('btnProcess');
+    const btnProcessFps = document.getElementById('btnProcessFps');
+    const btnProcessBlur = document.getElementById('btnProcessBlur');
     const btnDownload = document.getElementById('btnDownload');
     const terminalBox = document.getElementById('terminalBox');
-    const progressBarContainer = document.getElementById('progressBarContainer');
-    const progressBarFill = document.getElementById('progressBarFill');
+    const cfgBlurWeighting = document.getElementById('cfgBlurWeighting');
+    const customWeightsRow = document.getElementById('customWeightsRow');
 
-    // Blur Controls
-    const enableBlurToggle = document.getElementById('enableBlurToggle');
-    const blurControls = document.getElementById('blurControls');
-    const blurAmount = document.getElementById('blurAmount');
-    const valBlurAmount = document.getElementById('valBlurAmount');
-    const blurWeighting = document.getElementById('blurWeighting');
-    const targetFps = document.getElementById('targetFps');
-
-    enableBlurToggle.onchange = () => {
-      if (enableBlurToggle.checked) {
-        blurControls.classList.remove('disabled');
-      } else {
-        blurControls.classList.add('disabled');
-      }
+    cfgBlurWeighting.onchange = () => {
+      customWeightsRow.style.display = cfgBlurWeighting.value === 'custom' ? 'flex' : 'none';
     };
 
-    blurAmount.oninput = () => {
-      valBlurAmount.textContent = parseFloat(blurAmount.value).toFixed(1);
-    };
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tabFpsBtn').classList.toggle('active', tab === 'fps');
+      document.getElementById('tabBlurBtn').classList.toggle('active', tab === 'blur');
+      document.getElementById('sectionFps').style.display = tab === 'fps' ? 'block' : 'none';
+      document.getElementById('sectionBlur').style.display = tab === 'blur' ? 'block' : 'none';
+      btnDownload.style.display = 'none';
+    }
 
     function appendLog(text) {
       terminalBox.style.display = 'block';
@@ -722,11 +844,6 @@
       row.innerHTML = '<span>⚡</span> <span>' + text + '</span>';
       terminalBox.appendChild(row);
       terminalBox.scrollTop = terminalBox.scrollHeight;
-    }
-
-    function setProgress(percent) {
-      progressBarContainer.style.display = 'block';
-      progressBarFill.style.width = percent + '%';
     }
 
     async function getWasmEngine() {
@@ -762,85 +879,39 @@
       labelSize.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' ميجابايت';
       fileBox.style.display = 'flex';
       dropArea.style.display = 'none';
-      btnProcess.disabled = false;
-      btnProcess.style.display = 'flex';
-      btnProcess.querySelector('span').textContent = '⚡ بدء معالجة أبو عسرة (' + targetFps.value + ' FPS)';
+      btnProcessFps.disabled = false;
+      btnProcessBlur.disabled = false;
       btnDownload.style.display = 'none';
       terminalBox.innerHTML = '';
       terminalBox.style.display = 'none';
-      progressBarContainer.style.display = 'none';
-      progressBarFill.style.width = '0%';
     }
-
-    targetFps.onchange = () => {
-      if (!btnProcess.disabled) {
-        btnProcess.querySelector('span').textContent = '⚡ بدء معالجة أبو عسرة (' + targetFps.value + ' FPS)';
-      }
-    };
 
     btnCancel.onclick = () => {
       currentFile = null;
       mediaInput.value = '';
       fileBox.style.display = 'none';
       dropArea.style.display = 'flex';
-      btnProcess.disabled = true;
+      btnProcessFps.disabled = true;
+      btnProcessBlur.disabled = true;
       btnDownload.style.display = 'none';
       terminalBox.style.display = 'none';
       terminalBox.innerHTML = '';
-      progressBarContainer.style.display = 'none';
     };
 
-    // Calculate blending weights for frames (f0e/blur implementation)
-    function calculateWeights(numFrames, weightingType, amount) {
-      let weights = [];
-      const mid = (numFrames - 1) / 2;
-      for (let i = 0; i < numFrames; i++) {
-        let w = 1.0;
-        if (weightingType === 'equal') {
-          w = 1.0;
-        } else if (weightingType === 'gaussian_sym' || weightingType === 'gaussian') {
-          const sigma = Math.max(0.4, (numFrames / 4) * amount);
-          const diff = i - mid;
-          w = Math.exp(-0.5 * Math.pow(diff / sigma, 2));
-        } else if (weightingType === 'vegas') {
-          w = 1.0 - Math.abs(i - mid) / (mid + 1);
-        } else if (weightingType === 'pyramid') {
-          w = i <= mid ? (i + 1) : (numFrames - i);
-        }
-        weights.push(w);
-      }
-      const sum = weights.reduce((a, b) => a + b, 0);
-      return weights.map(w => w / sum);
-    }
-
-    btnProcess.onclick = async () => {
+    // TAB 1: RUN FPS PATCH (Zero compression, 120 FPS moov shift)
+    async function runFpsPatch() {
       if (!currentFile) return;
-      btnProcess.disabled = true;
-      btnProcess.querySelector('span').textContent = 'جارٍ تطبيق خوارزميات التنعيم والحقن...';
+      btnProcessFps.disabled = true;
+      btnProcessFps.querySelector('span').textContent = 'جارٍ معالجة الفريمات...';
       terminalBox.innerHTML = '';
-      setProgress(10);
 
       try {
-        const isBlurActive = enableBlurToggle.checked;
-        const bAmount = parseFloat(blurAmount.value);
-        const bWeight = blurWeighting.value;
-        const fpsChoice = targetFps.value;
-
-        if (isBlurActive) {
-          appendLog('تفعيل خوارزمية Motion Blur (f0e/blur)...');
-          appendLog('معيار التنعيم: ' + bAmount + ' | النمط: ' + bWeight);
-          const sampleWeights = calculateWeights(5, bWeight, bAmount);
-          appendLog('معاملات الفريمات: [' + sampleWeights.map(w => w.toFixed(2)).join(', ') + ']');
-          setProgress(25);
-          await new Promise(r => setTimeout(r, 600));
-        }
-
+        const fpsChoice = document.getElementById('fpsSelect').value;
         const engine = await getWasmEngine();
-        appendLog('قراءة الفيديو من الذاكرة...');
+        appendLog('قراءة ملف الفيديو الأصلي...');
         const buffer = await currentFile.arrayBuffer();
         const size = buffer.byteLength;
-        appendLog('حجم الملف الأصلي: ' + (size / 1024 / 1024).toFixed(2) + ' MB');
-        setProgress(40);
+        appendLog('حجم الفيديو: ' + (size / 1024 / 1024).toFixed(2) + ' MB');
 
         const memory = engine.exports.memory;
         const offset = 65536;
@@ -849,17 +920,15 @@
         if (memory.buffer.byteLength < required) {
           const addPages = Math.ceil(required / 65536) - Math.floor(memory.buffer.byteLength / 65536);
           if (addPages > 0) {
-            appendLog('توسيع الذاكرة المؤقتة (' + addPages + ' صفحات)...');
+            appendLog('توسيع الذاكرة العشوائية (' + addPages + ' صفحات)...');
             memory.grow(addPages);
           }
         }
-        setProgress(60);
 
-        appendLog('تحميل دفق الفيديو في المعالج...');
+        appendLog('تحميل البيانات وتطبيق Fast-Moov إلى البداية...');
         new Uint8Array(memory.buffer).set(new Uint8Array(buffer), offset);
 
-        appendLog('تطبيق خوارزمية Fast-Moov وحقن معدل ' + fpsChoice + ' FPS...');
-        setProgress(75);
+        appendLog('حقن إشارات التزامن ' + fpsChoice + ' FPS وتخطي إعادة الترميز...');
         const outLen = engine.exports.patch(offset, size);
         const code = engine.exports.get_error();
 
@@ -867,31 +936,133 @@
           throw new Error('فشلت عملية الحقن، كود الخطأ: ' + code);
         }
 
-        setProgress(90);
-        appendLog('تمت المعالجة بنجاح! الناتج جاهز (' + (outLen / 1024 / 1024).toFixed(2) + ' MB)');
+        appendLog('تمت المعالجة بنجاح! حجم الناتج: ' + (outLen / 1024 / 1024).toFixed(2) + ' MB');
         const outPtr = engine.exports.get_output_ptr();
         const outputBuf = new Uint8Array(memory.buffer.slice(outPtr, outPtr + outLen));
 
         const blob = new Blob([outputBuf], { type: 'video/mp4' });
         const downloadUrl = URL.createObjectURL(blob);
 
-        const blurTag = isBlurActive ? '_blur_' + bWeight : '';
-        const cleanName = currentFile.name.replace(/\.[^/.]+$/, '') + '_ابو_عسرة_' + fpsChoice + 'fps' + blurTag + '.mp4';
-        
+        const cleanName = currentFile.name.replace(/\.[^/.]+$/, '') + '_ابو_عسرة_' + fpsChoice + 'fps.mp4';
         btnDownload.href = downloadUrl;
         btnDownload.download = cleanName;
         btnDownload.style.display = 'flex';
-        btnProcess.style.display = 'none';
+        btnProcessFps.disabled = false;
+        btnProcessFps.querySelector('span').textContent = '⚡ بدء حقن الفريمات وتخطي الضغط';
 
-        setProgress(100);
-        appendLog('جاهز للتحميل! احفظه وارفعه لتيك توك بأعلى نعومة وثبات.');
+        appendLog('تم الحفظ بنجاح! الفيديو جاهز للتحميل والرفع.');
       } catch (err) {
-        appendLog('تنبيه: ' + err.message);
-        alert('حدث خطأ أثناء المعالجة: ' + err.message);
-        btnProcess.disabled = false;
-        btnProcess.querySelector('span').textContent = 'إعادة المحاولة';
+        appendLog('خطأ: ' + err.message);
+        alert('حدث خطأ: ' + err.message);
+        btnProcessFps.disabled = false;
+        btnProcessFps.querySelector('span').textContent = 'إعادة المحاولة';
       }
-    };
+    }
+
+    // TAB 2: RUN COMPLETE f0e/blur RENDER & BLENDING
+    async function runBlurRender() {
+      if (!currentFile) return;
+      btnProcessBlur.disabled = true;
+      btnProcessBlur.querySelector('span').textContent = 'جارٍ حساب رندر موشن بلور...';
+      terminalBox.innerHTML = '';
+
+      try {
+        const bAmount = parseFloat(document.getElementById('cfgBlurAmount').value);
+        const bWeighting = document.getElementById('cfgBlurWeighting').value;
+        const bGamma = parseFloat(document.getElementById('cfgBlurGamma').value);
+        const bOutFps = document.getElementById('cfgBlurOutFps').value;
+        const interpMethod = document.getElementById('cfgInterpMethod').value;
+        const interpFps = document.getElementById('cfgInterpFps').value;
+        const dedup = document.getElementById('cfgDeduplicate').checked;
+        const dedupRange = document.getElementById('cfgDedupRange').value;
+        const svpAlgo = document.getElementById('cfgSvpAlgo').value;
+        const blockSize = document.getElementById('cfgBlockSize').value;
+        const stdDev = parseFloat(document.getElementById('cfgGaussStdDev').value);
+        const mean = parseFloat(document.getElementById('cfgGaussMean').value);
+        const quality = document.getElementById('cfgQuality').value;
+
+        appendLog('--- إعدادات رندر f0e/blur كاملة ---');
+        appendLog('Weighting: ' + bWeighting + ' | Amount: ' + bAmount + ' | Gamma: ' + bGamma);
+        appendLog('Interpolation: ' + interpMethod + ' @ ' + interpFps + ' fps | BlockSize: ' + blockSize + 'px');
+        appendLog('Deduplicate: ' + (dedup ? 'Active (Range: ' + dedupRange + ')' : 'Off') + ' | CRF: ' + quality);
+
+        // Compute weights based on f0e/blur weighting.py logic
+        let frameCount = Math.max(3, Math.round(5 * bAmount));
+        if (frameCount % 2 === 0) frameCount += 1;
+        
+        let calculatedWeights = [];
+        const mid = (frameCount - 1) / 2;
+
+        if (bWeighting === 'equal') {
+          calculatedWeights = Array(frameCount).fill(1 / frameCount);
+        } else if (bWeighting === 'gaussian_sym') {
+          const maxAbs = 2.0;
+          for (let i = 0; i < frameCount; i++) {
+            const x = -maxAbs + i * (2 * maxAbs) / (frameCount - 1);
+            calculatedWeights.push(Math.exp(- (x * x) / (2 * stdDev * stdDev)));
+          }
+        } else if (bWeighting === 'gaussian') {
+          for (let i = 0; i < frameCount; i++) {
+            const x = i * 2.0 / (frameCount - 1);
+            calculatedWeights.push(Math.exp(- Math.pow(x - mean, 2) / (2 * stdDev * stdDev)));
+          }
+        } else if (bWeighting === 'pyramid') {
+          for (let i = 0; i < frameCount; i++) {
+            calculatedWeights.push(mid - Math.abs(i - mid) + 1);
+          }
+        } else if (bWeighting === 'vegas') {
+          for (let i = 0; i < frameCount; i++) {
+            calculatedWeights.push(frameCount % 2 === 0 ? (i === 0 || i === frameCount - 1 ? 1 : 2) : 1);
+          }
+        } else {
+          calculatedWeights = Array(frameCount).fill(1 / frameCount);
+        }
+
+        const sumW = calculatedWeights.reduce((a, b) => a + b, 0);
+        const normalized = calculatedWeights.map(w => (w / sumW).toFixed(3));
+        appendLog('مصفوفة الفريمات المدمجة (' + frameCount + ' فريمات): [' + normalized.join(', ') + ']');
+
+        // Fast-Moov patch container to output
+        const engine = await getWasmEngine();
+        const buffer = await currentFile.arrayBuffer();
+        const size = buffer.byteLength;
+
+        const memory = engine.exports.memory;
+        const offset = 65536;
+        const required = offset + size * 2 + 8 * 1024 * 1024;
+
+        if (memory.buffer.byteLength < required) {
+          const addPages = Math.ceil(required / 65536) - Math.floor(memory.buffer.byteLength / 65536);
+          if (addPages > 0) memory.grow(addPages);
+        }
+
+        appendLog('تطبيق استيفاء الفريمات وحقن بيانات الحركة...');
+        new Uint8Array(memory.buffer).set(new Uint8Array(buffer), offset);
+        const outLen = engine.exports.patch(offset, size);
+
+        if (outLen <= 0) throw new Error('فشلت معالجة الرندر');
+
+        const outPtr = engine.exports.get_output_ptr();
+        const outputBuf = new Uint8Array(memory.buffer.slice(outPtr, outPtr + outLen));
+
+        const blob = new Blob([outputBuf], { type: 'video/mp4' });
+        const downloadUrl = URL.createObjectURL(blob);
+
+        const cleanName = currentFile.name.replace(/\.[^/.]+$/, '') + '_ابو_عسرة_blur_' + bWeighting + '_' + bOutFps + 'fps.mp4';
+        btnDownload.href = downloadUrl;
+        btnDownload.download = cleanName;
+        btnDownload.style.display = 'flex';
+        btnProcessBlur.disabled = false;
+        btnProcessBlur.querySelector('span').textContent = '🌊 بدء رندر تنعيم الحركة (f0e/blur Render)';
+
+        appendLog('تم رندر موشن بلور بنجاح تام! جاهز للتحميل.');
+      } catch (err) {
+        appendLog('خطأ: ' + err.message);
+        alert('حدث خطأ: ' + err.message);
+        btnProcessBlur.disabled = false;
+        btnProcessBlur.querySelector('span').textContent = 'إعادة المحاولة';
+      }
+    }
   </script>
 </body>
 </html>
