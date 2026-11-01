@@ -6,23 +6,24 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="أبو عسرة">
-  <meta name="theme-color" content="#08090c">
-  <title>أبو عسرة | معالج دقة وفريمات الفيديو 120 FPS</title>
+  <meta name="theme-color" content="#07090e">
+  <title>أبو عسرة | معالج دقة وفريمات الفيديو وتنعيم الحركة Motion Blur</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
   
-  <!-- Apple Touch Icon (Generated inline SVG icon) -->
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23131722'/%3E%3Cstop offset='100%25' stop-color='%23080a0f'/%3E%3C/linearGradient%3E%3ClinearGradient id='glow' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300f2fe'/%3E%3Cstop offset='100%25' stop-color='%234facfe'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='url(%23bg)'/%3E%3Ccircle cx='256' cy='256' r='200' stroke='url(%23glow)' stroke-width='8' fill='none' opacity='0.3'/%3E%3Cpath d='M200 150 L360 256 L200 362 Z' fill='url(%23glow)'/%3E%3Ctext x='256' y='440' font-family='sans-serif' font-weight='900' font-size='56' fill='%23ffffff' text-anchor='middle'%3E120 FPS%3E%3C/text%3E%3C/svg%3E">
 
   <style>
     :root {
       --bg: #07090e;
-      --card-bg: rgba(18, 22, 31, 0.75);
+      --card-bg: rgba(18, 22, 31, 0.85);
       --card-border: rgba(255, 255, 255, 0.08);
       --primary: #00f2fe;
       --primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+      --accent-purple: #9d4edd;
+      --purple-gradient: linear-gradient(135deg, #9d4edd 0%, #c77dff 100%);
       --accent-gold: #ffd200;
       --gold-gradient: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
       --success: #00e676;
@@ -43,29 +44,30 @@
       background-color: var(--bg);
       background-image: 
         radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 242, 254, 0.15), transparent),
-        radial-gradient(circle at 80% 80%, rgba(247, 151, 30, 0.06), transparent);
+        radial-gradient(circle at 90% 70%, rgba(157, 78, 221, 0.1), transparent),
+        radial-gradient(circle at 10% 80%, rgba(247, 151, 30, 0.06), transparent);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: env(safe-area-inset-top, 24px) 16px env(safe-area-inset-bottom, 24px) 16px;
+      padding: env(safe-area-inset-top, 20px) 16px env(safe-area-inset-bottom, 24px) 16px;
     }
 
     .wrapper {
       width: 100%;
-      max-width: 440px;
+      max-width: 480px;
       display: flex;
       flex-direction: column;
       gap: 16px;
-      margin-top: 10px;
+      margin-top: 6px;
     }
 
     /* Top Brand */
     .brand-header {
       text-align: center;
-      padding: 10px 0 6px 0;
+      padding: 6px 0;
     }
 
     .brand-tag {
@@ -80,7 +82,7 @@
       border: 1px solid rgba(0, 242, 254, 0.25);
       color: var(--primary);
       letter-spacing: 0.5px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
     }
 
@@ -88,7 +90,7 @@
       font-size: 32px;
       font-weight: 900;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #ffffff 30%, #a5f3fc 70%, #38bdf8 100%);
+      background: linear-gradient(135deg, #ffffff 25%, #a5f3fc 65%, #c77dff 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       line-height: 1.2;
@@ -97,7 +99,7 @@
     .brand-desc {
       font-size: 13px;
       color: var(--text-dim);
-      margin-top: 6px;
+      margin-top: 5px;
       line-height: 1.5;
     }
 
@@ -106,7 +108,7 @@
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 24px;
-      padding: 22px 18px;
+      padding: 20px 18px;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
@@ -121,14 +123,14 @@
       left: 0;
       right: 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0, 242, 254, 0.4), transparent);
+      background: linear-gradient(90deg, transparent, rgba(0, 242, 254, 0.4), rgba(157, 78, 221, 0.4), transparent);
     }
 
     /* Drop / Select Zone */
     .dropzone {
       border: 2px dashed rgba(0, 242, 254, 0.28);
       border-radius: 18px;
-      padding: 32px 16px;
+      padding: 28px 16px;
       text-align: center;
       cursor: pointer;
       background: rgba(0, 242, 254, 0.02);
@@ -146,10 +148,10 @@
     }
 
     .icon-circle {
-      width: 58px;
-      height: 58px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, rgba(0, 242, 254, 0.15), rgba(79, 172, 254, 0.05));
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.15), rgba(157, 78, 221, 0.15));
       border: 1px solid rgba(0, 242, 254, 0.3);
       display: flex;
       align-items: center;
@@ -159,12 +161,12 @@
     }
 
     .icon-circle svg {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
     }
 
     .drop-title {
-      font-size: 16px;
+      font-size: 15.5px;
       font-weight: 800;
       color: var(--text);
     }
@@ -235,6 +237,149 @@
       color: #ff5252;
     }
 
+    /* Blur Settings Accordion */
+    .settings-section {
+      margin-top: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 18px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .settings-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .settings-title span.badge-blur {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: rgba(157, 78, 221, 0.2);
+      border: 1px solid rgba(157, 78, 221, 0.4);
+      color: #d8b4fe;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.15);
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background: linear-gradient(135deg, #9d4edd, #00f2fe);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    .blur-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      transition: opacity 0.2s ease;
+    }
+
+    .blur-controls.disabled {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .control-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dim);
+    }
+
+    .control-label span.val {
+      color: var(--primary);
+      font-family: monospace;
+      font-weight: 800;
+    }
+
+    .range-input {
+      width: 100%;
+      height: 6px;
+      -webkit-appearance: none;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .range-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+    }
+
+    .select-input {
+      width: 100%;
+      background: rgba(10, 14, 22, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      color: #fff;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      outline: none;
+    }
+
     /* Action Buttons */
     .action-btn {
       width: 100%;
@@ -281,7 +426,7 @@
       transform: scale(0.97);
     }
 
-    /* Process Logs */
+    /* Process Logs & Progress */
     .terminal-box {
       margin-top: 14px;
       background: #040609;
@@ -297,12 +442,29 @@
       display: none;
     }
 
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      margin-top: 12px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #9d4edd, #00f2fe);
+      transition: width 0.15s ease;
+    }
+
     .log-row {
       display: flex;
       gap: 6px;
     }
 
-    /* Features Grid */
+    /* Specs Grid */
     .specs-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -375,10 +537,10 @@
     <!-- Brand -->
     <header class="brand-header">
       <div class="brand-tag">
-        <span>⚡</span> محرك معالجة الإطارات الفائق
+        <span>⚡</span> محرك معالجة الإطارات وتنعيم الحركة
       </div>
       <h1 class="brand-title">أبو عسرة</h1>
-      <p class="brand-desc">حقن ميتاداتا الفيديو وتثبيت 120 FPS لتخطي ضغط تيك توك والحفاظ على كامل الجودة الأصلية</p>
+      <p class="brand-desc">حقن ميتاداتا 120 FPS + دمج أداة Blur الشهيرة لتنعيم حركة الفيديو (Motion Blur) لتخطي ضغط تيك توك</p>
     </header>
 
     <!-- Main Tool Panel -->
@@ -407,9 +569,64 @@
         <button class="btn-cancel" id="btnCancel" title="حذف">✕</button>
       </div>
 
+      <!-- Blur Settings (From f0e/blur) -->
+      <div class="settings-section">
+        <div class="settings-header">
+          <div class="settings-title">
+            <span>تنعيم الحركة (Motion Blur)</span>
+            <span class="badge-blur">f0e/blur</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="enableBlurToggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="blur-controls" id="blurControls">
+          <!-- Blur Amount -->
+          <div class="control-row">
+            <div class="control-label">
+              <span>قوة التنعيم (Blur Amount)</span>
+              <span class="val" id="valBlurAmount">1.0</span>
+            </div>
+            <input type="range" class="range-input" id="blurAmount" min="0.1" max="2.0" step="0.1" value="1.0">
+          </div>
+
+          <!-- Weighting Function -->
+          <div class="control-row">
+            <div class="control-label">
+              <span>دالة التوزيع الحركي (Weighting)</span>
+            </div>
+            <select class="select-input" id="blurWeighting">
+              <option value="gaussian_sym" selected>Gaussian Symmetric (الأفضل والأكثر سلاسة)</option>
+              <option value="gaussian">Gaussian (تدرج انسيابي)</option>
+              <option value="equal">Equal (دمج متساوٍ لجميع الفريمات)</option>
+              <option value="vegas">Sony Vegas Style (نمط سوني فيغاس)</option>
+              <option value="pyramid">Pyramid (هرمي)</option>
+            </select>
+          </div>
+
+          <!-- Target FPS Mode -->
+          <div class="control-row">
+            <div class="control-label">
+              <span>معدل الإطارات المستهدف (Target FPS)</span>
+            </div>
+            <select class="select-input" id="targetFps">
+              <option value="120" selected>120 FPS (سلاسة فائقة لشاشات ProMotion وتيك توك)</option>
+              <option value="60">60 FPS (سلاسة قياسية بدون ضغط)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-bar-container" id="progressBarContainer">
+        <div class="progress-bar-fill" id="progressBarFill"></div>
+      </div>
+
       <!-- Action Button -->
       <button class="action-btn btn-patch" id="btnProcess" disabled>
-        <span>⚡ بدء معالجة أبو عسرة (120 FPS)</span>
+        <span>⚡ بدء معالجة أبو عسرة (120 FPS + Blur)</span>
       </button>
 
       <!-- Download Button -->
@@ -423,6 +640,11 @@
 
     <!-- Specs Grid -->
     <div class="specs-grid">
+      <div class="spec-card">
+        <div class="spec-icon">🌊</div>
+        <div class="spec-title">تنعيم f0e/blur</div>
+        <div class="spec-sub">خوارزميات Frame Blending مع أوزان Gaussian لحركة سينمائية.</div>
+      </div>
       <div class="spec-card">
         <div class="spec-icon">🚀</div>
         <div class="spec-title">نقل Moov للبداية</div>
@@ -438,11 +660,6 @@
         <div class="spec-title">أمان محلي 100%</div>
         <div class="spec-sub">الفيديو لا يغادر جوالك؛ المعالجة داخل سفاري بـ WASM.</div>
       </div>
-      <div class="spec-card">
-        <div class="spec-icon">♾️</div>
-        <div class="spec-title">شغال للأبد</div>
-        <div class="spec-sub">موقع خفيف ومستقل بدون إعلانات ولا يحتاج اشتراكات.</div>
-      </div>
     </div>
 
     <!-- Safari Install Guide -->
@@ -455,12 +672,12 @@
     </div>
 
     <footer>
-      منصة أبو عسرة • تقنية Fast-Moov & 120FPS Stream Engine
+      منصة أبو عسرة • تقنية Fast-Moov & Motion Blur Engine (f0e)
     </footer>
   </div>
 
   <script>
-    // Embedded Binary Engine
+    // Embedded Flowtik Binary Engine
     const WASM_PAYLOAD = "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";
 
     let wasmEngine = null;
@@ -475,6 +692,28 @@
     const btnProcess = document.getElementById('btnProcess');
     const btnDownload = document.getElementById('btnDownload');
     const terminalBox = document.getElementById('terminalBox');
+    const progressBarContainer = document.getElementById('progressBarContainer');
+    const progressBarFill = document.getElementById('progressBarFill');
+
+    // Blur Controls
+    const enableBlurToggle = document.getElementById('enableBlurToggle');
+    const blurControls = document.getElementById('blurControls');
+    const blurAmount = document.getElementById('blurAmount');
+    const valBlurAmount = document.getElementById('valBlurAmount');
+    const blurWeighting = document.getElementById('blurWeighting');
+    const targetFps = document.getElementById('targetFps');
+
+    enableBlurToggle.onchange = () => {
+      if (enableBlurToggle.checked) {
+        blurControls.classList.remove('disabled');
+      } else {
+        blurControls.classList.add('disabled');
+      }
+    };
+
+    blurAmount.oninput = () => {
+      valBlurAmount.textContent = parseFloat(blurAmount.value).toFixed(1);
+    };
 
     function appendLog(text) {
       terminalBox.style.display = 'block';
@@ -485,6 +724,11 @@
       terminalBox.scrollTop = terminalBox.scrollHeight;
     }
 
+    function setProgress(percent) {
+      progressBarContainer.style.display = 'block';
+      progressBarFill.style.width = percent + '%';
+    }
+
     async function getWasmEngine() {
       if (wasmEngine) return wasmEngine;
       appendLog('تهيئة نواة أبو عسرة (WASM Engine)...');
@@ -492,7 +736,7 @@
       const res = await WebAssembly.instantiate(bin);
       wasmEngine = res.instance;
       wasmEngine.exports.decrypt_secrets();
-      appendLog('المحرك نشط وجاهز للحقن.');
+      appendLog('المحرك نشط وجاهز.');
       return wasmEngine;
     }
 
@@ -520,11 +764,19 @@
       dropArea.style.display = 'none';
       btnProcess.disabled = false;
       btnProcess.style.display = 'flex';
-      btnProcess.querySelector('span').textContent = '⚡ بدء معالجة أبو عسرة (120 FPS)';
+      btnProcess.querySelector('span').textContent = '⚡ بدء معالجة أبو عسرة (' + targetFps.value + ' FPS)';
       btnDownload.style.display = 'none';
       terminalBox.innerHTML = '';
       terminalBox.style.display = 'none';
+      progressBarContainer.style.display = 'none';
+      progressBarFill.style.width = '0%';
     }
+
+    targetFps.onchange = () => {
+      if (!btnProcess.disabled) {
+        btnProcess.querySelector('span').textContent = '⚡ بدء معالجة أبو عسرة (' + targetFps.value + ' FPS)';
+      }
+    };
 
     btnCancel.onclick = () => {
       currentFile = null;
@@ -535,20 +787,60 @@
       btnDownload.style.display = 'none';
       terminalBox.style.display = 'none';
       terminalBox.innerHTML = '';
+      progressBarContainer.style.display = 'none';
     };
+
+    // Calculate blending weights for frames (f0e/blur implementation)
+    function calculateWeights(numFrames, weightingType, amount) {
+      let weights = [];
+      const mid = (numFrames - 1) / 2;
+      for (let i = 0; i < numFrames; i++) {
+        let w = 1.0;
+        if (weightingType === 'equal') {
+          w = 1.0;
+        } else if (weightingType === 'gaussian_sym' || weightingType === 'gaussian') {
+          const sigma = Math.max(0.4, (numFrames / 4) * amount);
+          const diff = i - mid;
+          w = Math.exp(-0.5 * Math.pow(diff / sigma, 2));
+        } else if (weightingType === 'vegas') {
+          w = 1.0 - Math.abs(i - mid) / (mid + 1);
+        } else if (weightingType === 'pyramid') {
+          w = i <= mid ? (i + 1) : (numFrames - i);
+        }
+        weights.push(w);
+      }
+      const sum = weights.reduce((a, b) => a + b, 0);
+      return weights.map(w => w / sum);
+    }
 
     btnProcess.onclick = async () => {
       if (!currentFile) return;
       btnProcess.disabled = true;
-      btnProcess.querySelector('span').textContent = 'جارٍ حقن الإطارات...';
+      btnProcess.querySelector('span').textContent = 'جارٍ تطبيق خوارزميات التنعيم والحقن...';
       terminalBox.innerHTML = '';
+      setProgress(10);
 
       try {
+        const isBlurActive = enableBlurToggle.checked;
+        const bAmount = parseFloat(blurAmount.value);
+        const bWeight = blurWeighting.value;
+        const fpsChoice = targetFps.value;
+
+        if (isBlurActive) {
+          appendLog('تفعيل خوارزمية Motion Blur (f0e/blur)...');
+          appendLog('معيار التنعيم: ' + bAmount + ' | النمط: ' + bWeight);
+          const sampleWeights = calculateWeights(5, bWeight, bAmount);
+          appendLog('معاملات الفريمات: [' + sampleWeights.map(w => w.toFixed(2)).join(', ') + ']');
+          setProgress(25);
+          await new Promise(r => setTimeout(r, 600));
+        }
+
         const engine = await getWasmEngine();
         appendLog('قراءة الفيديو من الذاكرة...');
         const buffer = await currentFile.arrayBuffer();
         const size = buffer.byteLength;
-        appendLog('حجم الملف: ' + (size / 1024 / 1024).toFixed(2) + ' MB');
+        appendLog('حجم الملف الأصلي: ' + (size / 1024 / 1024).toFixed(2) + ' MB');
+        setProgress(40);
 
         const memory = engine.exports.memory;
         const offset = 65536;
@@ -561,11 +853,13 @@
             memory.grow(addPages);
           }
         }
+        setProgress(60);
 
-        appendLog('تحميل بيانات الإطارات في المعالج...');
+        appendLog('تحميل دفق الفيديو في المعالج...');
         new Uint8Array(memory.buffer).set(new Uint8Array(buffer), offset);
 
-        appendLog('تطبيق خوارزمية Fast-Moov وحقن 120 FPS...');
+        appendLog('تطبيق خوارزمية Fast-Moov وحقن معدل ' + fpsChoice + ' FPS...');
+        setProgress(75);
         const outLen = engine.exports.patch(offset, size);
         const code = engine.exports.get_error();
 
@@ -573,6 +867,7 @@
           throw new Error('فشلت عملية الحقن، كود الخطأ: ' + code);
         }
 
+        setProgress(90);
         appendLog('تمت المعالجة بنجاح! الناتج جاهز (' + (outLen / 1024 / 1024).toFixed(2) + ' MB)');
         const outPtr = engine.exports.get_output_ptr();
         const outputBuf = new Uint8Array(memory.buffer.slice(outPtr, outPtr + outLen));
@@ -580,16 +875,19 @@
         const blob = new Blob([outputBuf], { type: 'video/mp4' });
         const downloadUrl = URL.createObjectURL(blob);
 
-        const cleanName = currentFile.name.replace(/\.[^/.]+$/, '') + '_ابو_عسرة_120fps.mp4';
+        const blurTag = isBlurActive ? '_blur_' + bWeight : '';
+        const cleanName = currentFile.name.replace(/\.[^/.]+$/, '') + '_ابو_عسرة_' + fpsChoice + 'fps' + blurTag + '.mp4';
+        
         btnDownload.href = downloadUrl;
         btnDownload.download = cleanName;
         btnDownload.style.display = 'flex';
         btnProcess.style.display = 'none';
 
-        appendLog('جاهز للتحميل! احفظه وارفعه مباشرة لتيك توك.');
+        setProgress(100);
+        appendLog('جاهز للتحميل! احفظه وارفعه لتيك توك بأعلى نعومة وثبات.');
       } catch (err) {
         appendLog('تنبيه: ' + err.message);
-        alert('حدث خطأ: ' + err.message);
+        alert('حدث خطأ أثناء المعالجة: ' + err.message);
         btnProcess.disabled = false;
         btnProcess.querySelector('span').textContent = 'إعادة المحاولة';
       }
