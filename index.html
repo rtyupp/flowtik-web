@@ -640,13 +640,20 @@
       if (ffmpegInstance) return ffmpegInstance;
       appendLog('تحميل محرك المعالجة والرندر المرئي (FFmpeg Core)...');
       const { FFmpeg } = FFmpegWASM;
+      const { toBlobURL } = FFmpegUtil;
       ffmpegInstance = new FFmpeg();
       ffmpegInstance.on('log', ({ message }) => {
-        if (message && (message.includes('frame=') || message.includes('Duration'))) {
+        if (message && (message.includes('frame=') || message.includes('Duration') || message.includes('speed='))) {
           appendLog(message);
         }
       });
-      await ffmpegInstance.load();
+      
+      const baseURL = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd';
+      appendLog('تنزيل مكتبات الرندر والتنعيم إلى المتصفح...');
+      await ffmpegInstance.load({
+        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm')
+      });
       appendLog('محرك الرندر جاهز بنجاح!');
       return ffmpegInstance;
     }
