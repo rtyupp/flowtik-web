@@ -1,0 +1,80 @@
+name: Render Blur Video (PC Engine)
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_url:
+        description: 'Direct URL to input video'
+        required: true
+      blur_amount:
+        description: 'Blur Amount (e.g. 1.0)'
+        default: '1.0'
+        required: false
+      blur_weighting:
+        description: 'Blur Weighting function'
+        default: 'gaussian_sym'
+        required: false
+      output_fps:
+        description: 'Output framerate'
+        default: '60'
+        required: false
+      interpolated_fps:
+        description: 'Interpolated FPS'
+        default: '600'
+        required: false
+
+jobs:
+  render:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Environment
+        run: |
+          mkdir -p workspace
+          mkdir -p bin
+
+      - name: Download blur-cli and installer
+        shell: bash
+        run: |
+          curl -L -o bin/blur-installer.exe https://github.com/f0e/blur/releases/download/v2.45/blur-Windows-Installer-x64.exe
+          curl -L -o bin/blur-cli.exe https://github.com/f0e/blur/releases/download/v2.45/blur-cli-Windows-Release-x64.exe
+          echo "Downloaded tools successfully."
+
+      - name: Install dependencies (silent)
+        shell: cmd
+        run: |
+          start /wait bin\blur-installer.exe /S
+          echo Installed blur dependencies.
+
+      - name: Download Target Video
+        shell: bash
+        run: |
+          curl -L -o workspace/input_video.mp4 "${{ github.event.inputs.video_url }}"
+          ls -lh workspace/
+
+      - name: Render Video with PC blur-cli
+        shell: bash
+        run: |
+          echo "Starting Real PC Blur Render..."
+          ./bin/blur-cli.exe -i workspace/input_video.mp4 -o workspace/output_blurred.mp4 \
+            --blur true \
+            --blur-amount ${{ github.event.inputs.blur_amount }} \
+            --blur-weighting ${{ github.event.inputs.blur_weighting }} \
+            --blur-output-fps ${{ github.event.inputs.output_fps }} \
+            --interpolate true \
+            --interpolated-fps ${{ github.event.inputs.interpolated_fps }} \
+            --verbose || {
+              echo "Falling back to FFmpeg tmix interpolation..."
+              ffmpeg -i workspace/input_video.mp4 \
+                -vf "minterpolate=fps=120:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1,tmix=frames=7:weights='1 2 4 6 4 2 1'" \
+                -c:v libx264 -crf 16 -preset fast -c:a copy workspace/output_blurred.mp4 -y
+            }
+
+      - name: Upload Processed Video Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: abu_asrah_blurred_video
+          path: workspace/output_blurred.mp4
+          retention-days: 1
