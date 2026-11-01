@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Deep Obsidian Radial -->
+    <radialGradient id="bgGlow" cx="50%" cy="30%" r="80%">
+      <stop offset="0%" stop-color="#181a20" />
+      <stop offset="50%" stop-color="#0a0b0e" />
+      <stop offset="100%" stop-color="#020203" />
+    </radialGradient>
+
+    <!-- Chrome / Platinum Gradient for Monogram -->
+    <linearGradient id="chromeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="35%" stop-color="#e4e4e7" />
+      <stop offset="70%" stop-color="#71717a" />
+      <stop offset="100%" stop-color="#3f3f46" />
+    </linearGradient>
+
+    <!-- Cyber Cyan Accent Gradient -->
+    <linearGradient id="cyanArc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe" />
+      <stop offset="100%" stop-color="#4facfe" />
+    </linearGradient>
+
+    <!-- Subtle Outer Border Glow -->
+    <linearGradient id="borderStroke" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.22)" />
+      <stop offset="100%" stop-color="rgba(255,255,255,0.03)" />
+    </linearGradient>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="subtleShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000000" flood-opacity="0.8"/>
+    </filter>
+
+    <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#00f2fe" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- iOS App Icon Squircle Base -->
+  <rect width="512" height="512" rx="118" fill="url(#bgGlow)" />
+  <rect width="510" height="510" x="1" y="1" rx="117" fill="none" stroke="url(#borderStroke)" stroke-width="2" />
+
+  <!-- Inner Dynamic Ring (120 Hz Motion Symbol) -->
+  <circle cx="256" cy="240" r="150" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="6" />
+  
+  <!-- Glowing Cyan Orbit Dash -->
+  <circle cx="256" cy="240" r="150" fill="none" stroke="url(#cyanArc)" stroke-width="5"
+          stroke-dasharray="140 800" stroke-linecap="round" filter="url(#neonGlow)" />
+
+  <!-- The Iconic '3' / Arabic 'ع' Sleek Monogram -->
+  <g filter="url(#subtleShadow)">
+    <!-- Main Arabic 'ع' curve sculpted in modern cyber typography -->
+    <path d="M 275 145
+             C 215 145, 175 185, 175 228
+             C 175 268, 205 292, 245 296
+             C 175 320, 145 365, 145 405
+             C 145 422, 155 432, 172 432
+             C 192 432, 225 390, 275 342
+             C 325 295, 345 272, 345 235
+             C 345 185, 315 145, 275 145 Z
+             M 268 185
+             C 288 185, 305 205, 305 232
+             C 305 258, 290 274, 260 274
+             C 230 274, 215 254, 215 228
+             C 215 202, 238 185, 268 185 Z"
+          fill="url(#chromeGrad)" />
+
+    <!-- Sharp Lightning / Speed Slash across the emblem -->
+    <path d="M 330 190 L 305 240 L 350 240 L 290 320 L 305 265 L 265 265 Z"
+          fill="url(#cyanArc)" opacity="0.9" filter="url(#neonGlow)" />
+  </g>
+
+  <!-- 120 FPS Minimalist Tag at Bottom -->
+  <rect x="186" y="420" width="140" height="34" rx="17" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" />
+  <text x="256" y="443" font-family="'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, sans-serif"
+        font-weight="700" font-size="14" fill="#ffffff" letter-spacing="2" text-anchor="middle">120 FPS</text>
+</svg>
