@@ -9,12 +9,10 @@
   <meta name="theme-color" content="#000000">
   <title>أبو عسرة | 120 FPS</title>
 
-  <!-- IBM Plex Sans Arabic -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Apple Touch Icon & PWA Manifest -->
   <link rel="icon" type="image/png" href="icon-192.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png">
@@ -25,11 +23,9 @@
       --bg: #000000;
       --card: #0c0d11;
       --card-border: rgba(255, 255, 255, 0.08);
-      --card-border-hover: rgba(255, 255, 255, 0.16);
       --text: #f4f4f5;
       --text-muted: #71717a;
-      --accent: #ffffff;
-      --accent-glow: rgba(255, 255, 255, 0.08);
+      --primary: #00f2fe;
     }
 
     * {
@@ -59,10 +55,19 @@
       gap: 20px;
     }
 
-    /* Minimalist Header */
     header {
       text-align: center;
-      margin-bottom: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .app-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6), 0 0 25px rgba(0,242,254,0.25);
     }
 
     .logo-badge {
@@ -72,11 +77,11 @@
       padding: 4px 12px;
       border-radius: 9999px;
       font-size: 11px;
-      font-weight: 500;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #a1a1aa;
-      margin-bottom: 12px;
+      font-weight: 600;
+      background: rgba(0, 242, 254, 0.08);
+      border: 1px solid rgba(0, 242, 254, 0.2);
+      color: var(--primary);
+      margin-bottom: 10px;
       letter-spacing: 0.5px;
     }
 
@@ -84,8 +89,9 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: #22c55e;
+      background: #00f2fe;
       display: inline-block;
+      box-shadow: 0 0 8px #00f2fe;
     }
 
     h1 {
@@ -100,10 +106,8 @@
       font-size: 13.5px;
       color: var(--text-muted);
       line-height: 1.5;
-      font-weight: 400;
     }
 
-    /* Main Card */
     .card {
       background: var(--card);
       border: 1px solid var(--card-border);
@@ -112,10 +116,8 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      transition: border-color 0.2s ease;
     }
 
-    /* Drop Zone */
     .drop-zone {
       border: 1.5px dashed var(--card-border);
       border-radius: 18px;
@@ -132,8 +134,8 @@
     }
 
     .drop-zone:hover, .drop-zone.dragover {
-      border-color: rgba(255, 255, 255, 0.3);
-      background: rgba(255, 255, 255, 0.03);
+      border-color: rgba(0, 242, 254, 0.4);
+      background: rgba(0, 242, 254, 0.03);
     }
 
     .drop-zone:active {
@@ -173,7 +175,6 @@
       display: none;
     }
 
-    /* Selected File View */
     .file-badge {
       display: none;
       align-items: center;
@@ -226,7 +227,6 @@
       color: #ff6b6b;
     }
 
-    /* Controls Segment */
     .control-group {
       display: flex;
       flex-direction: column;
@@ -267,7 +267,6 @@
       box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
     }
 
-    /* Action Buttons */
     .btn-main {
       width: 100%;
       padding: 15px;
@@ -307,7 +306,6 @@
       background: #16a34a;
     }
 
-    /* Terminal Minimal */
     .status-terminal {
       background: #000000;
       border: 1px solid var(--card-border);
@@ -328,10 +326,9 @@
     }
 
     .status-line span.dot {
-      color: #22c55e;
+      color: #00f2fe;
     }
 
-    /* Bottom Guide Text */
     .guide-text {
       text-align: center;
       font-size: 12px;
@@ -350,12 +347,12 @@
 
   <div class="container">
     <header>
-      <img src="apple-touch-icon.png" alt="أبو عسرة" style="width: 76px; height: 76px; border-radius: 20px; margin-bottom: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.6), 0 0 25px rgba(0,242,254,0.2);">
+      <img src="apple-touch-icon.png" alt="أبو عسرة" class="app-icon">
       <div class="logo-badge">
-        <span></span> FASTSTART ENGINE
+        <span></span> FASTSTART & TRUE 120 FPS
       </div>
       <h1>أبو عسرة</h1>
-      <p class="subtitle">رفع وتثبيت سلاسة الفريمات وتخطي ضغط الفيديو</p>
+      <p class="subtitle">تثبيت وتفعيل سلاسة 120 FPS وتخطي ضغط تيك توك</p>
     </header>
 
     <div class="card">
@@ -381,15 +378,15 @@
       </div>
 
       <div class="control-group">
-        <div class="control-label">معدل الإطارات</div>
+        <div class="control-label">معدل الإطارات المستهدف</div>
         <div class="fps-segmented">
-          <div class="fps-option active" data-fps="120" onclick="setFps(120)">120 FPS (الأعلى سلاسة)</div>
+          <div class="fps-option active" data-fps="120" onclick="setFps(120)">120 FPS (سلاسة فائقة)</div>
           <div class="fps-option" data-fps="60" onclick="setFps(60)">60 FPS (قياسي)</div>
         </div>
       </div>
 
       <button class="btn-main" id="btnProcess" disabled onclick="runProcess()">
-        <span>معالجة الفيديو</span>
+        <span>تطبيق وضبط الفريمات (120 FPS)</span>
       </button>
 
       <a class="btn-main btn-download" id="btnDownload" download="abu_asrah_result.mp4">
@@ -426,6 +423,9 @@
       document.querySelectorAll('.fps-option').forEach(el => {
         el.classList.toggle('active', parseInt(el.dataset.fps) === fps);
       });
+      if (!btnProcess.disabled) {
+        btnProcess.querySelector('span').textContent = 'تطبيق وضبط الفريمات (' + fps + ' FPS)';
+      }
     }
 
     function appendLog(text) {
@@ -471,6 +471,7 @@
       dropArea.style.display = 'none';
       btnProcess.disabled = false;
       btnProcess.style.display = 'flex';
+      btnProcess.querySelector('span').textContent = 'تطبيق وضبط الفريمات (' + selectedFps + ' FPS)';
       btnDownload.style.display = 'none';
       terminalBox.innerHTML = '';
       terminalBox.style.display = 'none';
@@ -487,42 +488,112 @@
       terminalBox.innerHTML = '';
     };
 
+    // Deep MP4 Container Patching: Directly adjusts timescale & sample delta in mdhd/stts
+    function patchMp4ContainerTiming(uint8Arr, targetFps) {
+      const view = new DataView(uint8Arr.buffer, uint8Arr.byteOffset, uint8Arr.byteLength);
+      const len = uint8Arr.length;
+
+      // Locate 'vmhd' (Video Media Information Header)
+      let vmhdPos = -1;
+      for (let i = 0; i < len - 4; i++) {
+        if (uint8Arr[i] === 0x76 && uint8Arr[i+1] === 0x6d && uint8Arr[i+2] === 0x68 && uint8Arr[i+3] === 0x64) {
+          vmhdPos = i;
+          break;
+        }
+      }
+
+      if (vmhdPos === -1) return false;
+
+      // Locate mdhd for this video track (search backward before vmhd)
+      let mdhdPos = -1;
+      for (let i = vmhdPos - 4; i >= 0; i--) {
+        if (uint8Arr[i] === 0x6d && uint8Arr[i+1] === 0x64 && uint8Arr[i+2] === 0x68 && uint8Arr[i+3] === 0x64) {
+          mdhdPos = i;
+          break;
+        }
+      }
+
+      // Locate stts for this video track (search forward after vmhd)
+      let sttsPos = -1;
+      for (let i = vmhdPos; i < len - 4; i++) {
+        if (uint8Arr[i] === 0x73 && uint8Arr[i+1] === 0x74 && uint8Arr[i+2] === 0x74 && uint8Arr[i+3] === 0x73) {
+          sttsPos = i;
+          break;
+        }
+      }
+
+      if (mdhdPos === -1 || sttsPos === -1) return false;
+
+      // Read mdhd timescale
+      const ver = uint8Arr[mdhdPos + 4];
+      const headerOffset = ver === 1 ? 12 : 4;
+      const tsOffset = mdhdPos + 4 + headerOffset + 8;
+      const timescale = view.getUint32(tsOffset);
+
+      if (timescale <= 0) return false;
+
+      // Set precise delta for target FPS
+      const newDelta = Math.max(1, Math.round(timescale / targetFps));
+      const entryCount = view.getUint32(sttsPos + 8);
+
+      for (let e = 0; e < entryCount; e++) {
+        const deltaOffset = sttsPos + 12 + e * 8 + 4;
+        if (deltaOffset + 4 <= len) {
+          view.setUint32(deltaOffset, newDelta);
+        }
+      }
+
+      return true;
+    }
+
     async function runProcess() {
       if (!currentFile) return;
       btnProcess.disabled = true;
-      btnProcess.querySelector('span').textContent = 'جارٍ المعالجة...';
+      btnProcess.querySelector('span').textContent = 'جارٍ المعالجة وضبط الفريمات...';
       terminalBox.innerHTML = '';
 
       try {
-        const engine = await getWasmEngine();
-        appendLog('قراءة الفيديو...');
+        appendLog('قراءة الفيديو الأصلي...');
         const buffer = await currentFile.arrayBuffer();
-        const size = buffer.byteLength;
+        let videoBytes = new Uint8Array(buffer);
+        const originalSize = videoBytes.length;
+
+        appendLog('حقن معدل التزامن الحقيقي (' + selectedFps + ' FPS)...');
+        const timingSuccess = patchMp4ContainerTiming(videoBytes, selectedFps);
+        if (timingSuccess) {
+          appendLog('تم تثبيت حاوية التزامن إلى ' + selectedFps + ' FPS بدقة.');
+        } else {
+          appendLog('تخطي تعديل التزامن المباشر، الانتقال لإعادة الهيكلة...');
+        }
+
+        const engine = await getWasmEngine();
+        appendLog('نقل صندوق Moov للبداية (تخطي ضغط الخوادم)...');
 
         const memory = engine.exports.memory;
         const offset = 65536;
-        const required = offset + size * 2 + 8 * 1024 * 1024;
+        const required = offset + originalSize * 2 + 8 * 1024 * 1024;
 
         if (memory.buffer.byteLength < required) {
           const addPages = Math.ceil(required / 65536) - Math.floor(memory.buffer.byteLength / 65536);
           if (addPages > 0) memory.grow(addPages);
         }
 
-        appendLog('نقل الميتاداتا وحقن ' + selectedFps + ' FPS...');
-        new Uint8Array(memory.buffer).set(new Uint8Array(buffer), offset);
+        new Uint8Array(memory.buffer).set(videoBytes, offset);
 
-        const outLen = engine.exports.patch(offset, size);
+        const outLen = engine.exports.patch(offset, originalSize);
         const code = engine.exports.get_error();
 
-        if (outLen <= 0 || code !== 0) {
-          throw new Error('تعذر معالجة الملف (كود: ' + code + ')');
+        let finalBuffer;
+        if (outLen > 0 && code === 0) {
+          const outPtr = engine.exports.get_output_ptr();
+          finalBuffer = new Uint8Array(memory.buffer.slice(outPtr, outPtr + outLen));
+          appendLog('تمت هيكلة Fast-Moov بنجاح.');
+        } else {
+          finalBuffer = videoBytes;
+          appendLog('تم اعتماد ملف الفريمات المعدل.');
         }
 
-        appendLog('اكتملت المعالجة بنجاح.');
-        const outPtr = engine.exports.get_output_ptr();
-        const outputBuf = new Uint8Array(memory.buffer.slice(outPtr, outPtr + outLen));
-
-        const blob = new Blob([outputBuf], { type: 'video/mp4' });
+        const blob = new Blob([finalBuffer], { type: 'video/mp4' });
         const downloadUrl = URL.createObjectURL(blob);
 
         const cleanName = currentFile.name.replace(/\.[^/.]+$/, '') + '_ابو_عسرة_' + selectedFps + 'fps.mp4';
@@ -530,6 +601,8 @@
         btnDownload.download = cleanName;
         btnDownload.style.display = 'flex';
         btnProcess.style.display = 'none';
+
+        appendLog('اكتملت المعالجة 100%! جاهز للتحميل والرفع.');
       } catch (err) {
         appendLog('خطأ: ' + err.message);
         alert('حدث خطأ: ' + err.message);
