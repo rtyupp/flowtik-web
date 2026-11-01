@@ -648,7 +648,7 @@
       <span>Fast-Moov Engine (120fps)</span>
       <span class="engine-dot alt"></span>
       <span>FFmpeg Temporal Engine (60fps)</span>
-    </header>
+    </div>
 
     <div class="card">
       <div class="drop-zone" id="dropArea">
@@ -700,589 +700,180 @@
   <script>
     const FLOWTIK_WASM_BASE64 = "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";
 
+    // ===== Port of the original Flowtik sandbox (chunks/sandbox-BK-mHLU1.js) =====
+    // 120 -> flowtik.wasm patch()  |  60 -> ffmpeg-core -itsscale 2 (original: le==="60"?"2":"1")
+    'use strict';
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    const FAST = new URLSearchParams(location.search).has('fast'); // test mode: skip cosmetic delays
+    const wait = (ms) => FAST ? Promise.resolve() : sleep(ms);
+
     let flowtikWasm = null;
-    let ffmpegModule = null;
-    let ffmpegInstance = null;
+    let ffCore = null, ffDuration = 0;
     let currentFile = null;
     let selectedFps = 120;
+    let lastUrl = null;
+    let busy = false;
 
-    const dropArea = document.getElementById('dropArea');
-    const mediaInput = document.getElementById('mediaInput');
-    const fileBox = document.getElementById('fileBox');
-    const labelName = document.getElementById('labelName');
-    const labelSize = document.getElementById('labelSize');
-    const btnCancel = document.getElementById('btnCancel');
-    const btnProcess = document.getElementById('btnProcess');
-    const btnDownload = document.getElementById('btnDownload');
-    const terminalBox = document.getElementById('terminalBox');
+    const $ = (id) => document.getElementById(id);
+    const dropArea = $('dropArea'), mediaInput = $('mediaInput'), fileBox = $('fileBox'),
+          labelName = $('labelName'), labelSize = $('labelSize'), btnCancel = $('btnCancel'),
+          btnProcess = $('btnProcess'), btnDownload = $('btnDownload'), terminalBox = $('terminalBox');
+
+    function setLabel(t) { btnProcess.querySelector('span').textContent = t; }
+    function idleLabel() {
+      setLabel(selectedFps === 120 ? 'بدء معالجة Flowtik 120 FPS' : 'بدء معالجة Flowtik 60 FPS');
+    }
 
     function setFps(fps) {
+      if (busy) return;
       selectedFps = fps;
-      document.querySelectorAll('.fps-option').forEach(el => {
-        el.classList.toggle('active', parseInt(el.dataset.fps) === fps);
-      });
-      if (!btnProcess.disabled) {
-        btnProcess.querySelector('span').textContent = fps === 120 
-          ? 'بدء معالجة Flowtik 120 FPS (Fast-Moov)' 
-          : 'بدء معالجة Flowtik 60 FPS (FFmpeg Temporal)';
-      }
+      document.querySelectorAll('.fps-option').forEach(el =>
+        el.classList.toggle('active', parseInt(el.dataset.fps, 10) === fps));
+      if (currentFile) { btnDownload.style.display = 'none'; btnProcess.style.display = 'flex'; btnProcess.disabled = false; idleLabel(); }
     }
+    window.setFps = setFps;
 
     function appendLog(text, type = 'normal') {
       terminalBox.style.display = 'block';
       const row = document.createElement('div');
       row.className = 'status-line ' + type;
-      row.innerHTML = '<span class="dot">●</span> <span>' + text + '</span>';
+      const dot = document.createElement('span'); dot.className = 'dot'; dot.textContent = '●';
+      const msg = document.createElement('span'); msg.textContent = text;
+      row.append(dot, ' ', msg);
       terminalBox.appendChild(row);
       terminalBox.scrollTop = terminalBox.scrollHeight;
     }
 
-    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
+    // --- Engine 1: flowtik.wasm (same as original S()) ---
     async function initFlowtikWasm() {
       if (flowtikWasm) return flowtikWasm;
-      appendLog('# Loading Flowtik Engine (120fps Fast-Moov)...');
       const bin = Uint8Array.from(atob(FLOWTIK_WASM_BASE64), c => c.charCodeAt(0));
-      const res = await WebAssembly.instantiate(bin);
-      flowtikWasm = res.instance;
+      flowtikWasm = (await WebAssembly.instantiate(bin)).instance;
       flowtikWasm.exports.decrypt_secrets();
-      appendLog('Flowtik Engine ready.', 'success');
       return flowtikWasm;
     }
 
-    async function initFfmpegCore() {
-      if (ffmpegInstance) return ffmpegInstance;
-      appendLog('# Loading FFmpeg Core (60fps Temporal Scaling)...');
-      
-      try {
-        if (!window.FFmpegCoreFactory) {
-          appendLog('# Downloading FFmpeg Core JS...');
-          const resp = await fetch('ffmpeg-core.js');
-          if (!resp.ok) throw new Error('Failed to fetch ffmpeg-core.js');
-          const jsCode = await resp.text();
-          const factoryModule = { exports: {} };
-          eval(jsCode + '; factoryModule.exports = createFFmpegCore;');
-          window.FFmpegCoreFactory = factoryModule.exports;
-          appendLog('FFmpeg Core JS loaded.', 'success');
-        }
-
-        const createFFmpegCore = window.FFmpegCoreFactory;
-        
-        ffmpegModule = createFFmpegCore({
-          locateFile: (path) => {
-            if (path.endsWith('.wasm')) {
-              return 'ffmpeg-core.wasm';
-            }
-            return path;
-          },
-          print: (msg) => appendLog('[FFmpeg] ' + msg),
-          printErr: (msg) => appendLog('[FFmpeg Err] ' + msg, 'warning'),
-        });
-        
-        await ffmpegModule.ready;
-        ffmpegInstance = ffmpegModule;
-        appendLog('FFmpeg Core ready.', 'success');
-        return ffmpegInstance;
-        
-      } catch (err) {
-        appendLog('Failed to load FFmpeg Core: ' + err.message, 'warning');
-        throw err;
-      }
+    // --- Engine 2: ffmpeg-core (same as original E()) ---
+    function loadScript(src) {
+      return new Promise((res, rej) => {
+        if (typeof createFFmpegCore === 'function') return res();
+        const el = document.createElement('script');
+        el.src = src; el.onload = res; el.onerror = () => rej(new Error('تعذر تحميل ' + src));
+        document.head.appendChild(el);
+      });
     }
+    function parseTime(t) { const e = t.trim().split(':'); return 3600 * parseFloat(e[0] || '0') + 60 * parseFloat(e[1] || '0') + parseFloat(e[2] || '0'); }
+    async function initFfmpegCore() {
+      if (ffCore) return ffCore;
+      appendLog('# Loading encoding core (~32MB)');
+      await loadScript('ffmpeg-core.js');
+      ffDuration = 0;
+      ffCore = await createFFmpegCore({ locateFile: (f) => f.endsWith('.wasm') ? 'ffmpeg-core.wasm' : f });
+      ffCore.setLogger(({ type, message }) => {
+        if (type !== 'stderr' || !message) return;
+        if (message.startsWith('  Duration')) { const m = message.match(/Duration: (\S+)/); if (m) ffDuration = parseTime(m[1]); }
+        else if (message.startsWith('frame=') && ffDuration > 0) { const m = message.match(/time=(\S+)/); if (m) setLabel('جارٍ المعالجة ' + Math.round(Math.min(parseTime(m[1]) / ffDuration, .99) * 100) + '%'); }
+      });
+      appendLog('Core ready', 'success');
+      return ffCore;
+    }
+    function ffClean() { if (ffCore) ['input.mp4', 'output.mp4'].forEach(f => { try { ffCore.FS.unlink(f); } catch (e) {} }); }
+    function ffExit() { if (ffCore) { try { ffCore.exit && ffCore.exit(); } catch (e) {} ffCore = null; ffDuration = 0; } }
 
-    dropArea.onclick = () => mediaInput.click();
-
-    mediaInput.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) pickFile(file);
-    };
-
-    dropArea.ondragover = (e) => { e.preventDefault(); dropArea.classList.add('dragover'); };
-    dropArea.ondragleave = () => dropArea.classList.remove('dragover');
-    dropArea.ondrop = (e) => {
-      e.preventDefault();
-      dropArea.classList.remove('dragover');
-      const file = e.dataTransfer.files[0];
-      if (file) pickFile(file);
-    };
+    // Exact processing pipeline of the original sandbox message handler
+    async function processBuffer(data, fpsLabel) {
+      const itsscale = fpsLabel === '60' ? '2' : '1';
+      appendLog('# Loading security protocols'); await wait(1000);
+      const o = await initFlowtikWasm();
+      if (!o) throw new Error('Security verification failed: WASM module is missing or corrupted.');
+      if (fpsLabel === '120') {
+        appendLog('# Initializing bytecode engine'); await wait(1500);
+        const p = o.exports.memory, g = 65536, F = data.byteLength, L = g + F * 2 + 8 * 1024 * 1024;
+        if (p.buffer.byteLength < L) p.grow(Math.ceil(L / 65536) - p.buffer.byteLength / 65536);
+        new Uint8Array(p.buffer).set(new Uint8Array(data), g); data = null;
+        appendLog('# Parsing MP4 structure'); await wait(1500);
+        appendLog('# Establishing frame injection'); await wait(1500);
+        const x = o.exports.patch(g, F);
+        if (!x) throw new Error('Processing failed (error code ' + o.exports.get_error() + ').');
+        appendLog('# Injecting temporal frames'); await wait(1500);
+        const P = o.exports.get_output_ptr();
+        const v = p.buffer.slice(P, P + x);
+        appendLog('# Finalizing output buffer — complete', 'success'); await wait(500);
+        return v;
+      }
+      appendLog('# Initializing slow-motion engine'); await wait(1500);
+      const c = await initFfmpegCore(); ffClean();
+      appendLog('# Loading input stream'); await wait(1500);
+      c.FS.writeFile('input.mp4', new Uint8Array(data)); data = null;
+      appendLog('# Applying temporal scaling'); await wait(1500);
+      const h = c.exec('-itsscale', itsscale, '-i', 'input.mp4', '-c:v', 'copy', '-c:a', 'copy',
+        '-map_metadata', '-1', '-map_metadata:s:v', '-1', '-map_metadata:s:a', '-1', '-map_chapters', '-1',
+        '-metadata', 'title=Flowtik Method', '-metadata', 'comment=queen_iy flowtik method',
+        '-metadata', 'artist=flowtik.org', 'output.mp4');
+      if (h !== 0) throw new Error('Core exited with code ' + h);
+      const b = c.FS.readFile('output.mp4').buffer.slice(0);
+      ffClean();
+      appendLog('# Finalizing output buffer — complete', 'success'); await wait(500);
+      ffExit(); // original tears the core down after each job
+      return b;
+    }
+    window.processBuffer = processBuffer; // used by automated tests
 
     function pickFile(file) {
+      if (!file || busy) return;
+      if (file.type && !file.type.startsWith('video/')) { alert('الملف لازم يكون فيديو'); return; }
       currentFile = file;
       labelName.textContent = file.name;
-      labelSize.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+      labelSize.textContent = (file.size / 1048576).toFixed(2) + ' MB';
       fileBox.style.display = 'flex';
       dropArea.style.display = 'none';
-      btnProcess.disabled = false;
       btnProcess.style.display = 'flex';
+      btnProcess.disabled = false;
       btnDownload.style.display = 'none';
-      terminalBox.innerHTML = '';
-      terminalBox.style.display = 'none';
+      terminalBox.innerHTML = ''; terminalBox.style.display = 'none';
+      idleLabel();
     }
 
-    btnCancel.onclick = () => {
-      currentFile = null;
-      mediaInput.value = '';
-      fileBox.style.display = 'none';
-      dropArea.style.display = 'flex';
-      btnProcess.disabled = true;
+    function resetFile() {
+      if (busy) return;
+      currentFile = null; mediaInput.value = '';
+      fileBox.style.display = 'none'; dropArea.style.display = '';
+      btnProcess.disabled = true; idleLabel(); btnProcess.style.display = 'flex';
       btnDownload.style.display = 'none';
-      terminalBox.style.display = 'none';
-      terminalBox.innerHTML = '';
-    };
-
-    function setFps(fps) {
-      selectedFps = fps;
-      document.querySelectorAll('.fps-option').forEach(el => {
-        el.classList.toggle('active', parseInt(el.dataset.fps) === fps);
-      });
-      if (!btnProcess.disabled) {
-        btnProcess.querySelector('span').textContent = fps === 120 
-          ? 'بدء معالجة Flowtik 120 FPS (Fast-Moov)' 
-          : 'بدء معالجة Flowtik 60 FPS (FFmpeg Temporal)';
-      }
-    }
-
-    function sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    async function initFlowtikWasm() {
-      if (flowtikWasm) return flowtikWasm;
-      appendLog('# Loading Flowtik Engine (120fps Fast-Moov)...');
-      const bin = Uint8Array.from(atob(FLOWTIK_WASM_BASE64), c => c.charCodeAt(0));
-      const res = await WebAssembly.instantiate(bin);
-      flowtikWasm = res.instance;
-      flowtikWasm.exports.decrypt_secrets();
-      appendLog('Flowtik Engine ready.', 'success');
-      return flowtikWasm;
-    }
-
-    async function initFfmpegCore() {
-      if (ffmpegInstance) return ffmpegInstance;
-      appendLog('# Loading FFmpeg Core (60fps Temporal Scaling)...');
-      
-      try {
-        if (!window.FFmpegCoreFactory) {
-          appendLog('# Downloading FFmpeg Core JS...');
-          const resp = await fetch('ffmpeg-core.js');
-          if (!resp.ok) throw new Error('Failed to fetch ffmpeg-core.js');
-          const jsCode = await resp.text();
-          const factoryModule = { exports: {} };
-          eval(jsCode + '; factoryModule.exports = createFFmpegCore;');
-          window.FFmpegCoreFactory = factoryModule.exports;
-          appendLog('FFmpeg Core JS loaded.', 'success');
-        }
-
-        const createFFmpegCore = window.FFmpegCoreFactory;
-        
-        ffmpegModule = createFFmpegCore({
-          locateFile: (path) => {
-            if (path.endsWith('.wasm')) {
-              return 'ffmpeg-core.wasm';
-            }
-            return path;
-          },
-          print: (msg) => appendLog('[FFmpeg] ' + msg),
-          printErr: (msg) => appendLog('[FFmpeg Err] ' + msg, 'warning'),
-        });
-        
-        await ffmpegModule.ready;
-        ffmpegInstance = ffmpegModule;
-        appendLog('FFmpeg Core ready.', 'success');
-        return ffmpegInstance;
-        
-      } catch (err) {
-        appendLog('Failed to load FFmpeg Core: ' + err.message, 'warning');
-        throw err;
-      }
+      terminalBox.innerHTML = ''; terminalBox.style.display = 'none';
     }
 
     async function runProcess() {
-      if (!currentFile) return;
-      btnProcess.disabled = true;
+      if (!currentFile || busy) return;
+      busy = true; btnProcess.disabled = true;
       const fpsLabel = selectedFps === 120 ? '120' : '60';
-      btnProcess.querySelector('span').textContent = 'جارٍ معالجة Flowtik ' + fpsLabel + ' FPS...';
+      setLabel('جارٍ معالجة ' + fpsLabel + ' FPS...');
       terminalBox.innerHTML = '';
-
       try {
-        const arrayBuf = await currentFile.arrayBuffer();
-        const inputVideo = new Uint8Array(arrayBuf);
-        const fileLen = inputVideo.length;
-
-        if (selectedFps === 120) {
-          appendLog('# Initializing Flowtik 120fps Engine...');
-          await sleep(1500);
-
-          const o = await initFlowtikWasm();
-          
-          const p = o.exports.memory;
-          const g = 65536;
-          const F = inputVideo.length;
-          const L = g + F * 2 + 8 * 1024 * 1024;
-
-          if (p.buffer.byteLength < L) {
-            p.grow(Math.ceil(L / 65536) - p.buffer.byteLength / 65536);
-          }
-
-          new Uint8Array(p.buffer).set(inputVideo, g);
-
-          appendLog('# Parsing MP4 structure...');
-          await sleep(1500);
-
-          appendLog('# Establishing frame injection (Fast-Moov)...');
-          await sleep(1500);
-
-          const x = o.exports.patch(g, F);
-          if (!x) {
-            throw new Error("Processing failed (error code " + o.exports.get_error() + ").");
-          }
-
-          appendLog('# Injecting temporal frames (120 FPS flags)...');
-          await sleep(1500);
-
-          const P = o.exports.get_output_ptr();
-          const v = new Uint8Array(p.buffer, P, x);
-
-          appendLog('# Finalizing output buffer — complete');
-          await sleep(500);
-
-          const blob = new Blob([v], { type: currentFile.type || 'video/mp4' });
-          const downloadUrl = URL.createObjectURL(blob);
-
-          const cleanName = currentFile.name.replace(/\.[^/.]+$/, '') + '_flowtik120.mp4';
-          btnDownload.href = downloadUrl;
-          btnDownload.download = cleanName;
-          btnDownload.style.display = 'flex';
-          btnProcess.style.display = 'none';
-
-          appendLog('✅ Flowtik 120 FPS completed successfully!', 'success');
-          
-        } else {
-          const ffmpeg = await initFfmpegCore();
-          
-          appendLog('# Writing input to FFmpeg virtual FS...');
-          ffmpegInstance.FS.writeFile('input.mp4', inputVideo);
-          
-          appendLog('# Applying temporal scaling (itsscale=1 for 60fps)...');
-          const result = ffmpegInstance.exec([
-            '-itsscale', '1',
-            '-i', 'input.mp4',
-            '-c:v', 'copy',
-            '-c:a', 'copy',
-            '-map_metadata', '-1',
-            '-map_metadata:s:v', '-1',
-            '-map_metadata:s:a', '-1',
-            '-map_chapters', '-1',
-            '-metadata', 'title=Flowtik Method',
-            '-metadata', 'comment=queen_iy flowtik method',
-            '-metadata', 'artist=flowtik.org',
-            'output.mp4'
-          ]);
-          
-          if (ffmpegInstance.ret !== 0) {
-            throw new Error('FFmpeg exited with code ' + ffmpegInstance.ret);
-          }
-
-          appendLog('Reading processed video from FFmpeg FS...');
-          const outputData = ffmpegInstance.FS.readFile('output.mp4');
-          
-          ffmpegInstance.FS.unlink('input.mp4');
-          ffmpegInstance.FS.unlink('output.mp4');
-          
-          const blob = new Blob([outputData], { type: 'video/mp4' });
-          const downloadUrl = URL.createObjectURL(blob);
-
-          const cleanName = currentFile.name.replace(/\.[^/.]+$/, '') + '_flowtik60.mp4';
-          btnDownload.href = downloadUrl;
-          btnDownload.download = cleanName;
-          btnDownload.style.display = 'flex';
-          btnProcess.style.display = 'none';
-
-          appendLog('✅ Flowtik 60 FPS temporal scaling completed!', 'success');
-        }
-
+        const out = await processBuffer(await currentFile.arrayBuffer(), fpsLabel);
+        const blob = new Blob([out], { type: 'video/mp4' });
+        if (lastUrl) URL.revokeObjectURL(lastUrl);
+        lastUrl = URL.createObjectURL(blob);
+        btnDownload.href = lastUrl;
+        btnDownload.download = 'Flowtik_' + fpsLabel + 'fps.mp4';
+        btnDownload.style.display = 'flex';
+        btnProcess.style.display = 'none';
+        appendLog('✅ تم — ' + (blob.size / 1048576).toFixed(2) + ' MB', 'success');
       } catch (err) {
+        ffClean(); ffExit();
         appendLog('Error: ' + err.message, 'warning');
-        alert('حدث خطأ: ' + err.message);
-        btnProcess.disabled = false;
-        btnProcess.querySelector('span').textContent = 'إعادة المحاولة';
-      }
+        btnProcess.disabled = false; setLabel('إعادة المحاولة');
+      } finally { busy = false; }
     }
+    window.runProcess = runProcess;
 
-    function sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    async function initFlowtikWasm() {
-      if (flowtikWasm) return flowtikWasm;
-      appendLog('# Loading Flowtik Engine (120fps Fast-Moov)...');
-      const bin = Uint8Array.from(atob(FLOWTIK_WASM_BASE64), c => c.charCodeAt(0));
-      const res = await WebAssembly.instantiate(bin);
-      flowtikWasm = res.instance;
-      flowtikWasm.exports.decrypt_secrets();
-      appendLog('Flowtik Engine ready.', 'success');
-      return flowtikWasm;
-    }
-
-    async function initFfmpegCore() {
-      if (ffmpegInstance) return ffmpegInstance;
-      appendLog('# Loading FFmpeg Core (60fps Temporal Scaling)...');
-      
-      try {
-        if (!window.FFmpegCoreFactory) {
-          appendLog('# Downloading FFmpeg Core JS...');
-          const resp = await fetch('ffmpeg-core.js');
-          if (!resp.ok) throw new Error('Failed to fetch ffmpeg-core.js');
-          const jsCode = await resp.text();
-          const factoryModule = { exports: {} };
-          eval(jsCode + '; factoryModule.exports = createFFmpegCore;');
-          window.FFmpegCoreFactory = factoryModule.exports;
-          appendLog('FFmpeg Core JS loaded.', 'success');
-        }
-
-        const createFFmpegCore = window.FFmpegCoreFactory;
-        
-        ffmpegModule = createFFmpegCore({
-          locateFile: (path) => {
-            if (path.endsWith('.wasm')) {
-              return 'ffmpeg-core.wasm';
-            }
-            return path;
-          },
-          print: (msg) => appendLog('[FFmpeg] ' + msg),
-          printErr: (msg) => appendLog('[FFmpeg Err] ' + msg, 'warning'),
-        });
-        
-        await ffmpegModule.ready;
-        ffmpegInstance = ffmpegModule;
-        appendLog('FFmpeg Core ready.', 'success');
-        return ffmpegInstance;
-        
-      } catch (err) {
-        appendLog('Failed to load FFmpeg Core: ' + err.message, 'warning');
-        throw err;
-      }
-    }
-
-    // Event handlers
-    dropArea.onclick = () => mediaInput.click();
-
-    mediaInput.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) pickFile(file);
-    };
-
-    dropArea.ondragover = (e) => { e.preventDefault(); dropArea.classList.add('dragover'); };
-    dropArea.ondragleave = () => dropArea.classList.remove('dragover');
-    dropArea.ondrop = (e) => {
-      e.preventDefault();
-      dropArea.classList.remove('dragover');
-      const file = e.dataTransfer.files[0];
-      if (file) pickFile(file);
-    };
-
-    function pickFile(file) {
-      currentFile = file;
-      labelName.textContent = file.name;
-      labelSize.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
-      fileBox.style.display = 'flex';
-      dropArea.style.display = 'none';
-      btnProcess.disabled = false;
-      btnProcess.style.display = 'flex';
-      btnDownload.style.display = 'none';
-      terminalBox.innerHTML = '';
-      terminalBox.style.display = 'none';
-    }
-
-    btnCancel.onclick = () => {
-      currentFile = null;
-      mediaInput.value = '';
-      fileBox.style.display = 'none';
-      dropArea.style.display = 'flex';
-      btnProcess.disabled = true;
-      btnDownload.style.display = 'none';
-      terminalBox.style.display = 'none';
-      terminalBox.innerHTML = '';
-    };
-
-    function setFps(fps) {
-      selectedFps = fps;
-      document.querySelectorAll('.fps-option').forEach(el => {
-        el.classList.toggle('active', parseInt(el.dataset.fps) === fps);
-      });
-      if (!btnProcess.disabled) {
-        btnProcess.querySelector('span').textContent = fps === 120 
-          ? 'بدء معالجة Flowtik 120 FPS (Fast-Moov)' 
-          : 'بدء معالجة Flowtik 60 FPS (FFmpeg Temporal)';
-      }
-    }
-
-    async function runProcess() {
-      if (!currentFile) return;
-      btnProcess.disabled = true;
-      const fpsLabel = selectedFps === 120 ? '120' : '60';
-      btnProcess.querySelector('span').textContent = 'جارٍ معالجة Flowtik ' + fpsLabel + ' FPS...';
-      terminalBox.innerHTML = '';
-
-      try {
-        const arrayBuf = await currentFile.arrayBuffer();
-        const inputVideo = new Uint8Array(arrayBuf);
-        const fileLen = inputVideo.length;
-
-        if (selectedFps === 120) {
-          appendLog('# Initializing Flowtik 120fps Engine...');
-          await sleep(1500);
-
-          const o = await initFlowtikWasm();
-          
-          const p = o.exports.memory;
-          const g = 65536;
-          const F = inputVideo.length;
-          const L = g + F * 2 + 8 * 1024 * 1024;
-
-          if (p.buffer.byteLength < L) {
-            p.grow(Math.ceil(L / 65536) - p.buffer.byteLength / 65536);
-          }
-
-          new Uint8Array(p.buffer).set(inputVideo, g);
-
-          appendLog('# Parsing MP4 structure...');
-          await sleep(1500);
-
-          appendLog('# Establishing frame injection (Fast-Moov)...');
-          await sleep(1500);
-
-          const x = o.exports.patch(g, F);
-          if (!x) {
-            throw new Error("Processing failed (error code " + o.exports.get_error() + ").");
-          }
-
-          appendLog('# Injecting temporal frames (120 FPS flags)...');
-          await sleep(1500);
-
-          const P = o.exports.get_output_ptr();
-          const v = new Uint8Array(p.buffer, P, x);
-
-          appendLog('# Finalizing output buffer — complete');
-          await sleep(500);
-
-          const blob = new Blob([v], { type: currentFile.type || 'video/mp4' });
-          const downloadUrl = URL.createObjectURL(blob);
-
-          const cleanName = currentFile.name.replace(/\.[^/.]+$/, '') + '_flowtik120.mp4';
-          btnDownload.href = downloadUrl;
-          btnDownload.download = cleanName;
-          btnDownload.style.display = 'flex';
-          btnProcess.style.display = 'none';
-
-          appendLog('✅ Flowtik 120 FPS completed successfully!', 'success');
-          
-        } else {
-          const ffmpeg = await initFfmpegCore();
-          
-          appendLog('# Writing input to FFmpeg virtual FS...');
-          ffmpegInstance.FS.writeFile('input.mp4', inputVideo);
-          
-          appendLog('# Applying temporal scaling (itsscale=1 for 60fps)...');
-          const result = ffmpegInstance.exec([
-            '-itsscale', '1',
-            '-i', 'input.mp4',
-            '-c:v', 'copy',
-            '-c:a', 'copy',
-            '-map_metadata', '-1',
-            '-map_metadata:s:v', '-1',
-            '-map_metadata:s:a', '-1',
-            '-map_chapters', '-1',
-            '-metadata', 'title=Flowtik Method',
-            '-metadata', 'comment=queen_iy flowtik method',
-            '-metadata', 'artist=flowtik.org',
-            'output.mp4'
-          ]);
-          
-          if (ffmpegInstance.ret !== 0) {
-            throw new Error('FFmpeg exited with code ' + ffmpegInstance.ret);
-          }
-
-          appendLog('Reading processed video from FFmpeg FS...');
-          const outputData = ffmpegInstance.FS.readFile('output.mp4');
-          
-          ffmpegInstance.FS.unlink('input.mp4');
-          ffmpegInstance.FS.unlink('output.mp4');
-          
-          const blob = new Blob([outputData], { type: 'video/mp4' });
-          const downloadUrl = URL.createObjectURL(blob);
-
-          const cleanName = currentFile.name.replace(/\.[^/.]+$/, '') + '_flowtik60.mp4';
-          btnDownload.href = downloadUrl;
-          btnDownload.download = cleanName;
-          btnDownload.style.display = 'flex';
-          btnProcess.style.display = 'none';
-
-          appendLog('✅ Flowtik 60 FPS temporal scaling completed!', 'success');
-        }
-
-      } catch (err) {
-        appendLog('Error: ' + err.message, 'warning');
-        alert('حدث خطأ: ' + err.message);
-        btnProcess.disabled = false;
-        btnProcess.querySelector('span').textContent = 'إعادة المحاولة';
-      }
-    }
-
-    function sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    async function initFlowtikWasm() {
-      if (flowtikWasm) return flowtikWasm;
-      appendLog('# Loading Flowtik Engine (120fps Fast-Moov)...');
-      const bin = Uint8Array.from(atob(FLOWTIK_WASM_BASE64), c => c.charCodeAt(0));
-      const res = await WebAssembly.instantiate(bin);
-      flowtikWasm = res.instance;
-      flowtikWasm.exports.decrypt_secrets();
-      appendLog('Flowtik Engine ready.', 'success');
-      return flowtikWasm;
-    }
-
-    async function initFfmpegCore() {
-      if (ffmpegInstance) return ffmpegInstance;
-      appendLog('# Loading FFmpeg Core (60fps Temporal Scaling)...');
-      
-      try {
-        if (!window.FFmpegCoreFactory) {
-          appendLog('# Downloading FFmpeg Core JS...');
-          const resp = await fetch('ffmpeg-core.js');
-          if (!resp.ok) throw new Error('Failed to fetch ffmpeg-core.js');
-          const jsCode = await resp.text();
-          const factoryModule = { exports: {} };
-          eval(jsCode + '; factoryModule.exports = createFFmpegCore;');
-          window.FFmpegCoreFactory = factoryModule.exports;
-          appendLog('FFmpeg Core JS loaded.', 'success');
-        }
-
-        const createFFmpegCore = window.FFmpegCoreFactory;
-        
-        ffmpegModule = createFFmpegCore({
-          locateFile: (path) => {
-            if (path.endsWith('.wasm')) {
-              return 'ffmpeg-core.wasm';
-            }
-            return path;
-          },
-          print: (msg) => appendLog('[FFmpeg] ' + msg),
-          printErr: (msg) => appendLog('[FFmpeg Err] ' + msg, 'warning'),
-        });
-        
-        await ffmpegModule.ready;
-        ffmpegInstance = ffmpegModule;
-        appendLog('FFmpeg Core ready.', 'success');
-        return ffmpegInstance;
-        
-      } catch (err) {
-        appendLog('Failed to load FFmpeg Core: ' + err.message, 'warning');
-        throw err;
-      }
-    }
+    dropArea.addEventListener('click', () => mediaInput.click());
+    mediaInput.addEventListener('change', (e) => pickFile(e.target.files && e.target.files[0]));
+    dropArea.addEventListener('dragover', (e) => { e.preventDefault(); dropArea.classList.add('dragover'); });
+    dropArea.addEventListener('dragleave', () => dropArea.classList.remove('dragover'));
+    dropArea.addEventListener('drop', (e) => { e.preventDefault(); dropArea.classList.remove('dragover'); pickFile(e.dataTransfer.files[0]); });
+    btnCancel.addEventListener('click', resetFile);
+    window.__flowtikReady = true;
   </script>
 </body>
 </html>
