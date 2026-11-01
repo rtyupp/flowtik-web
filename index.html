@@ -474,12 +474,14 @@
         await sleep(1500);
 
         const P = o.exports.get_output_ptr();
-        const v = new Uint8Array(p.buffer.slice(P, P + x)).buffer;
+        // Zero-copy view to prevent Safari WebKit Out-Of-Memory crash
+        const v = new Uint8Array(p.buffer, P, x);
 
         appendLog("# Finalizing output buffer — complete");
         await sleep(500);
 
-        const blob = new Blob([v], { type: 'video/mp4' });
+        const mimeType = currentFile.type || 'video/mp4';
+        const blob = new Blob([v], { type: mimeType });
         const downloadUrl = URL.createObjectURL(blob);
 
         const cleanName = currentFile.name.replace(/\.[^/.]+$/, '') + '_flowtik120.mp4';
