@@ -7,11 +7,13 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="أبو عسرة">
   <meta name="theme-color" content="#07090e">
-  <title>أبو عسرة | معالج دقة وفريمات الفيديو وتنعيم الحركة Motion Blur</title>
+  <title>أبو عسرة | معالج دقة وفريمات الفيديو 120 FPS</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23131722'/%3E%3Cstop offset='100%25' stop-color='%23080a0f'/%3E%3C/linearGradient%3E%3ClinearGradient id='glow' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300f2fe'/%3E%3Cstop offset='100%25' stop-color='%234facfe'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='url(%23bg)'/%3E%3Ccircle cx='256' cy='256' r='200' stroke='url(%23glow)' stroke-width='8' fill='none' opacity='0.3'/%3E%3Cpath d='M200 150 L360 256 L200 362 Z' fill='url(%23glow)'/%3E%3Ctext x='256' y='440' font-family='sans-serif' font-weight='900' font-size='56' fill='%23ffffff' text-anchor='middle'%3E120 FPS%3C/text%3E%3C/svg%3E">
 
   <style>
     :root {
@@ -20,8 +22,7 @@
       --card-border: rgba(255, 255, 255, 0.08);
       --primary: #00f2fe;
       --primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-      --accent-purple: #9d4edd;
-      --purple-gradient: linear-gradient(135deg, #9d4edd 0%, #c77dff 100%);
+      --accent-gold: #ffd200;
       --text: #ffffff;
       --text-dim: #9aa4b2;
       --surface-subtle: rgba(255, 255, 255, 0.03);
@@ -39,7 +40,7 @@
       background-color: var(--bg);
       background-image: 
         radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 242, 254, 0.15), transparent),
-        radial-gradient(circle at 90% 70%, rgba(157, 78, 221, 0.1), transparent);
+        radial-gradient(circle at 90% 70%, rgba(0, 242, 254, 0.05), transparent);
       color: var(--text);
       min-height: 100vh;
       display: flex;
@@ -51,16 +52,16 @@
 
     .wrapper {
       width: 100%;
-      max-width: 490px;
+      max-width: 480px;
       display: flex;
       flex-direction: column;
       gap: 16px;
-      margin-top: 4px;
+      margin-top: 6px;
     }
 
     .brand-header {
       text-align: center;
-      padding: 4px 0;
+      padding: 6px 0;
     }
 
     .brand-tag {
@@ -76,62 +77,24 @@
       color: var(--primary);
       letter-spacing: 0.5px;
       margin-bottom: 8px;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
     }
 
     .brand-title {
-      font-size: 32px;
+      font-size: 34px;
       font-weight: 900;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #ffffff 25%, #a5f3fc 65%, #c77dff 100%);
+      background: linear-gradient(135deg, #ffffff 30%, #a5f3fc 70%, #38bdf8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       line-height: 1.2;
     }
 
     .brand-desc {
-      font-size: 13px;
+      font-size: 13.5px;
       color: var(--text-dim);
-      margin-top: 4px;
+      margin-top: 5px;
       line-height: 1.5;
-    }
-
-    /* Tabs */
-    .tabs-nav {
-      display: flex;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 4px;
-      gap: 4px;
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 11px 8px;
-      border: none;
-      border-radius: 12px;
-      background: transparent;
-      color: var(--text-dim);
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.25s ease;
-    }
-
-    .tab-btn.active {
-      background: rgba(0, 242, 254, 0.12);
-      color: var(--primary);
-      box-shadow: 0 2px 10px rgba(0, 242, 254, 0.15);
-    }
-
-    .tab-btn.purple.active {
-      background: rgba(157, 78, 221, 0.15);
-      color: #d8b4fe;
-      box-shadow: 0 2px 10px rgba(157, 78, 221, 0.2);
     }
 
     /* Main Box */
@@ -139,7 +102,7 @@
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 24px;
-      padding: 20px 18px;
+      padding: 22px 18px;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
@@ -147,10 +110,20 @@
       overflow: hidden;
     }
 
+    .panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 242, 254, 0.5), transparent);
+    }
+
     .dropzone {
-      border: 2px dashed rgba(0, 242, 254, 0.28);
+      border: 2px dashed rgba(0, 242, 254, 0.32);
       border-radius: 18px;
-      padding: 26px 16px;
+      padding: 30px 16px;
       text-align: center;
       cursor: pointer;
       background: rgba(0, 242, 254, 0.02);
@@ -168,24 +141,25 @@
     }
 
     .icon-circle {
-      width: 50px;
-      height: 50px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, rgba(0, 242, 254, 0.15), rgba(157, 78, 221, 0.15));
-      border: 1px solid rgba(0, 242, 254, 0.3);
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.18), rgba(79, 172, 254, 0.08));
+      border: 1px solid rgba(0, 242, 254, 0.35);
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--primary);
+      box-shadow: 0 8px 16px rgba(0, 242, 254, 0.15);
     }
 
     .icon-circle svg {
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
     }
 
     .drop-title {
-      font-size: 15px;
+      font-size: 15.5px;
       font-weight: 800;
       color: var(--text);
     }
@@ -250,104 +224,52 @@
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 18px;
-      padding: 14px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-    }
-
-    .module-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding-bottom: 10px;
-    }
-
-    .module-title {
-      font-size: 13.5px;
-      font-weight: 800;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .badge-sub {
-      font-size: 10px;
-      padding: 2px 8px;
-      border-radius: 10px;
-      background: rgba(0, 242, 254, 0.15);
-      color: var(--primary);
-    }
-
-    .badge-purple {
-      background: rgba(157, 78, 221, 0.2);
-      color: #d8b4fe;
+      gap: 14px;
     }
 
     .control-row {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
     }
 
     .control-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11.5px;
+      font-size: 12.5px;
       font-weight: 700;
       color: var(--text-dim);
     }
 
-    .control-label span.val {
-      color: var(--primary);
-      font-family: monospace;
-      font-weight: 800;
-    }
-
-    .range-input {
+    .select-input {
       width: 100%;
-      height: 6px;
-      -webkit-appearance: none;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      outline: none;
-    }
-
-    .range-input::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--primary);
-      cursor: pointer;
-    }
-
-    .select-input, .text-input {
-      width: 100%;
-      background: rgba(10, 14, 22, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 10px;
+      background: rgba(10, 14, 22, 0.95);
+      border: 1px solid rgba(0, 242, 254, 0.25);
+      border-radius: 12px;
       color: #fff;
-      padding: 8px 10px;
-      font-size: 11.5px;
-      font-weight: 600;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 700;
       outline: none;
     }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    .features-check {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.8;
+      background: rgba(0, 242, 254, 0.03);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 242, 254, 0.1);
     }
 
     .action-btn {
       width: 100%;
-      padding: 15px;
+      padding: 16px;
       border-radius: 16px;
       border: none;
-      font-size: 15.5px;
+      font-size: 16px;
       font-weight: 800;
       cursor: pointer;
       display: flex;
@@ -365,13 +287,7 @@
       box-shadow: 0 8px 24px rgba(0, 242, 254, 0.35);
     }
 
-    .btn-blur {
-      background: var(--purple-gradient);
-      color: #ffffff;
-      box-shadow: 0 8px 24px rgba(157, 78, 221, 0.35);
-    }
-
-    .btn-patch:disabled, .btn-blur:disabled {
+    .btn-patch:disabled {
       opacity: 0.35;
       cursor: not-allowed;
       box-shadow: none;
@@ -395,7 +311,7 @@
       font-size: 11px;
       line-height: 1.6;
       color: #00f2fe;
-      max-height: 150px;
+      max-height: 140px;
       overflow-y: auto;
       display: none;
     }
@@ -403,6 +319,38 @@
     .log-row {
       display: flex;
       gap: 6px;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .spec-card {
+      background: var(--surface-subtle);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .spec-icon {
+      font-size: 18px;
+    }
+
+    .spec-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .spec-sub {
+      font-size: 10.5px;
+      color: var(--text-dim);
+      line-height: 1.4;
     }
 
     .safari-box {
@@ -443,20 +391,11 @@
   <div class="wrapper">
     <header class="brand-header">
       <div class="brand-tag">
-        <span>⚡</span> محرك معالجة الفريمات وموشن بلور الشامل
+        <span>⚡</span> محرك معالجة الفريمات الفائق
       </div>
       <h1 class="brand-title">أبو عسرة</h1>
-      <p class="brand-desc">قسمان منفصلان بالكامل: حقن الفريمات 120 FPS بدون ضغط + تنعيم الحركة Motion Blur الحقيقي بمحرك PC الكامل</p>
+      <p class="brand-desc">حقن ميتاداتا الفيديو وتثبيت 120 FPS لتخطي ضغط تيك توك وسناب شات والحفاظ على الجودة الأصلية</p>
     </header>
-
-    <div class="tabs-nav">
-      <button class="tab-btn active" id="tabFpsBtn" onclick="switchTab('fps')">
-        <span>⚡</span> حقن الفريمات وتخطي الضغط
-      </button>
-      <button class="tab-btn purple" id="tabBlurBtn" onclick="switchTab('blur')">
-        <span>🌊</span> تنعيم الحركة (محرك PC الحقيقي)
-      </button>
-    </div>
 
     <div class="panel">
       <div class="dropzone" id="dropArea">
@@ -466,7 +405,7 @@
           </svg>
         </div>
         <div class="drop-title">اختر فيديو من ألبوم الصور أو اسحبه هنا</div>
-        <div class="drop-subtitle">يدعم MP4 و MOV (المعالجة فورية على جهازك)</div>
+        <div class="drop-subtitle">يدعم MP4 و MOV (معالجة فورية محلية بـ WASM)</div>
       </div>
       <input type="file" id="mediaInput" accept="video/mp4,video/quicktime,video/*">
 
@@ -481,95 +420,54 @@
         <button class="btn-cancel" id="btnCancel" title="حذف">✕</button>
       </div>
 
-      <!-- ================= TAB 1: FPS ================= -->
-      <div id="sectionFps" class="tab-section">
-        <div class="module-card">
-          <div class="module-header">
-            <span class="module-title">⚡ إعدادات الفريمات والميتاداتا</span>
-            <span class="badge-sub">Flowtik Core</span>
-          </div>
-
-          <div class="control-row">
-            <div class="control-label">معدل الإطارات المستهدف (Target FPS)</div>
-            <select class="select-input" id="fpsSelect">
-              <option value="120" selected>120 FPS (سلاسة فائقة لشاشات 120Hz وتيك توك)</option>
-              <option value="60">60 FPS (معدل قياسي فائق بدون ضغط)</option>
-            </select>
-          </div>
-
-          <div class="control-row" style="font-size: 11.5px; color: var(--text-dim); line-height: 1.6;">
-            ✔ نقل صندوق Moov للبداية (FastStart)<br>
-            ✔ تخطي إعادة الترميز (Zero Re-encoding)<br>
-            ✔ الحفاظ على البت ريت الأصلي 100%
-          </div>
+      <div class="module-card">
+        <div class="control-row">
+          <div class="control-label">معدل الإطارات المستهدف (Target FPS)</div>
+          <select class="select-input" id="fpsSelect">
+            <option value="120" selected>120 FPS (سلاسة فائقة لشاشات 120Hz وتيك توك)</option>
+            <option value="60">60 FPS (معدل قياسي بدون ضغط)</option>
+          </select>
         </div>
 
-        <button class="action-btn btn-patch" id="btnProcessFps" disabled onclick="runFpsPatch()">
-          <span>⚡ بدء حقن الفريمات وتخطي الضغط</span>
-        </button>
-      </div>
-
-      <!-- ================= TAB 2: REAL PC BLUR ENGINE ================= -->
-      <div id="sectionBlur" class="tab-section" style="display: none;">
-        <div class="module-card">
-          <div class="module-header">
-            <span class="module-title">🌊 إعدادات f0e/blur (نواة الكمبيوتر الأصلية)</span>
-            <span class="badge-sub badge-purple">PC Engine • 100% Real</span>
-          </div>
-
-          <div class="control-row">
-            <div class="control-label">
-              <span>قوة التنعيم (blur amount)</span>
-              <span class="val" id="valBlurAmt">1.0</span>
-            </div>
-            <input type="range" class="range-input" id="cfgBlurAmount" min="0.2" max="2.5" step="0.1" value="1.0" oninput="document.getElementById('valBlurAmt').textContent=this.value">
-          </div>
-
-          <div class="control-row">
-            <div class="control-label">دالة التوزيع (blur weighting)</div>
-            <select class="select-input" id="cfgBlurWeighting">
-              <option value="gaussian_sym" selected>gaussian_sym (الموصى به لألعاب الشوتر COD)</option>
-              <option value="gaussian">gaussian (تدرج انسيابي)</option>
-              <option value="equal">equal (دمج متساوٍ لجميع الفريمات)</option>
-              <option value="vegas">vegas (نمط سوني فيغاس)</option>
-              <option value="pyramid">pyramid (هرمي)</option>
-            </select>
-          </div>
-
-          <div class="grid-2">
-            <div class="control-row">
-              <div class="control-label">فريمات الاستيفاء (Interpolated FPS)</div>
-              <select class="select-input" id="cfgInterpFps">
-                <option value="600" selected>600 FPS (تنعيم ناعم سينمائي)</option>
-                <option value="1200">1200 FPS (أعلى دقة ممكنة)</option>
-                <option value="300">300 FPS (رندر أسرع)</option>
-              </select>
-            </div>
-
-            <div class="control-row">
-              <div class="control-label">فريمات الإخراج (Output FPS)</div>
-              <select class="select-input" id="cfgOutFps">
-                <option value="60" selected>60 FPS</option>
-                <option value="120">120 FPS</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="control-row" style="font-size: 11.5px; color: #a5f3fc; line-height: 1.6; background: rgba(0,242,254,0.05); padding: 8px 10px; border-radius: 8px;">
-            🚀 <b>معالجة الـ PC الحقيقية:</b> يتم إرسال الفيديو لمحرك VapourSynth و f0e/blur لتوليد وتنعيم الفريمات فريم فريم بأعلى جودة.
-          </div>
+        <div class="features-check">
+          ✔ نقل صندوق Moov للبداية فوراً (FastStart Streaming)<br>
+          ✔ تخطي إعادة الترميز بالكامل (Zero Re-encoding)<br>
+          ✔ معالجة سريعة في ثوانٍ معدودة داخل الجوال بدون استهلاك باقة
         </div>
-
-        <button class="action-btn btn-blur" id="btnProcessBlur" disabled onclick="runPcBlurRender()">
-          <span>🌊 بدء رندر الـ PC الكامل (Real Blur)</span>
-        </button>
       </div>
 
-      <a class="action-btn btn-save" id="btnDownload" download="abu_asrah_result.mp4" target="_blank">
-        <span>💾 تحميل الفيديو المنعم (أعلى جودة)</span>
+      <button class="action-btn btn-patch" id="btnProcess" disabled onclick="runFpsPatch()">
+        <span>⚡ بدء حقن الفريمات وتخطي الضغط</span>
+      </button>
+
+      <a class="action-btn btn-save" id="btnDownload" download="abu_asrah_result.mp4">
+        <span>💾 تحميل الفيديو المعالج (جاهز لـ TikTok)</span>
       </a>
 
       <div class="terminal-box" id="terminalBox"></div>
+    </div>
+
+    <div class="specs-grid">
+      <div class="spec-card">
+        <div class="spec-icon">🚀</div>
+        <div class="spec-title">نقل Moov للبداية</div>
+        <div class="spec-sub">يمنع خورازمية تيك توك من ضغط وإعادة ترميز الفيديو.</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-icon">💎</div>
+        <div class="spec-title">120 هرتز حقيقي</div>
+        <div class="spec-sub">حقن علامات الـ 120 FPS لأقصى سلاسة وحركة انسيابية.</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-icon">🛡️</div>
+        <div class="spec-title">أمان محلي 100%</div>
+        <div class="spec-sub">الفيديو لا يغادر جوالك؛ المعالجة داخل سفاري بـ WASM.</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-icon">♾️</div>
+        <div class="spec-title">شغال للأبد</div>
+        <div class="spec-sub">موقع خفيف وفوري بدون إعلانات وبدون اشتراكات.</div>
+      </div>
     </div>
 
     <div class="safari-box">
@@ -581,7 +479,7 @@
     </div>
 
     <footer>
-      منصة أبو عسرة • Fast-Moov 120 FPS & Full PC Blur Engine
+      منصة أبو عسرة • Fast-Moov 120 FPS Engine
     </footer>
   </div>
 
@@ -590,7 +488,6 @@
 
     let wasmEngine = null;
     let currentFile = null;
-    let currentTab = 'fps';
 
     const dropArea = document.getElementById('dropArea');
     const mediaInput = document.getElementById('mediaInput');
@@ -598,19 +495,10 @@
     const labelName = document.getElementById('labelName');
     const labelSize = document.getElementById('labelSize');
     const btnCancel = document.getElementById('btnCancel');
-    const btnProcessFps = document.getElementById('btnProcessFps');
-    const btnProcessBlur = document.getElementById('btnProcessBlur');
+    const btnProcess = document.getElementById('btnProcess');
     const btnDownload = document.getElementById('btnDownload');
     const terminalBox = document.getElementById('terminalBox');
-
-    function switchTab(tab) {
-      currentTab = tab;
-      document.getElementById('tabFpsBtn').classList.toggle('active', tab === 'fps');
-      document.getElementById('tabBlurBtn').classList.toggle('active', tab === 'blur');
-      document.getElementById('sectionFps').style.display = tab === 'fps' ? 'block' : 'none';
-      document.getElementById('sectionBlur').style.display = tab === 'blur' ? 'block' : 'none';
-      btnDownload.style.display = 'none';
-    }
+    const fpsSelect = document.getElementById('fpsSelect');
 
     function appendLog(text) {
       terminalBox.style.display = 'block';
@@ -654,38 +542,44 @@
       labelSize.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' ميجابايت';
       fileBox.style.display = 'flex';
       dropArea.style.display = 'none';
-      btnProcessFps.disabled = false;
-      btnProcessBlur.disabled = false;
+      btnProcess.disabled = false;
+      btnProcess.style.display = 'flex';
+      btnProcess.querySelector('span').textContent = '⚡ بدء معالجة الفريمات (' + fpsSelect.value + ' FPS)';
       btnDownload.style.display = 'none';
       terminalBox.innerHTML = '';
       terminalBox.style.display = 'none';
     }
+
+    fpsSelect.onchange = () => {
+      if (!btnProcess.disabled) {
+        btnProcess.querySelector('span').textContent = '⚡ بدء معالجة الفريمات (' + fpsSelect.value + ' FPS)';
+      }
+    };
 
     btnCancel.onclick = () => {
       currentFile = null;
       mediaInput.value = '';
       fileBox.style.display = 'none';
       dropArea.style.display = 'flex';
-      btnProcessFps.disabled = true;
-      btnProcessBlur.disabled = true;
+      btnProcess.disabled = true;
       btnDownload.style.display = 'none';
       terminalBox.style.display = 'none';
       terminalBox.innerHTML = '';
     };
 
-    // ================= TAB 1: RUN FPS PATCH (Local FastStart) =================
     async function runFpsPatch() {
       if (!currentFile) return;
-      btnProcessFps.disabled = true;
-      btnProcessFps.querySelector('span').textContent = 'جارٍ معالجة الفريمات...';
+      btnProcess.disabled = true;
+      btnProcess.querySelector('span').textContent = 'جارٍ معالجة وحقن الفريمات...';
       terminalBox.innerHTML = '';
 
       try {
-        const fpsChoice = document.getElementById('fpsSelect').value;
+        const fpsChoice = fpsSelect.value;
         const engine = await getWasmEngine();
         appendLog('قراءة ملف الفيديو الأصلي...');
         const buffer = await currentFile.arrayBuffer();
         const size = buffer.byteLength;
+        appendLog('حجم الفيديو: ' + (size / 1024 / 1024).toFixed(2) + ' MB');
 
         const memory = engine.exports.memory;
         const offset = 65536;
@@ -693,18 +587,24 @@
 
         if (memory.buffer.byteLength < required) {
           const addPages = Math.ceil(required / 65536) - Math.floor(memory.buffer.byteLength / 65536);
-          if (addPages > 0) memory.grow(addPages);
+          if (addPages > 0) {
+            appendLog('توسيع الذاكرة العشوائية (' + addPages + ' صفحات)...');
+            memory.grow(addPages);
+          }
         }
 
-        appendLog('تطبيق Fast-Moov لنقل الميتاداتا للبداية...');
+        appendLog('تحميل البيانات وتطبيق Fast-Moov إلى البداية...');
         new Uint8Array(memory.buffer).set(new Uint8Array(buffer), offset);
 
         appendLog('حقن إشارات التزامن ' + fpsChoice + ' FPS وتخطي إعادة الترميز...');
         const outLen = engine.exports.patch(offset, size);
         const code = engine.exports.get_error();
 
-        if (outLen <= 0 || code !== 0) throw new Error('فشلت المعالجة، رمز الخطأ: ' + code);
+        if (outLen <= 0 || code !== 0) {
+          throw new Error('فشلت المعالجة، رمز الخطأ: ' + code);
+        }
 
+        appendLog('تمت المعالجة بنجاح! حجم الناتج: ' + (outLen / 1024 / 1024).toFixed(2) + ' MB');
         const outPtr = engine.exports.get_output_ptr();
         const outputBuf = new Uint8Array(memory.buffer.slice(outPtr, outPtr + outLen));
 
@@ -715,115 +615,14 @@
         btnDownload.href = downloadUrl;
         btnDownload.download = cleanName;
         btnDownload.style.display = 'flex';
-        btnProcessFps.disabled = false;
-        btnProcessFps.querySelector('span').textContent = '⚡ بدء حقن الفريمات وتخطي الضغط';
+        btnProcess.style.display = 'none';
 
-        appendLog('تمت المعالجة بنجاح! جاهز للتحميل والرفع لتيك توك.');
+        appendLog('تم الحفظ بنجاح! الفيديو جاهز للتحميل والرفع لتيك توك.');
       } catch (err) {
         appendLog('خطأ: ' + err.message);
         alert('حدث خطأ: ' + err.message);
-        btnProcessFps.disabled = false;
-        btnProcessFps.querySelector('span').textContent = 'إعادة المحاولة';
-      }
-    }
-
-    // ================= TAB 2: REAL PC BLUR ENGINE (Cloud Render) =================
-    async function runPcBlurRender() {
-      if (!currentFile) return;
-      btnProcessBlur.disabled = true;
-      btnProcessBlur.querySelector('span').textContent = 'جارٍ تشغيل محرك الـ PC...';
-      terminalBox.innerHTML = '';
-
-      try {
-        const bAmount = document.getElementById('cfgBlurAmount').value;
-        const bWeighting = document.getElementById('cfgBlurWeighting').value;
-        const interpFps = document.getElementById('cfgInterpFps').value;
-        const outFps = document.getElementById('cfgOutFps').value;
-
-        appendLog('رفع الفيديو بأمان لمحرك الـ PC الحقيقي...');
-        
-        const formData = new FormData();
-        formData.append('reqtype', 'fileupload');
-        formData.append('fileToUpload', currentFile);
-
-        const uploadRes = await fetch('https://catbox.moe/user/api.php', {
-          method: 'POST',
-          body: formData
-        });
-
-        if (!uploadRes.ok) throw new Error('فشل رفع الفيديو لمحرك الرندر');
-        const videoDirectUrl = (await uploadRes.text()).trim();
-        appendLog('تم استقبال الفيديو: ' + videoDirectUrl);
-
-        appendLog('بدء تشغيل أداة blur-cli الرسمية على السيرفر...');
-        appendLog('الإعدادات: ' + bWeighting + ' | Blur: ' + bAmount + ' | Interpolated: ' + interpFps + ' fps');
-
-        const triggerRes = await fetch('https://api.github.com/repos/rtyupp/flowtik-web/actions/workflows/render_blur.yml/dispatches', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/vnd.github.v3+json',
-            'Authorization': 'Bearer ' + atob('Z2hwX25nTE14V1pvYldBbk1JcW9uWjhocW12R3g4U3VlajExMmticw==')
-          },
-          body: JSON.stringify({
-            ref: 'main',
-            inputs: {
-              video_url: videoDirectUrl,
-              blur_amount: bAmount,
-              blur_weighting: bWeighting,
-              output_fps: outFps,
-              interpolated_fps: interpFps
-            }
-          })
-        });
-
-        if (!triggerRes.ok) {
-          throw new Error('فشل بدء الرندر: كود ' + triggerRes.status);
-        }
-
-        appendLog('تم إطلاق رندر الـ PC الكامل بنجاح!');
-        appendLog('محرك VapourSynth يقوم الآن بتوليد 600-1200 فريم ودمجها بدقة...');
-        appendLog('سياخذ الرندر دقيقتين إلى 4 دقائق حسب طول الفيديو كأي كمبيوتر.');
-
-        let done = false;
-        let attempts = 0;
-        while (!done && attempts < 40) {
-          await new Promise(r => setTimeout(r, 10000));
-          attempts++;
-          appendLog('جارٍ الرندر الحقيقي... (' + (attempts * 10) + ' ثانية)');
-
-          const runsRes = await fetch('https://api.github.com/repos/rtyupp/flowtik-web/actions/runs?event=workflow_dispatch&per_page=1', {
-            headers: {
-              'Accept': 'application/vnd.github.v3+json',
-              'Authorization': 'Bearer ' + atob('Z2hwX25nTE14V1pvYldBbk1JcW9uWjhocW12R3g4U3VlajExMmticw==')
-            }
-          });
-          
-          if (runsRes.ok) {
-            const data = await runsRes.json();
-            if (data.workflow_runs && data.workflow_runs.length > 0) {
-              const run = data.workflow_runs[0];
-              if (run.status === 'completed') {
-                done = true;
-                if (run.conclusion === 'success') {
-                  appendLog('اكتمل رندر بلور الأصلي بنجاح 100%!');
-                  btnDownload.href = run.html_url;
-                  btnDownload.querySelector('span').textContent = '💾 فتح وتحميل الفيديو المنعم من السيرفر';
-                  btnDownload.style.display = 'flex';
-                  btnProcessBlur.disabled = false;
-                  btnProcessBlur.querySelector('span').textContent = '🌊 بدء رندر الـ PC الكامل (Real Blur)';
-                } else {
-                  throw new Error('انتهى الرندر بحالة: ' + run.conclusion);
-                }
-              }
-            }
-          }
-        }
-
-      } catch (err) {
-        appendLog('خطأ: ' + err.message);
-        alert('حدث خطأ: ' + err.message);
-        btnProcessBlur.disabled = false;
-        btnProcessBlur.querySelector('span').textContent = 'إعادة المحاولة';
+        btnProcess.disabled = false;
+        btnProcess.querySelector('span').textContent = 'إعادة المحاولة';
       }
     }
   </script>
