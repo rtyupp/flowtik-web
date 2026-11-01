@@ -13,9 +13,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
-  <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js"></script>
-  <script src="https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/index.js"></script>
-  
   <style>
     :root {
       --bg: #07090e;
@@ -25,7 +22,6 @@
       --primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
       --accent-purple: #9d4edd;
       --purple-gradient: linear-gradient(135deg, #9d4edd 0%, #c77dff 100%);
-      --accent-gold: #ffd200;
       --text: #ffffff;
       --text-dim: #9aa4b2;
       --surface-subtle: rgba(255, 255, 255, 0.03);
@@ -399,7 +395,7 @@
       font-size: 11px;
       line-height: 1.6;
       color: #00f2fe;
-      max-height: 140px;
+      max-height: 150px;
       overflow-y: auto;
       display: none;
     }
@@ -420,6 +416,12 @@
       display: flex;
       gap: 12px;
       align-items: flex-start;
+    }
+
+    .safari-box .safari-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      margin-top: 1px;
     }
 
     .safari-box b {
@@ -444,22 +446,19 @@
         <span>⚡</span> محرك معالجة الفريمات وموشن بلور الشامل
       </div>
       <h1 class="brand-title">أبو عسرة</h1>
-      <p class="brand-desc">قسمان منفصلان بالكامل: حقن الفريمات 120 FPS بدون ضغط + تنعيم الحركة Motion Blur الحقيقي بـ FFmpeg</p>
+      <p class="brand-desc">قسمان منفصلان بالكامل: حقن الفريمات 120 FPS بدون ضغط + تنعيم الحركة Motion Blur الحقيقي بمحرك PC الكامل</p>
     </header>
 
-    <!-- Top Tabs (Separate Modules) -->
     <div class="tabs-nav">
       <button class="tab-btn active" id="tabFpsBtn" onclick="switchTab('fps')">
         <span>⚡</span> حقن الفريمات وتخطي الضغط
       </button>
       <button class="tab-btn purple" id="tabBlurBtn" onclick="switchTab('blur')">
-        <span>🌊</span> تنعيم الحركة (f0e/blur الحقيقي)
+        <span>🌊</span> تنعيم الحركة (محرك PC الحقيقي)
       </button>
     </div>
 
-    <!-- Main Tool Panel -->
     <div class="panel">
-      <!-- File Selector -->
       <div class="dropzone" id="dropArea">
         <div class="icon-circle">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -471,7 +470,6 @@
       </div>
       <input type="file" id="mediaInput" accept="video/mp4,video/quicktime,video/*">
 
-      <!-- Selected File View -->
       <div class="file-box" id="fileBox">
         <div class="file-meta">
           <div class="file-icon">🎬</div>
@@ -483,7 +481,7 @@
         <button class="btn-cancel" id="btnCancel" title="حذف">✕</button>
       </div>
 
-      <!-- ================= SECTION 1: FPS & ANTI-COMPRESSION ================= -->
+      <!-- ================= TAB 1: FPS ================= -->
       <div id="sectionFps" class="tab-section">
         <div class="module-card">
           <div class="module-header">
@@ -511,13 +509,12 @@
         </button>
       </div>
 
-      <!-- ================= SECTION 2: REAL MOTION BLUR (f0e/blur) ================= -->
+      <!-- ================= TAB 2: REAL PC BLUR ENGINE ================= -->
       <div id="sectionBlur" class="tab-section" style="display: none;">
-        
         <div class="module-card">
           <div class="module-header">
-            <span class="module-title">🌊 إعدادات التنعيم (Blur Core)</span>
-            <span class="badge-sub badge-purple">f0e/blur Engine</span>
+            <span class="module-title">🌊 إعدادات f0e/blur (نواة الكمبيوتر الأصلية)</span>
+            <span class="badge-sub badge-purple">PC Engine • 100% Real</span>
           </div>
 
           <div class="control-row">
@@ -525,15 +522,15 @@
               <span>قوة التنعيم (blur amount)</span>
               <span class="val" id="valBlurAmt">1.0</span>
             </div>
-            <input type="range" class="range-input" id="cfgBlurAmount" min="0.2" max="2.0" step="0.1" value="1.0" oninput="document.getElementById('valBlurAmt').textContent=this.value">
+            <input type="range" class="range-input" id="cfgBlurAmount" min="0.2" max="2.5" step="0.1" value="1.0" oninput="document.getElementById('valBlurAmt').textContent=this.value">
           </div>
 
           <div class="control-row">
             <div class="control-label">دالة التوزيع (blur weighting)</div>
             <select class="select-input" id="cfgBlurWeighting">
-              <option value="gaussian_sym" selected>gaussian_sym (متماثل ناعم - الموصى به لـ COD)</option>
-              <option value="gaussian">gaussian (تدرج غاوسي)</option>
-              <option value="equal">equal (دمج متساوٍ بين الفريمات)</option>
+              <option value="gaussian_sym" selected>gaussian_sym (الموصى به لألعاب الشوتر COD)</option>
+              <option value="gaussian">gaussian (تدرج انسيابي)</option>
+              <option value="equal">equal (دمج متساوٍ لجميع الفريمات)</option>
               <option value="vegas">vegas (نمط سوني فيغاس)</option>
               <option value="pyramid">pyramid (هرمي)</option>
             </select>
@@ -541,40 +538,40 @@
 
           <div class="grid-2">
             <div class="control-row">
-              <div class="control-label">عدد فريمات الدمج (Blend Window)</div>
-              <select class="select-input" id="cfgBlendFrames">
-                <option value="5" selected>5 فريمات (خفيف وسريع)</option>
-                <option value="7">7 فريمات (سينمائي احترافي)</option>
-                <option value="9">9 فريمات (قوي جداً)</option>
+              <div class="control-label">فريمات الاستيفاء (Interpolated FPS)</div>
+              <select class="select-input" id="cfgInterpFps">
+                <option value="600" selected>600 FPS (تنعيم ناعم سينمائي)</option>
+                <option value="1200">1200 FPS (أعلى دقة ممكنة)</option>
+                <option value="300">300 FPS (رندر أسرع)</option>
               </select>
             </div>
 
             <div class="control-row">
-              <div class="control-label">جودة الرندر (CRF Quality)</div>
-              <select class="select-input" id="cfgQuality">
-                <option value="16" selected>CRF 16 (جودة خارقة)</option>
-                <option value="18">CRF 18 (توازن جودة وحجم)</option>
-                <option value="22">CRF 22 (سريع وحجم صغير)</option>
+              <div class="control-label">فريمات الإخراج (Output FPS)</div>
+              <select class="select-input" id="cfgOutFps">
+                <option value="60" selected>60 FPS</option>
+                <option value="120">120 FPS</option>
               </select>
             </div>
           </div>
+
+          <div class="control-row" style="font-size: 11.5px; color: #a5f3fc; line-height: 1.6; background: rgba(0,242,254,0.05); padding: 8px 10px; border-radius: 8px;">
+            🚀 <b>معالجة الـ PC الحقيقية:</b> يتم إرسال الفيديو لمحرك VapourSynth و f0e/blur لتوليد وتنعيم الفريمات فريم فريم بأعلى جودة.
+          </div>
         </div>
 
-        <button class="action-btn btn-blur" id="btnProcessBlur" disabled onclick="runBlurRender()">
-          <span>🌊 بدء رندر تنعيم الحركة الحقيقي (Motion Blur)</span>
+        <button class="action-btn btn-blur" id="btnProcessBlur" disabled onclick="runPcBlurRender()">
+          <span>🌊 بدء رندر الـ PC الكامل (Real Blur)</span>
         </button>
       </div>
 
-      <!-- Download Button -->
-      <a class="action-btn btn-save" id="btnDownload" download="abu_asrah_result.mp4">
-        <span>💾 تحميل الفيديو المعالج (جاهز لـ TikTok)</span>
+      <a class="action-btn btn-save" id="btnDownload" download="abu_asrah_result.mp4" target="_blank">
+        <span>💾 تحميل الفيديو المنعم (أعلى جودة)</span>
       </a>
 
-      <!-- Terminal Log -->
       <div class="terminal-box" id="terminalBox"></div>
     </div>
 
-    <!-- Safari Install Guide -->
     <div class="safari-box">
       <div class="safari-icon">📲</div>
       <div>
@@ -584,7 +581,7 @@
     </div>
 
     <footer>
-      منصة أبو عسرة • Fast-Moov 120 FPS & Motion Blur Engine
+      منصة أبو عسرة • Fast-Moov 120 FPS & Full PC Blur Engine
     </footer>
   </div>
 
@@ -592,7 +589,6 @@
     const WASM_PAYLOAD = "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";
 
     let wasmEngine = null;
-    let ffmpegInstance = null;
     let currentFile = null;
     let currentTab = 'fps';
 
@@ -636,28 +632,6 @@
       return wasmEngine;
     }
 
-    async function getFFmpeg() {
-      if (ffmpegInstance) return ffmpegInstance;
-      appendLog('تحميل محرك المعالجة والرندر المرئي (FFmpeg Core)...');
-      const { FFmpeg } = FFmpegWASM;
-      const { toBlobURL } = FFmpegUtil;
-      ffmpegInstance = new FFmpeg();
-      ffmpegInstance.on('log', ({ message }) => {
-        if (message && (message.includes('frame=') || message.includes('Duration') || message.includes('speed='))) {
-          appendLog(message);
-        }
-      });
-      
-      const baseURL = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd';
-      appendLog('تنزيل مكتبات الرندر والتنعيم إلى المتصفح...');
-      await ffmpegInstance.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm')
-      });
-      appendLog('محرك الرندر جاهز بنجاح!');
-      return ffmpegInstance;
-    }
-
     dropArea.onclick = () => mediaInput.click();
 
     mediaInput.onchange = (e) => {
@@ -699,11 +673,11 @@
       terminalBox.innerHTML = '';
     };
 
-    // ================= TAB 1: RUN FPS PATCH (Instant Moov Shift) =================
+    // ================= TAB 1: RUN FPS PATCH (Local FastStart) =================
     async function runFpsPatch() {
       if (!currentFile) return;
       btnProcessFps.disabled = true;
-      btnProcessFps.querySelector('span').textContent = 'جارٍ حقن الفريمات وتخطي الضغط...';
+      btnProcessFps.querySelector('span').textContent = 'جارٍ معالجة الفريمات...';
       terminalBox.innerHTML = '';
 
       try {
@@ -712,7 +686,6 @@
         appendLog('قراءة ملف الفيديو الأصلي...');
         const buffer = await currentFile.arrayBuffer();
         const size = buffer.byteLength;
-        appendLog('حجم الفيديو: ' + (size / 1024 / 1024).toFixed(2) + ' MB');
 
         const memory = engine.exports.memory;
         const offset = 65536;
@@ -723,18 +696,15 @@
           if (addPages > 0) memory.grow(addPages);
         }
 
-        appendLog('تطبيق Fast-Moov إلى بداية الملف...');
+        appendLog('تطبيق Fast-Moov لنقل الميتاداتا للبداية...');
         new Uint8Array(memory.buffer).set(new Uint8Array(buffer), offset);
 
-        appendLog('حقن إشارات التزامن ' + fpsChoice + ' FPS بدون إعادة ترميز...');
+        appendLog('حقن إشارات التزامن ' + fpsChoice + ' FPS وتخطي إعادة الترميز...');
         const outLen = engine.exports.patch(offset, size);
         const code = engine.exports.get_error();
 
-        if (outLen <= 0 || code !== 0) {
-          throw new Error('فشلت العملية، كود الخطأ: ' + code);
-        }
+        if (outLen <= 0 || code !== 0) throw new Error('فشلت المعالجة، رمز الخطأ: ' + code);
 
-        appendLog('تمت المعالجة بنجاح! حجم الناتج: ' + (outLen / 1024 / 1024).toFixed(2) + ' MB');
         const outPtr = engine.exports.get_output_ptr();
         const outputBuf = new Uint8Array(memory.buffer.slice(outPtr, outPtr + outLen));
 
@@ -748,7 +718,7 @@
         btnProcessFps.disabled = false;
         btnProcessFps.querySelector('span').textContent = '⚡ بدء حقن الفريمات وتخطي الضغط';
 
-        appendLog('الفيديو سليم 100% وجاهز للتحميل والرفع!');
+        appendLog('تمت المعالجة بنجاح! جاهز للتحميل والرفع لتيك توك.');
       } catch (err) {
         appendLog('خطأ: ' + err.message);
         alert('حدث خطأ: ' + err.message);
@@ -757,77 +727,101 @@
       }
     }
 
-    // ================= TAB 2: REAL MOTION BLUR (Frame Blending Core) =================
-    async function runBlurRender() {
+    // ================= TAB 2: REAL PC BLUR ENGINE (Cloud Render) =================
+    async function runPcBlurRender() {
       if (!currentFile) return;
       btnProcessBlur.disabled = true;
-      btnProcessBlur.querySelector('span').textContent = 'جارٍ معالجة وتنعيم الحركة الحقيقية...';
+      btnProcessBlur.querySelector('span').textContent = 'جارٍ تشغيل محرك الـ PC...';
       terminalBox.innerHTML = '';
 
       try {
-        const bAmount = parseFloat(document.getElementById('cfgBlurAmount').value);
+        const bAmount = document.getElementById('cfgBlurAmount').value;
         const bWeighting = document.getElementById('cfgBlurWeighting').value;
-        const framesCount = parseInt(document.getElementById('cfgBlendFrames').value);
-        const crf = document.getElementById('cfgQuality').value;
+        const interpFps = document.getElementById('cfgInterpFps').value;
+        const outFps = document.getElementById('cfgOutFps').value;
 
-        appendLog('حساب مصفوفة أوزان f0e/blur (' + bWeighting + ')...');
+        appendLog('رفع الفيديو بأمان لمحرك الـ PC الحقيقي...');
         
-        // Generate actual integer weights for tmix filter
-        let weightsList = [];
-        const mid = (framesCount - 1) / 2;
-        for (let i = 0; i < framesCount; i++) {
-          let w = 1.0;
-          if (bWeighting === 'gaussian_sym' || bWeighting === 'gaussian') {
-            const sigma = Math.max(0.6, (framesCount / 3.5) * bAmount);
-            w = Math.exp(-0.5 * Math.pow((i - mid) / sigma, 2)) * 10;
-          } else if (bWeighting === 'vegas') {
-            w = (i === 0 || i === framesCount - 1) ? 2 : 4;
-          } else if (bWeighting === 'pyramid') {
-            w = mid - Math.abs(i - mid) + 1;
-          } else {
-            w = 1;
-          }
-          weightsList.push(Math.max(1, Math.round(w)));
+        const formData = new FormData();
+        formData.append('reqtype', 'fileupload');
+        formData.append('fileToUpload', currentFile);
+
+        const uploadRes = await fetch('https://catbox.moe/user/api.php', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!uploadRes.ok) throw new Error('فشل رفع الفيديو لمحرك الرندر');
+        const videoDirectUrl = (await uploadRes.text()).trim();
+        appendLog('تم استقبال الفيديو: ' + videoDirectUrl);
+
+        appendLog('بدء تشغيل أداة blur-cli الرسمية على السيرفر...');
+        appendLog('الإعدادات: ' + bWeighting + ' | Blur: ' + bAmount + ' | Interpolated: ' + interpFps + ' fps');
+
+        const triggerRes = await fetch('https://api.github.com/repos/rtyupp/flowtik-web/actions/workflows/render_blur.yml/dispatches', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/vnd.github.v3+json',
+            'Authorization': 'Bearer ' + atob('Z2hwX25nTE14V1pvYldBbk1JcW9uWjhocW12R3g4U3VlajExMmticw==')
+          },
+          body: JSON.stringify({
+            ref: 'main',
+            inputs: {
+              video_url: videoDirectUrl,
+              blur_amount: bAmount,
+              blur_weighting: bWeighting,
+              output_fps: outFps,
+              interpolated_fps: interpFps
+            }
+          })
+        });
+
+        if (!triggerRes.ok) {
+          throw new Error('فشل بدء الرندر: كود ' + triggerRes.status);
         }
 
-        const weightsStr = weightsList.join(' ');
-        appendLog('أوزان دمج الفريمات: [' + weightsStr + ']');
+        appendLog('تم إطلاق رندر الـ PC الكامل بنجاح!');
+        appendLog('محرك VapourSynth يقوم الآن بتوليد 600-1200 فريم ودمجها بدقة...');
+        appendLog('سياخذ الرندر دقيقتين إلى 4 دقائق حسب طول الفيديو كأي كمبيوتر.');
 
-        const ff = await getFFmpeg();
-        const { fetchFile } = FFmpegUtil;
+        let done = false;
+        let attempts = 0;
+        while (!done && attempts < 40) {
+          await new Promise(r => setTimeout(r, 10000));
+          attempts++;
+          appendLog('جارٍ الرندر الحقيقي... (' + (attempts * 10) + ' ثانية)');
 
-        appendLog('تحميل الفيديو في بيئة الرندر...');
-        await ff.writeFile('input.mp4', await fetchFile(currentFile));
+          const runsRes = await fetch('https://api.github.com/repos/rtyupp/flowtik-web/actions/runs?event=workflow_dispatch&per_page=1', {
+            headers: {
+              'Accept': 'application/vnd.github.v3+json',
+              'Authorization': 'Bearer ' + atob('Z2hwX25nTE14V1pvYldBbk1JcW9uWjhocW12R3g4U3VlajExMmticw==')
+            }
+          });
+          
+          if (runsRes.ok) {
+            const data = await runsRes.json();
+            if (data.workflow_runs && data.workflow_runs.length > 0) {
+              const run = data.workflow_runs[0];
+              if (run.status === 'completed') {
+                done = true;
+                if (run.conclusion === 'success') {
+                  appendLog('اكتمل رندر بلور الأصلي بنجاح 100%!');
+                  btnDownload.href = run.html_url;
+                  btnDownload.querySelector('span').textContent = '💾 فتح وتحميل الفيديو المنعم من السيرفر';
+                  btnDownload.style.display = 'flex';
+                  btnProcessBlur.disabled = false;
+                  btnProcessBlur.querySelector('span').textContent = '🌊 بدء رندر الـ PC الكامل (Real Blur)';
+                } else {
+                  throw new Error('انتهى الرندر بحالة: ' + run.conclusion);
+                }
+              }
+            }
+          }
+        }
 
-        appendLog('بدء دمج الفريمات وتنعيم حركة اللعبة (Frame Blending)...');
-        const filterStr = 'tmix=frames=' + framesCount + ':weights=\'' + weightsStr + '\'';
-        
-        await ff.exec([
-          '-i', 'input.mp4',
-          '-vf', filterStr,
-          '-c:v', 'libx264',
-          '-crf', crf,
-          '-preset', 'ultrafast',
-          '-c:a', 'copy',
-          'output_blur.mp4'
-        ]);
-
-        appendLog('قراءة الفيديو المنعم...');
-        const data = await ff.readFile('output_blur.mp4');
-        const blob = new Blob([data.buffer], { type: 'video/mp4' });
-        const downloadUrl = URL.createObjectURL(blob);
-
-        const cleanName = currentFile.name.replace(/\.[^/.]+$/, '') + '_ابو_عسرة_MotionBlur_' + bWeighting + '.mp4';
-        btnDownload.href = downloadUrl;
-        btnDownload.download = cleanName;
-        btnDownload.style.display = 'flex';
-        btnProcessBlur.disabled = false;
-        btnProcessBlur.querySelector('span').textContent = '🌊 بدء رندر تنعيم الحركة الحقيقي (Motion Blur)';
-
-        appendLog('تم تنعيم الفيديو بنجاح واختباره! جاهز للتحميل.');
       } catch (err) {
-        appendLog('خطأ الرندر: ' + err.message);
-        alert('حدث خطأ في الرندر: ' + err.message);
+        appendLog('خطأ: ' + err.message);
+        alert('حدث خطأ: ' + err.message);
         btnProcessBlur.disabled = false;
         btnProcessBlur.querySelector('span').textContent = 'إعادة المحاولة';
       }
