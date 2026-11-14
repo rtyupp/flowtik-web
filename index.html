@@ -508,6 +508,233 @@
     input[type="file"] {
       display: none;
     }
+
+    /* Main Mode Tabs */
+    .engine-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 5px;
+      border-radius: 16px;
+      background: rgba(16, 20, 29, 0.72);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+    }
+
+    .engine-tab {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Tajawal', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 11px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: all 0.22s ease;
+    }
+
+    .engine-tab.active {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(45, 212, 191, 0.12));
+      color: #FFFFFF;
+      border: 1px solid var(--border-strong);
+      box-shadow: 0 6px 18px rgba(56, 189, 248, 0.12);
+    }
+
+    .tab-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.18);
+      color: var(--accent);
+    }
+
+    .tab-pane {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .tab-pane.active {
+      display: flex;
+    }
+
+    /* Blur Settings Controls */
+    .blur-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+    }
+
+    .blur-group-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .blur-group-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .field label span.val {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      font-size: 11px;
+    }
+
+    .field input[type="text"],
+    .field input[type="number"],
+    .field select {
+      width: 100%;
+      padding: 10px 11px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(5, 7, 11, 0.72);
+      color: var(--text);
+      font-family: 'Tajawal', 'JetBrains Mono', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--accent);
+    }
+
+    .field input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 11px;
+      border-radius: 10px;
+      background: rgba(5, 7, 11, 0.55);
+      border: 1px solid var(--border);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .toggle-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    details.adv-accordion {
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.018);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+    }
+
+    details.adv-accordion summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    details.adv-accordion[open] summary {
+      margin-bottom: 12px;
+      color: var(--accent);
+    }
+
+    .blur-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 14px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-strong);
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent);
+      font-family: 'Tajawal', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(56, 189, 248, 0.22);
+    }
+
+    .cloud-note {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(56, 189, 248, 0.06);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .cloud-note code {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      font-size: 10.5px;
+    }
   </style>
 </head>
 <body>
@@ -524,7 +751,19 @@
       <div class="ver-pill">v2.8</div>
     </header>
 
-    <section class="studio-card">
+    <div class="engine-tabs" role="tablist">
+      <button class="engine-tab active" data-tab="flowtik" onclick="switchMainTab('flowtik')">
+        <span>Flowtik 120/60</span>
+        <span class="tab-badge">فوري</span>
+      </button>
+      <button class="engine-tab" data-tab="blur" onclick="switchMainTab('blur')">
+        <span>f0e/blur</span>
+        <span class="tab-badge">كامل</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: Flowtik 120 / 60 (untouched dual engine) -->
+    <section class="studio-card tab-pane active" id="paneFlowtik">
       <div class="drop-zone" id="dropArea">
         <div class="upload-orb">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -585,6 +824,274 @@
       </a>
 
       <div class="log-box" id="terminalBox"></div>
+    </section>
+
+    <!-- TAB 2: Official f0e/blur Engine (Full Config Parity) -->
+    <section class="studio-card tab-pane" id="paneBlur">
+      <div class="cloud-note">
+        محرك <b>f0e/blur v2.45</b> الكامل (VapourSynth + Motion Interpolation + Weighted Blending) يعمل سحابياً على <code>GitHub Actions</code> بدون أي حمل على سيرفرك.
+      </div>
+
+      <!-- Blur Core -->
+      <div class="blur-group">
+        <div class="blur-group-head">
+          <span>البلور الأساسي</span>
+          <span class="blur-group-sub">- blur</span>
+        </div>
+        <label class="toggle-row">
+          <span>تفعيل البلور (blur)</span>
+          <input type="checkbox" id="b_blur" checked>
+        </label>
+        <div class="field-grid">
+          <div class="field">
+            <label><span>blur amount</span><span class="val" id="v_blur_amount">1.0</span></label>
+            <input type="range" id="b_blur_amount" min="0" max="2.5" step="0.05" value="1.0" oninput="v_blur_amount.textContent=this.value">
+          </div>
+          <div class="field">
+            <label><span>blur gamma</span><span class="val" id="v_blur_gamma">1.0</span></label>
+            <input type="range" id="b_blur_gamma" min="0.5" max="2.2" step="0.05" value="1.0" oninput="v_blur_gamma.textContent=this.value">
+          </div>
+          <div class="field">
+            <label><span>blur output fps</span></label>
+            <input type="number" id="b_blur_output_fps" value="60" min="15" max="240">
+          </div>
+          <div class="field">
+            <label><span>blur weighting</span></label>
+            <select id="b_blur_weighting">
+              <option value="gaussian_sym" selected>gaussian_sym</option>
+              <option value="equal">equal</option>
+              <option value="vegas">vegas</option>
+              <option value="pyramid">pyramid</option>
+              <option value="gaussian">gaussian</option>
+              <option value="ascending">ascending</option>
+              <option value="descending">descending</option>
+              <option value="gaussian_reverse">gaussian_reverse</option>
+              <option value="custom">custom weights</option>
+            </select>
+          </div>
+          <div class="field full" id="customWeightWrap" style="display:none;">
+            <label><span>custom weights (comma-separated)</span></label>
+            <input type="text" id="b_custom_weights" value="1, 2, 3, 2, 1" placeholder="5, 3, 3, 2, 1">
+          </div>
+        </div>
+      </div>
+
+      <!-- Interpolation & Pre-interpolation -->
+      <div class="blur-group">
+        <div class="blur-group-head">
+          <span>توليد الفريمات</span>
+          <span class="blur-group-sub">- interpolation</span>
+        </div>
+        <label class="toggle-row">
+          <span>تفعيل التوليد (interpolate)</span>
+          <input type="checkbox" id="b_interpolate" checked>
+        </label>
+        <div class="field-grid">
+          <div class="field">
+            <label><span>interpolated fps</span></label>
+            <input type="text" id="b_interpolated_fps" value="600" placeholder="600 أو 5x">
+          </div>
+          <div class="field">
+            <label><span>interpolation method</span></label>
+            <select id="b_interpolation_method">
+              <option value="svp" selected>svp (سريع/دقيق)</option>
+              <option value="rife">rife (AI)</option>
+            </select>
+          </div>
+          <label class="toggle-row" style="grid-column:1/-1;">
+            <span>pre-interpolate (RIFE قبل SVP)</span>
+            <input type="checkbox" id="b_pre_interpolate">
+          </label>
+          <div class="field full">
+            <label><span>pre-interpolated fps</span></label>
+            <input type="text" id="b_pre_interpolated_fps" value="360" placeholder="360 أو 3x">
+          </div>
+        </div>
+      </div>
+
+      <!-- Deduplication & Rendering -->
+      <div class="blur-group">
+        <div class="blur-group-head">
+          <span>الرندر وتنظيف التكرار</span>
+          <span class="blur-group-sub">- rendering</span>
+        </div>
+        <label class="toggle-row">
+          <span>deduplicate (معالجة التقطيع)</span>
+          <input type="checkbox" id="b_deduplicate" checked>
+        </label>
+        <div class="field-grid">
+          <div class="field">
+            <label><span>deduplicate method</span></label>
+            <select id="b_deduplicate_method">
+              <option value="svp" selected>svp</option>
+              <option value="rife">rife</option>
+              <option value="old">old (mvtools)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label><span>quality (CRF 0-51)</span><span class="val" id="v_quality">16</span></label>
+            <input type="range" id="b_quality" min="0" max="51" step="1" value="16" oninput="v_quality.textContent=this.value">
+          </div>
+          <div class="field">
+            <label><span>encode preset</span></label>
+            <select id="b_encode_preset">
+              <option value="h264" selected>h264</option>
+              <option value="h265">h265</option>
+              <option value="vp9">vp9</option>
+              <option value="av1">av1</option>
+            </select>
+          </div>
+          <div class="field">
+            <label><span>video container</span></label>
+            <select id="b_video_container">
+              <option value="mp4" selected>mp4</option>
+              <option value="mkv">mkv</option>
+              <option value="mov">mov</option>
+              <option value="avi">avi</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced Accordion (Timescale, Filters, Gaussian, SVP, Dedupe, Custom FFmpeg) -->
+      <details class="adv-accordion">
+        <summary>
+          <span>الإعدادات المتقدمة (Gaussian / SVP / Timescale / Filters)</span>
+          <span style="font-size:11px;color:var(--text-dim);">▼</span>
+        </summary>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="field-grid">
+            <div class="field">
+              <label><span>gaussian std dev</span></label>
+              <input type="number" id="b_gauss_std" value="1.0" step="0.1">
+            </div>
+            <div class="field">
+              <label><span>gaussian mean</span></label>
+              <input type="number" id="b_gauss_mean" value="2.0" step="0.1">
+            </div>
+            <div class="field full">
+              <label><span>gaussian bound</span></label>
+              <input type="text" id="b_gauss_bound" value="[0,2]">
+            </div>
+
+            <div class="field">
+              <label><span>svp preset</span></label>
+              <select id="b_svp_preset">
+                <option value="weak" selected>weak</option>
+                <option value="film">film</option>
+                <option value="smooth">smooth</option>
+                <option value="animation">animation</option>
+                <option value="default">default</option>
+                <option value="test">test</option>
+              </select>
+            </div>
+            <div class="field">
+              <label><span>svp algorithm</span></label>
+              <select id="b_svp_algo">
+                <option value="13" selected>13 (الأفضل)</option>
+                <option value="23">23</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="11">11</option>
+                <option value="21">21</option>
+              </select>
+            </div>
+            <div class="field">
+              <label><span>block size</span></label>
+              <select id="b_blocksize">
+                <option value="4">4</option>
+                <option value="8" selected>8</option>
+                <option value="16">16</option>
+                <option value="32">32</option>
+              </select>
+            </div>
+            <div class="field">
+              <label><span>mask area</span></label>
+              <input type="number" id="b_mask_area" value="0" min="0" max="500">
+            </div>
+            <div class="field">
+              <label><span>deduplicate range</span></label>
+              <input type="number" id="b_dedup_range" value="2" min="-1" max="20">
+            </div>
+            <div class="field">
+              <label><span>deduplicate threshold</span></label>
+              <input type="text" id="b_dedup_thresh" value="0.001">
+            </div>
+
+            <label class="toggle-row" style="grid-column:1/-1;">
+              <span>timescale (تغيير السرعة)</span>
+              <input type="checkbox" id="b_timescale">
+            </label>
+            <div class="field">
+              <label><span>input timescale</span></label>
+              <input type="number" id="b_in_ts" value="1.0" step="0.05">
+            </div>
+            <div class="field">
+              <label><span>output timescale</span></label>
+              <input type="number" id="b_out_ts" value="1.0" step="0.05">
+            </div>
+            <label class="toggle-row" style="grid-column:1/-1;">
+              <span>adjust timescaled audio pitch</span>
+              <input type="checkbox" id="b_ts_pitch">
+            </label>
+
+            <label class="toggle-row" style="grid-column:1/-1;">
+              <span>filters (ألوان وسطوع)</span>
+              <input type="checkbox" id="b_filters">
+            </label>
+            <div class="field">
+              <label><span>brightness</span></label>
+              <input type="number" id="b_bright" value="1.0" step="0.05">
+            </div>
+            <div class="field">
+              <label><span>saturation</span></label>
+              <input type="number" id="b_sat" value="1.0" step="0.05">
+            </div>
+            <div class="field full">
+              <label><span>contrast</span></label>
+              <input type="number" id="b_cont" value="1.0" step="0.05">
+            </div>
+
+            <div class="field full">
+              <label><span>custom ffmpeg filters (اختياري)</span></label>
+              <input type="text" id="b_ffmpeg_override" placeholder="-c:v libx264 -crf 15">
+            </div>
+            <label class="toggle-row" style="grid-column:1/-1;">
+              <span>debug overlay</span>
+              <input type="checkbox" id="b_debug">
+            </label>
+          </div>
+        </div>
+      </details>
+
+      <!-- Cloud Dispatch / Export -->
+      <div class="blur-group">
+        <div class="blur-group-head">
+          <span>تشغيل الرندر السحابي أو التصدير</span>
+          <span class="blur-group-sub">ZERO SERVER LOAD</span>
+        </div>
+        <div class="field-grid">
+          <div class="field full">
+            <label><span>رابط الفيديو المباشر (أو استخدم تبويب تيليجرام / Local)</span></label>
+            <input type="text" id="b_video_url" placeholder="https://.../clip.mp4">
+          </div>
+          <div class="field full">
+            <label><span>GitHub PAT Token (يُحفظ في متصفحك فقط لتشغيل GitHub Actions)</span></label>
+            <input type="text" id="b_gh_token" placeholder="github_pat_... (اختياري للتشغيل المباشر من الويب)">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="btnBlurCloud" onclick="dispatchCloudBlur()">
+        <span>تشغيل الرندر السحابي (f0e/blur)</span>
+      </button>
+
+      <div class="blur-actions">
+        <button class="btn-secondary" type="button" onclick="downloadBlurCfg()">تصدير .blur-config.cfg</button>
+        <button class="btn-secondary" type="button" onclick="copyBlurBotCmd()">نسخ أوامر البوت</button>
+      </div>
+
+      <div class="log-box" id="blurLogBox"></div>
     </section>
 
     <div class="pwa-hint">
@@ -765,6 +1272,216 @@
     dropArea.addEventListener('dragleave', () => dropArea.classList.remove('dragover'));
     dropArea.addEventListener('drop', (e) => { e.preventDefault(); dropArea.classList.remove('dragover'); pickFile(e.dataTransfer.files[0]); });
     btnCancel.addEventListener('click', resetFile);
+
+    // ===== f0e/blur Tab Logic (isolated from Flowtik 120/60 engine) =====
+    function switchMainTab(tab) {
+      document.querySelectorAll('.engine-tab').forEach(el =>
+        el.classList.toggle('active', el.dataset.tab === tab));
+      $('paneFlowtik').classList.toggle('active', tab === 'flowtik');
+      $('paneBlur').classList.toggle('active', tab === 'blur');
+    }
+    window.switchMainTab = switchMainTab;
+
+    const blurWeightSel = $('b_blur_weighting');
+    const customWeightWrap = $('customWeightWrap');
+    blurWeightSel.addEventListener('change', () => {
+      customWeightWrap.style.display = blurWeightSel.value === 'custom' ? 'flex' : 'none';
+    });
+
+    const ghTokInput = $('b_gh_token');
+    try {
+      const savedTok = localStorage.getItem('abuasrh_gh_pat');
+      if (savedTok) ghTokInput.value = savedTok;
+      ghTokInput.addEventListener('change', () => {
+        if (ghTokInput.value.trim()) localStorage.setItem('abuasrh_gh_pat', ghTokInput.value.trim());
+        else localStorage.removeItem('abuasrh_gh_pat');
+      });
+    } catch (_) {}
+
+    function getBlurConfig() {
+      const wVal = blurWeightSel.value === 'custom'
+        ? ($('b_custom_weights').value.trim() || '1, 2, 3, 2, 1')
+        : blurWeightSel.value;
+      return {
+        blur: $('b_blur').checked,
+        blur_amount: parseFloat($('b_blur_amount').value || '1.0'),
+        blur_output_fps: parseInt($('b_blur_output_fps').value || '60', 10),
+        blur_weighting: wVal,
+        blur_gamma: parseFloat($('b_blur_gamma').value || '1.0'),
+        interpolate: $('b_interpolate').checked,
+        interpolated_fps: $('b_interpolated_fps').value.trim() || '600',
+        interpolation_method: $('b_interpolation_method').value,
+        pre_interpolate: $('b_pre_interpolate').checked,
+        pre_interpolated_fps: $('b_pre_interpolated_fps').value.trim() || '360',
+        deduplicate: $('b_deduplicate').checked,
+        deduplicate_method: $('b_deduplicate_method').value,
+        deduplicate_range: parseInt($('b_dedup_range').value || '2', 10),
+        deduplicate_threshold: $('b_dedup_thresh').value.trim() || '0.001',
+        timescale: $('b_timescale').checked,
+        input_timescale: parseFloat($('b_in_ts').value || '1.0'),
+        output_timescale: parseFloat($('b_out_ts').value || '1.0'),
+        output_timescale_audio_pitch: $('b_ts_pitch').checked,
+        filters: $('b_filters').checked,
+        brightness: parseFloat($('b_bright').value || '1.0'),
+        saturation: parseFloat($('b_sat').value || '1.0'),
+        contrast: parseFloat($('b_cont').value || '1.0'),
+        encode_preset: $('b_encode_preset').value,
+        quality: parseInt($('b_quality').value || '16', 10),
+        video_container: $('b_video_container').value,
+        ffmpeg_override: $('b_ffmpeg_override').value.trim(),
+        debug: $('b_debug').checked,
+        blur_weighting_gaussian_std_dev: parseFloat($('b_gauss_std').value || '1.0'),
+        blur_weighting_gaussian_mean: parseFloat($('b_gauss_mean').value || '2.0'),
+        blur_weighting_gaussian_bound: $('b_gauss_bound').value.trim() || '[0,2]',
+        svp_interpolation_preset: $('b_svp_preset').value,
+        svp_interpolation_algorithm: $('b_svp_algo').value,
+        interpolation_blocksize: $('b_blocksize').value,
+        interpolation_mask_area: parseInt($('b_mask_area').value || '0', 10),
+      };
+    }
+    window.getBlurConfig = getBlurConfig;
+
+    function appendBlurLog(text, type = 'normal') {
+      const box = $('blurLogBox');
+      box.style.display = 'block';
+      const row = document.createElement('div');
+      row.className = 'status-line ' + type;
+      const dot = document.createElement('span'); dot.className = 'dot'; dot.textContent = '●';
+      const msg = document.createElement('span'); msg.textContent = text;
+      row.append(dot, ' ', msg);
+      box.appendChild(row);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function toOfficialBlurCfg(c) {
+      return [
+        '[blur v2.45]',
+        '',
+        '- blur',
+        `blur: ${c.blur}`,
+        `blur amount: ${c.blur_amount}`,
+        `blur output fps: ${c.blur_output_fps}`,
+        `blur weighting: ${c.blur_weighting}`,
+        `blur gamma: ${c.blur_gamma}`,
+        '',
+        '- interpolation',
+        `interpolate: ${c.interpolate}`,
+        `interpolated fps: ${c.interpolated_fps}`,
+        `interpolation method: ${c.interpolation_method}`,
+        '',
+        '- pre-interpolation',
+        `pre-interpolate: ${c.pre_interpolate}`,
+        `pre-interpolated fps: ${c.pre_interpolated_fps}`,
+        '',
+        '- deduplication',
+        `deduplicate: ${c.deduplicate}`,
+        `deduplicate method: ${c.deduplicate_method}`,
+        '',
+        '- rendering',
+        `encode preset: ${c.encode_preset}`,
+        `quality: ${c.quality}`,
+        '',
+        '- timescale',
+        `timescale: ${c.timescale}`,
+        `input timescale: ${c.input_timescale}`,
+        `output timescale: ${c.output_timescale}`,
+        `adjust timescaled audio pitch: ${c.output_timescale_audio_pitch}`,
+        '',
+        '- filters',
+        `filters: ${c.filters}`,
+        `brightness: ${c.brightness}`,
+        `saturation: ${c.saturation}`,
+        `contrast: ${c.contrast}`,
+        '',
+        '- advanced',
+        'advanced: true',
+        `deduplicate range: ${c.deduplicate_range}`,
+        `deduplicate threshold: ${c.deduplicate_threshold}`,
+        `video container: ${c.video_container}`,
+        ...(c.ffmpeg_override ? [`custom ffmpeg filters: ${c.ffmpeg_override}`] : []),
+        `debug: ${c.debug}`,
+        `blur weighting gaussian std dev: ${c.blur_weighting_gaussian_std_dev}`,
+        `blur weighting gaussian mean: ${c.blur_weighting_gaussian_mean}`,
+        `blur weighting gaussian bound: ${c.blur_weighting_gaussian_bound}`,
+        `svp interpolation preset: ${c.svp_interpolation_preset}`,
+        `svp interpolation algorithm: ${c.svp_interpolation_algorithm}`,
+        `interpolation block size: ${c.interpolation_blocksize}`,
+        `interpolation mask area: ${c.interpolation_mask_area}`,
+      ].join('\n');
+    }
+
+    function downloadBlurCfg() {
+      const text = toOfficialBlurCfg(getBlurConfig());
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = '.blur-config.cfg';
+      a.click();
+      appendBlurLog('Exported .blur-config.cfg (f0e/blur v2.45)', 'success');
+    }
+    window.downloadBlurCfg = downloadBlurCfg;
+
+    async function copyBlurBotCmd() {
+      const c = getBlurConfig();
+      const lines = Object.entries(c)
+        .filter(([, v]) => v !== '' && v !== null)
+        .map(([k, v]) => `${k}=${v}`)
+        .join('\n');
+      try {
+        await navigator.clipboard.writeText(lines);
+        appendBlurLog('Copied full f0e/blur config for Telegram bot!', 'success');
+      } catch (e) {
+        appendBlurLog('Copy failed: ' + e.message, 'warning');
+      }
+    }
+    window.copyBlurBotCmd = copyBlurBotCmd;
+
+    async function dispatchCloudBlur() {
+      const videoUrl = $('b_video_url').value.trim();
+      const token = $('b_gh_token').value.trim();
+      const box = $('blurLogBox');
+      box.innerHTML = '';
+      if (!videoUrl) {
+        appendBlurLog('أدخل رابط الفيديو المباشر أو استخدم بوت تيليجرام.', 'warning');
+        return;
+      }
+      if (!token) {
+        appendBlurLog('أدخل GitHub PAT Token لتشغيل GitHub Actions من المتصفح.', 'warning');
+        return;
+      }
+      const cfg = getBlurConfig();
+      const jsonBytes = new TextEncoder().encode(JSON.stringify(cfg));
+      let binStr = '';
+      jsonBytes.forEach(b => { binStr += String.fromCharCode(b); });
+      const cfgB64 = btoa(binStr);
+      const jobId = Math.random().toString(36).slice(2, 10);
+
+      appendBlurLog(`Dispatching f0e/blur job ${jobId} to GitHub Actions...`);
+      try {
+        const resp = await fetch('https://api.github.com/repos/rtyupp/flowtik-web/actions/workflows/render_blur.yml/dispatches', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/vnd.github+json',
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ref: 'main',
+            inputs: { video_url: videoUrl, blur_config_b64: cfgB64, job_id: jobId },
+          }),
+        });
+        if (!resp.ok) {
+          const errTxt = await resp.text();
+          throw new Error(`HTTP ${resp.status}: ${errTxt}`);
+        }
+        appendBlurLog(`✅ Job ${jobId} started! Check Actions or Telegram in 1-4 min.`, 'success');
+        appendBlurLog(`https://github.com/rtyupp/flowtik-web/actions/workflows/render_blur.yml`, 'normal');
+      } catch (e) {
+        appendBlurLog('Error: ' + e.message, 'warning');
+      }
+    }
+    window.dispatchCloudBlur = dispatchCloudBlur;
+
     window.__flowtikReady = true;
   </script>
 </body>
