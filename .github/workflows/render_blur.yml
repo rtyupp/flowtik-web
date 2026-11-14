@@ -46,14 +46,14 @@ jobs:
         with:
           path: |
             /tmp/blur_env
-          key: f0e-blur-v2.45-ubuntu24-v1
+          key: f0e-blur-v2.45-ubuntu24-v2
         continue-on-error: true
 
       - name: Setup f0e/blur VapourSynth Runtime
         run: |
           set -e
           mkdir -p /tmp/blur_env/plugins /tmp/blur_env/scripts/blur /tmp/blur_env/models/rife-v4.26_ensembleFalse
-          python3 -m pip install --break-system-packages --quiet vapoursynth
+          python3 -m pip install --break-system-packages --quiet vapoursynth==70 numpy
 
           python3 -c "import vapoursynth as vs; print('VapourSynth:', vs.__version__)"
           VS_DIR=$(python3 -c "import vapoursynth as vs, pathlib; print(pathlib.Path(vs.__file__).parent)")
@@ -64,40 +64,20 @@ jobs:
           fi
           which vspipe || true
 
-          if [ ! -f /tmp/blur_env/scripts/blur.py ]; then
-            BASE_RAW="https://raw.githubusercontent.com/f0e/blur/master/src/vapoursynth"
-            curl -fsSL "$BASE_RAW/blur.py" -o /tmp/blur_env/scripts/blur.py
-            for f in blending.py deduplicate.py interpolate.py utils.py weighting.py; do
-              curl -fsSL "$BASE_RAW/blur/$f" -o "/tmp/blur_env/scripts/blur/$f"
-            done
+          if [ ! -f /tmp/blur_env/scripts/blur.py ] || [ ! -f /tmp/blur_env/plugins/libsvpflow1_vs64.so ]; then
+            curl -fsSL "https://github.com/f0e/blur/releases/download/v2.45/blur-Linux-Release-x64.tar.gz" -o blur_rel.tar.gz
+            mkdir -p /tmp/blur_rel_extract
+            tar -xzf blur_rel.tar.gz -C /tmp/blur_rel_extract
+            cp -f /tmp/blur_rel_extract/vapoursynth-plugins/*.so /tmp/blur_env/plugins/
+            cp -rn /tmp/blur_rel_extract/models/* /tmp/blur_env/models/ || true
+            cp -rf /tmp/blur_rel_extract/lib/* /tmp/blur_env/scripts/
+            rm -rf blur_rel.tar.gz /tmp/blur_rel_extract
           fi
 
-          cd /tmp/blur_env/plugins
-          if [ ! -f libsvpflow1_vs64.so ] || [ ! -f librife_linux_x86-64.so ]; then
-            curl -fsSL "https://github.com/f0e/blur/releases/download/v2.45/blur-Linux-Release-x64.tar.gz" -o blur_rel.tar.gz || true
-            if [ -s blur_rel.tar.gz ]; then
-              mkdir -p /tmp/blur_rel_extract
-              tar -xzf blur_rel.tar.gz -C /tmp/blur_rel_extract
-              cp -f /tmp/blur_rel_extract/vapoursynth-plugins/*.so /tmp/blur_env/plugins/ || true
-              cp -rn /tmp/blur_rel_extract/models/* /tmp/blur_env/models/ || true
-              cp -rf /tmp/blur_rel_extract/lib/* /tmp/blur_env/scripts/ || true
-              rm -rf blur_rel.tar.gz /tmp/blur_rel_extract
-            fi
-          fi
-          for pair in \
-            "bestsource.so|https://github.com/f0e/blur-plugin-builds/releases/latest/download/bestsource.so" \
-            "libbestsource.so|https://github.com/f0e/blur-plugin-builds/releases/latest/download/libbestsource.so" \
-            "libakarin.so|https://github.com/f0e/blur-plugin-builds/releases/latest/download/libakarin.so" \
-            "libmvtools.so|https://github.com/f0e/blur-plugin-builds/releases/latest/download/libmvtools.so" \
-            "libadjust.so|https://github.com/f0e/Vapoursynth-adjust/releases/latest/download/libadjust.so" \
-            "librife_linux_x86-64.so|https://github.com/styler00dollar/VapourSynth-RIFE-ncnn-Vulkan/releases/download/r9_mod_v33/librife_linux_x86-64.so"; do
-            fname="${pair%%|*}"
-            furl="${pair##*|}"
-            if [ ! -f "$fname" ]; then
-              curl -fsSL "$furl" -o "$fname" || echo "WARN: failed $fname"
-            fi
-          done
-
+          # BestSource prebuilt needs FFmpeg 8 (libavutil.so.60), whereas Ubuntu 24.04 ships FFmpeg 6;
+          # install lsmas / ffms2 from Ubuntu or build bestsource fallback in render_blur.py via core.std / imwri / lsmas
+          sudo apt-get install -y --no-install-recommends libffms2-5 || true
+          echo "Checking plugins:"
           ls -lh /tmp/blur_env/plugins/ /tmp/blur_env/models/
 
       - name: Download Input Video

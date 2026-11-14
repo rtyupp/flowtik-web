@@ -103,6 +103,8 @@ def probe_video(video_path: Path) -> dict:
     return {
         "fps_num": fps_num,
         "fps_den": fps_den,
+        "width": int(stream.get("width") or 1280),
+        "height": int(stream.get("height") or 720),
         "color_range": stream.get("color_range"),
         "color_space": stream.get("color_space"),
         "color_transfer": stream.get("color_transfer"),
@@ -113,9 +115,10 @@ def probe_video(video_path: Path) -> dict:
     }
 
 
-def load_plugins_wrapper(blur_env: Path) -> Path:
-    """Create a thin wrapper script that preloads VapourSynth plugins from blur_env/plugins
-    and then executes f0e/blur's official blur.py."""
+def load_plugins_wrapper(blur_env: Path, width: int, height: int) -> Path:
+    """Create a thin wrapper script that preloads VapourSynth plugins from blur_env/plugins,
+    provides a rawvideo source fallback if bestsource cannot load due to system FFmpeg ABI,
+    and executes f0e/blur's official blur.py."""
     wrapper = blur_env / "scripts" / "run_blur_wrapper.py"
     code = f"""import vapoursynth as vs
 from vapoursynth import core
@@ -132,9 +135,43 @@ for plugin in sorted(plugin_dir.glob("*.so")):
         except Exception as e:
             print("Plugin load warning:", plugin.name, e, file=sys.stderr)
 
-# Expose variables expected by official blur.py
-globals_dict = globals().copy()
-runpy.run_path({repr(str(blur_env / "scripts" / "blur.py"))}, init_globals=globals_dict)
+# If bestsource failed to load (e.g. libavutil.so.60 ABI mismatch on Ubuntu 24.04),
+# fall back to FFmpeg-decoded raw YUV420P8 clip in VapourSynth.
+if not hasattr(core, "bs"):
+    import subprocess as _sp, numpy as _np
+    class _RawBSFallback:
+        @staticmethod
+        def VideoSource(source, cachemode=0, fpsnum=None, fpsden=None):
+            w, h = {width}, {height}
+            fn = int(fpsnum or 60)
+            fd = int(fpsden or 1)
+            raw_cmd = ["ffmpeg", "-v", "error", "-i", str(source), "-f", "rawvideo", "-pix_fmt", "yuv420p", "-"]
+            raw_bytes = _sp.check_output(raw_cmd)
+            frame_sz = (w * h * 3) // 2
+            n_frames = len(raw_bytes) // frame_sz
+            blank = core.std.BlankClip(width=w, height=h, format=vs.YUV420P8, length=n_frames, fpsnum=fn, fpsden=fd)
+            mv = memoryview(raw_bytes)
+            y_sz = w * h
+            uv_sz = (w // 2) * (h // 2)
+            def _fill(n, f):
+                fout = f.copy()
+                off = n * frame_sz
+                _np.copyto(_np.asarray(fout[0]), _np.frombuffer(mv[off:off+y_sz], dtype=_np.uint8).reshape((h, w)))
+                _np.copyto(_np.asarray(fout[1]), _np.frombuffer(mv[off+y_sz:off+y_sz+uv_sz], dtype=_np.uint8).reshape((h//2, w//2)))
+                _np.copyto(_np.asarray(fout[2]), _np.frombuffer(mv[off+y_sz+uv_sz:off+frame_sz], dtype=_np.uint8).reshape((h//2, w//2)))
+                return fout
+            return core.std.ModifyFrame(blank, blank, _fill)
+    _bs_fb = _RawBSFallback()
+    blur_py_path = Path({repr(str(blur_env / "scripts" / "blur.py"))})
+    src = blur_py_path.read_text(encoding="utf-8")
+    src = src.replace("core.bs.VideoSource(", "_bs_fb.VideoSource(")
+    globals_dict = globals().copy()
+    globals_dict["__file__"] = str(blur_py_path)
+    globals_dict["_bs_fb"] = _bs_fb
+    exec(compile(src, str(blur_py_path), "exec"), globals_dict)
+else:
+    globals_dict = globals().copy()
+    runpy.run_path({repr(str(blur_env / "scripts" / "blur.py"))}, init_globals=globals_dict)
 """
     wrapper.write_text(code, encoding="utf-8")
     return wrapper
@@ -210,7 +247,7 @@ def main():
     print("Input video info:", info)
     print("Effective f0e/blur settings:", json.dumps(cfg, ensure_ascii=False))
 
-    wrapper = load_plugins_wrapper(blur_env)
+    wrapper = load_plugins_wrapper(blur_env, info["width"], info["height"])
 
     import shutil, importlib.util
     vspipe_bin = shutil.which("vspipe")
