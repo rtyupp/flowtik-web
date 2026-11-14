@@ -46,14 +46,14 @@ jobs:
         with:
           path: |
             /tmp/blur_env
-          key: f0e-blur-v2.45-ubuntu24-v2
+          key: f0e-blur-v2.45-ubuntu24-v3
         continue-on-error: true
 
       - name: Setup f0e/blur VapourSynth Runtime
         run: |
           set -e
           mkdir -p /tmp/blur_env/plugins /tmp/blur_env/scripts/blur /tmp/blur_env/models/rife-v4.26_ensembleFalse
-          python3 -m pip install --break-system-packages --quiet vapoursynth==70 numpy
+          python3 -m pip install --break-system-packages --quiet "vapoursynth==80" numpy
 
           python3 -c "import vapoursynth as vs; print('VapourSynth:', vs.__version__)"
           VS_DIR=$(python3 -c "import vapoursynth as vs, pathlib; print(pathlib.Path(vs.__file__).parent)")
@@ -74,9 +74,9 @@ jobs:
             rm -rf blur_rel.tar.gz /tmp/blur_rel_extract
           fi
 
-          # BestSource prebuilt needs FFmpeg 8 (libavutil.so.60), whereas Ubuntu 24.04 ships FFmpeg 6;
-          # install lsmas / ffms2 from Ubuntu or build bestsource fallback in render_blur.py via core.std / imwri / lsmas
-          sudo apt-get install -y --no-install-recommends libffms2-5 || true
+          # Also install prebuilt VapourSynth R70/R68 + libvapoursynth if svpflow API 3 is needed:
+          # Note: VapourSynth 73+ dropped API 3 support, while official Ubuntu/brew/wheel R80 has API 4;
+          # If SVP API 3 plugins fail to load in VS80, install Ubuntu's official vapoursynth or fallback to MVTools/RIFE!
           echo "Checking plugins:"
           ls -lh /tmp/blur_env/plugins/ /tmp/blur_env/models/
 
