@@ -1,56 +1,166 @@
-name: Render Blur Video (PC Engine)
+name: Render Blur Video (f0e/blur Engine)
 
 on:
   workflow_dispatch:
     inputs:
       video_url:
-        description: 'Direct URL to input video'
+        description: 'Direct URL to input video (or tg:<file_id>)'
         required: true
-      blur_amount:
-        description: 'Blur Amount (e.g. 1.0)'
-        default: '1.0'
+      blur_config_b64:
+        description: 'Base64-encoded JSON of full f0e/blur settings'
         required: false
-      blur_weighting:
-        description: 'Blur Weighting function'
-        default: 'gaussian_sym'
+        default: ''
+      tg_chat_id:
+        description: 'Optional Telegram chat_id to deliver rendered video'
         required: false
-      output_fps:
-        description: 'Output framerate'
-        default: '60'
+        default: ''
+      job_id:
+        description: 'Client job correlation ID'
         required: false
-      interpolated_fps:
-        description: 'Interpolated FPS'
-        default: '600'
-        required: false
+        default: ''
+
+permissions:
+  contents: read
+  actions: write
 
 jobs:
   render:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Environment
+      - name: Install system dependencies (FFmpeg, VapourSynth libs, Vulkan CPU)
         run: |
-          mkdir -p workspace
+          set -e
           sudo apt-get update
-          sudo apt-get install -y ffmpeg
+          sudo apt-get install -y \
+            ffmpeg python3 python3-pip python3-dev \
+            libgl1 libegl1 libvulkan1 mesa-vulkan-drivers \
+            libfftw3-double3 libfftw3-single3 libzimg2 \
+            curl wget unzip jq
 
-      - name: Download Target Video
-        run: |
-          curl -L -o workspace/input_video.mp4 "${{ github.event.inputs.video_url }}"
-          ls -lh workspace/
+      - name: Cache VapourSynth + f0e/blur runtime
+        uses: actions/cache@v4
+        with:
+          path: |
+            /tmp/blur_env
+          key: f0e-blur-v2.45-ubuntu24-v1
+        continue-on-error: true
 
-      - name: Render Real Motion Blur Video
+      - name: Setup f0e/blur VapourSynth Runtime
         run: |
-          echo "Starting High-Speed Real Motion Blur..."
-          ffmpeg -i workspace/input_video.mp4 \
-            -vf "tblend=all_mode=average" \
-            -c:v libx264 -crf 17 -preset ultrafast -c:a copy workspace/output_blurred.mp4 -y
+          set -e
+          mkdir -p /tmp/blur_env/plugins /tmp/blur_env/scripts/blur /tmp/blur_env/models/rife-v4.26_ensembleFalse
+          python3 -m pip install --break-system-packages --quiet vapoursynth
+
+          python3 -c "import vapoursynth as vs; print('VapourSynth:', vs.__version__)"
+          VS_DIR=$(python3 -c "import vapoursynth as vs, pathlib; print(pathlib.Path(vs.__file__).parent)")
+          echo "VS_DIR=$VS_DIR"
+          ls -la "$VS_DIR"
+          if [ -x "$VS_DIR/vspipe" ]; then
+            sudo ln -sf "$VS_DIR/vspipe" /usr/local/bin/vspipe
+          fi
+          which vspipe || true
+
+          if [ ! -f /tmp/blur_env/scripts/blur.py ]; then
+            BASE_RAW="https://raw.githubusercontent.com/f0e/blur/master/src/vapoursynth"
+            curl -fsSL "$BASE_RAW/blur.py" -o /tmp/blur_env/scripts/blur.py
+            for f in blending.py deduplicate.py interpolate.py utils.py weighting.py; do
+              curl -fsSL "$BASE_RAW/blur/$f" -o "/tmp/blur_env/scripts/blur/$f"
+            done
+          fi
+
+          cd /tmp/blur_env/plugins
+          if [ ! -f libsvpflow1_vs64.so ] || [ ! -f librife_linux_x86-64.so ]; then
+            curl -fsSL "https://github.com/f0e/blur/releases/download/v2.45/blur-Linux-Release-x64.tar.gz" -o blur_rel.tar.gz || true
+            if [ -s blur_rel.tar.gz ]; then
+              mkdir -p /tmp/blur_rel_extract
+              tar -xzf blur_rel.tar.gz -C /tmp/blur_rel_extract
+              cp -f /tmp/blur_rel_extract/vapoursynth-plugins/*.so /tmp/blur_env/plugins/ || true
+              cp -rn /tmp/blur_rel_extract/models/* /tmp/blur_env/models/ || true
+              cp -rf /tmp/blur_rel_extract/lib/* /tmp/blur_env/scripts/ || true
+              rm -rf blur_rel.tar.gz /tmp/blur_rel_extract
+            fi
+          fi
+          for pair in \
+            "bestsource.so|https://github.com/f0e/blur-plugin-builds/releases/latest/download/bestsource.so" \
+            "libbestsource.so|https://github.com/f0e/blur-plugin-builds/releases/latest/download/libbestsource.so" \
+            "libakarin.so|https://github.com/f0e/blur-plugin-builds/releases/latest/download/libakarin.so" \
+            "libmvtools.so|https://github.com/f0e/blur-plugin-builds/releases/latest/download/libmvtools.so" \
+            "libadjust.so|https://github.com/f0e/Vapoursynth-adjust/releases/latest/download/libadjust.so" \
+            "librife_linux_x86-64.so|https://github.com/styler00dollar/VapourSynth-RIFE-ncnn-Vulkan/releases/download/r9_mod_v33/librife_linux_x86-64.so"; do
+            fname="${pair%%|*}"
+            furl="${pair##*|}"
+            if [ ! -f "$fname" ]; then
+              curl -fsSL "$furl" -o "$fname" || echo "WARN: failed $fname"
+            fi
+          done
+
+          ls -lh /tmp/blur_env/plugins/ /tmp/blur_env/models/
+
+      - name: Download Input Video
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+        run: |
+          set -e
+          mkdir -p workspace
+          VIDEO_URL="${{ github.event.inputs.video_url }}"
+          if [[ "$VIDEO_URL" == tg:* ]]; then
+            FILE_ID="${VIDEO_URL#tg:}"
+            if [ -z "$TG_BOT_TOKEN" ]; then
+              echo "ERROR: TG_BOT_TOKEN secret is required for tg: file_id"
+              exit 1
+            fi
+            FILE_PATH=$(curl -fsSL "https://api.telegram.org/bot${TG_BOT_TOKEN}/getFile?file_id=${FILE_ID}" | jq -r '.result.file_path')
+            curl -fsSL "https://api.telegram.org/file/bot${TG_BOT_TOKEN}/${FILE_PATH}" -o workspace/input_video.mp4
+          else
+            curl -fsSL "$VIDEO_URL" -o workspace/input_video.mp4
+          fi
+          ls -lh workspace/input_video.mp4
+          ffprobe -v error -show_entries stream=codec_type,width,height,r_frame_rate,avg_frame_rate,nb_frames -of default=nw=1 workspace/input_video.mp4
+
+      - name: Render with f0e/blur VapourSynth Pipeline
+        env:
+          BLUR_CONFIG_B64: ${{ github.event.inputs.blur_config_b64 }}
+          JOB_ID: ${{ github.event.inputs.job_id }}
+        run: |
+          python3 scripts/render_blur.py \
+            --input workspace/input_video.mp4 \
+            --output-dir workspace \
+            --blur-env /tmp/blur_env \
+            --config-b64 "$BLUR_CONFIG_B64" \
+            --job-id "$JOB_ID"
 
       - name: Upload Processed Video Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: abu_asrah_blurred_video
-          path: workspace/output_blurred.mp4
-          retention-days: 1
+          name: abu_asrah_blur_${{ github.event.inputs.job_id || github.run_id }}
+          path: workspace/output_blur.*
+          retention-days: 3
+
+      - name: Send Rendered Video to Telegram (if configured)
+        if: always() && (secrets.TG_BOT_TOKEN != '') && (github.event.inputs.tg_chat_id != '' || secrets.TG_CHAT_ID != '')
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ github.event.inputs.tg_chat_id || secrets.TG_CHAT_ID }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          OUT_FILE=$(ls workspace/output_blur.* 2>/dev/null | head -n 1 || true)
+          if [ "$JOB_STATUS" = "success" ] && [ -n "$OUT_FILE" ] && [ -f "$OUT_FILE" ]; then
+            SIZE_MB=$(du -m "$OUT_FILE" | cut -f1)
+            if [ "$SIZE_MB" -le 49 ]; then
+              curl -fsSL -F "chat_id=${TG_CHAT_ID}" -F "video=@${OUT_FILE}" -F "supports_streaming=true" \
+                -F "caption=✅ تم رندر البلور بنجاح (f0e/blur)" \
+                "https://api.telegram.org/bot${TG_BOT_TOKEN}/sendVideo" || true
+            else
+              curl -fsSL -X POST "https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage" \
+                -d "chat_id=${TG_CHAT_ID}" \
+                -d "text=✅ اكتمل رندر البلور (${SIZE_MB}MB أكبر من حد تيليجرام 50MB). حمله من GitHub Artifact: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" || true
+            fi
+          else
+            curl -fsSL -X POST "https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage" \
+              -d "chat_id=${TG_CHAT_ID}" \
+              -d "text=❌ فشل رندر البلور. راجع اللوق: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" || true
+          fi

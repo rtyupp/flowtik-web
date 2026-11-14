@@ -1,0 +1,37 @@
+name: Blur Telegram Bot Listener
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: blur-tg-bot-poller
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    if: github.event_name == 'workflow_dispatch' || vars.ENABLE_TG_BOT == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Telegram Blur Bot Poller
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          GH_TOKEN: ${{ secrets.BLUR_GH_TOKEN || github.token }}
+          GH_REPO: ${{ github.repository }}
+          ALLOWED_CHAT_IDS: ${{ vars.ALLOWED_CHAT_IDS }}
+          RUN_SECONDS: "270"
+        run: |
+          if [ -z "$TG_BOT_TOKEN" ]; then
+            echo "TG_BOT_TOKEN secret not set yet; exiting cleanly."
+            exit 0
+          fi
+          python3 scripts/blur_tg_bot.py
