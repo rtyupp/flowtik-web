@@ -168,9 +168,14 @@ if not hasattr(core, "bs"):
         src = src.replace("core.bs.VideoSource(", "_bs_fb.VideoSource(")
     if not hasattr(core, "svp1") or not hasattr(core, "svp2"):
         print("SVP API3 unavailable in this VapourSynth build; using MVTools/RIFE fallback.", file=sys.stderr)
-        # Replace deduplicate svp -> old (mvtools) and interpolation svp -> mvtools (commented out in official blur.py)
-        src = src.replace('        case "svp":\n            video = blur.deduplicate.fill_drops_multiple(', '        case "svp":\n            video = blur.deduplicate.fill_drops_mvtools(video, threshold=deduplicate_threshold, debug=settings["debug"])\n        case "_svp_disabled":\n            video = blur.deduplicate.fill_drops_multiple(')
-        src = src.replace('            case _:  # svp', '            case _:  # mvtools_fallback\n                video = blur.interpolate.interpolate_mvtools(video, int(interpolated_fps), blocksize=interpolation_blocksize, masking=interpolation_mask_area)\n            case "_svp_disabled":')
+        src = src.replace(
+            'case "svp":\\n            video = blur.deduplicate.fill_drops_multiple(',
+            'case "svp":\\n            video = blur.deduplicate.fill_drops_mvtools(video, threshold=deduplicate_threshold, debug=settings["debug"])\\n        case "_svp_disabled":\\n            video = blur.deduplicate.fill_drops_multiple('
+        )
+        src = src.replace(
+            'case _:  # svp',
+            'case _:  # mvtools_fallback\\n                video = blur.interpolate.interpolate_mvtools(video, int(interpolated_fps), blocksize=interpolation_blocksize, masking=interpolation_mask_area)\\n            case "_svp_disabled":'
+        )
     globals_dict = globals().copy()
     globals_dict["__file__"] = str(blur_py_path)
     globals_dict["_bs_fb"] = _bs_fb
