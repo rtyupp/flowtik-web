@@ -141,12 +141,16 @@ jobs:
           retention-days: 3
 
       - name: Send Rendered Video to Telegram (if configured)
-        if: always() && (secrets.TG_BOT_TOKEN != '') && (github.event.inputs.tg_chat_id != '' || secrets.TG_CHAT_ID != '')
+        if: always()
         env:
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           TG_CHAT_ID: ${{ github.event.inputs.tg_chat_id || secrets.TG_CHAT_ID }}
           JOB_STATUS: ${{ job.status }}
         run: |
+          if [ -z "$TG_BOT_TOKEN" ] || [ -z "$TG_CHAT_ID" ]; then
+            echo "Telegram secrets not configured; skipping TG notification."
+            exit 0
+          fi
           OUT_FILE=$(ls workspace/output_blur.* 2>/dev/null | head -n 1 || true)
           if [ "$JOB_STATUS" = "success" ] && [ -n "$OUT_FILE" ] && [ -f "$OUT_FILE" ]; then
             SIZE_MB=$(du -m "$OUT_FILE" | cut -f1)
