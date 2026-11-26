@@ -138,8 +138,10 @@ from vapoursynth import core
 from pathlib import Path
 import runpy, sys
 
+sys.stdout = sys.stderr
+
 plugin_dir = Path({repr(str(blur_env / "plugins"))})
-ignored = {{"libbestsource.so"}}
+ignored = {{"libbestsource.so", "bestsource.so"}}
 for plugin in sorted(plugin_dir.glob("*.so")):
     if plugin.name not in ignored:
         try:
@@ -346,6 +348,8 @@ def main():
         "-hide_banner",
         "-stats",
         "-y",
+        "-f",
+        "yuv4mpegpipe",
         "-i",
         "-",
         "-fflags",
