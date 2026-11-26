@@ -15,7 +15,7 @@
 
   <link rel="icon" type="image/png" href="icon-192.png?v=3">
   <link rel="apple-touch-icon" sizes="512x512" href="apple-touch-icon.png?v=3">
-  <link rel="manifest" href="manifest.json?v=9">
+  <link rel="manifest" href="manifest.json?v=10">
 
   <style>
     :root {
@@ -822,7 +822,7 @@
           <p class="brand-sub">TIKTOK 120 FPS STUDIO</p>
         </div>
       </div>
-      <div class="ver-pill" id="verPill">v5.0 · محلي</div>
+      <div class="ver-pill" id="verPill">v5.1 · محلي</div>
     </header>
 
     <section class="studio-card" id="paneMain">
@@ -863,7 +863,7 @@
               <span class="fps-num">120 FPS</span>
               <span class="fps-tag">أسلوب 120</span>
             </div>
-            <div class="fps-desc">توقيت 120K + ترقيع MP4 Atom بدون فقد جودة</div>
+            <div class="fps-desc">توقيت 120K · حاوية isom · ترقيع Atom 10× بدون فقد جودة</div>
           </div>
 
           <div class="fps-option" data-fps="60" onclick="setFps(60)">
@@ -871,7 +871,7 @@
               <span class="fps-num">60 FPS</span>
               <span class="fps-tag">مستقر</span>
             </div>
-            <div class="fps-desc">توقيت 60K · ألوان BT.709 · حماية فريمات</div>
+            <div class="fps-desc">توقيت 60K · حاوية isom · ترقيع Atom 4× بدون فقد جودة</div>
           </div>
         </div>
       </div>
@@ -888,9 +888,9 @@
         <div class="mult-pills" id="atomMultWrap">
           <span>مضاعفة ترويسة الفريمات (Ghost Frames)</span>
           <div class="mult-group">
-            <button type="button" class="mult-btn" data-mult="2" onclick="setAtomMult(2)">2×</button>
-            <button type="button" class="mult-btn active" data-mult="4" onclick="setAtomMult(4)">4×</button>
-            <button type="button" class="mult-btn" data-mult="6" onclick="setAtomMult(6)">6×</button>
+            <button type="button" class="mult-btn" data-mult="4" onclick="setAtomMult(4)">4×</button>
+            <button type="button" class="mult-btn active" data-mult="10" onclick="setAtomMult(10)">10×</button>
+            <button type="button" class="mult-btn" data-mult="15" onclick="setAtomMult(15)">15×</button>
           </div>
         </div>
 
@@ -971,12 +971,12 @@
   </main>
 
   <script>
-    // ===== AbuAsrh Studio v5.0 (GitHub Pages · MP4 Atom Patcher + CAS + HDR->SDR) =====
+    // ===== AbuAsrh Studio v5.1 (GitHub Pages · isom 10x MP4 Atom Patch + CAS + HDR->SDR) =====
     'use strict';
 
     let currentFile = null;
     let selectedFps = 120;
-    let atomMultiplier = 4;
+    let atomMultiplier = 10;
     let lastUrl = null;
     let lastBlob = null;
     let previewUrl = null;
@@ -1029,7 +1029,7 @@
       document.querySelectorAll('.fps-option').forEach((el) => {
         el.classList.toggle('active', parseInt(el.dataset.fps, 10) === fps);
       });
-      setAtomMult(fps === 120 ? 4 : 2);
+      setAtomMult(fps === 120 ? 10 : 4);
       if (currentFile) {
         resultCard.style.display = 'none';
         btnDownload.style.display = 'none';
@@ -1195,15 +1195,15 @@
         const outName = 'out_video.mp4';
         const coreUrl = new URL('ffmpeg-core.js', location.href).href;
         const wasmUrl = new URL('ffmpeg-core.wasm', location.href).href;
-        const patcherUrl = new URL('mp4-atom-patcher.js?v=9', location.href).href;
+        const patcherUrl = new URL('mp4-atom-patcher.js?v=10', location.href).href;
 
-        appendLog(`# AbuAsrh v5.0 · ${fpsNum} FPS · Atom=${patchMultiplier}x · Reencode=${reencode} · CAS=${casSharp}`);
+        appendLog(`# AbuAsrh v5.1 · ${fpsNum} FPS · Atom=${patchMultiplier}x · Reencode=${reencode} · CAS=${casSharp}`);
 
         if (worker) {
           try { worker.terminate(); } catch (_) {}
           worker = null;
         }
-        worker = new Worker('abuasrh-worker.js?v=9');
+        worker = new Worker('abuasrh-worker.js?v=10');
 
         await new Promise((resolve, reject) => {
           worker.onmessage = (ev) => {

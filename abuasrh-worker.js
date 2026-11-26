@@ -44,7 +44,7 @@ function buildFfmpegArgs(opts, hdrDetected) {
         '-metadata', 'title=AbuAsrh',
         '-metadata', 'artist=AbuAsrh',
         '-metadata', `comment=AbuAsrh Studio ${fpsNum}FPS`,
-        '-brand', 'mp42',
+        '-brand', 'isom',
         '-movflags', '+faststart',
         outName
       );
@@ -118,7 +118,7 @@ function buildFfmpegArgs(opts, hdrDetected) {
     '-ac', '2',
     '-b:a', '192k',
     '-avoid_negative_ts', 'make_zero',
-    '-brand', 'mp42',
+    '-brand', 'isom',
     '-movflags', '+faststart',
     outName
   );
@@ -131,7 +131,7 @@ self.onmessage = async (ev) => {
   if (msg.type !== 'run') return;
 
   let { coreUrl, wasmUrl, patcherUrl, fileBuffer, inName, outName, options } = msg;
-  const opts = Object.assign({ inName, outName, fps: 120, reencode: false, casSharp: false, autoHdr: true, slowMo: false, patchMultiplier: 4 }, options || {});
+  const opts = Object.assign({ inName, outName, fps: 120, reencode: false, casSharp: false, autoHdr: true, slowMo: false, patchMultiplier: 10 }, options || {});
   let core = null;
   let dur = 0;
   let lastProgressAt = 0;

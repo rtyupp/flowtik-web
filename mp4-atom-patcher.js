@@ -32,6 +32,13 @@
     return String.fromCharCode(u8[off], u8[off + 1], u8[off + 2], u8[off + 3]);
   }
 
+  function writeFourcc(u8, off, s) {
+    u8[off] = s.charCodeAt(0);
+    u8[off + 1] = s.charCodeAt(1);
+    u8[off + 2] = s.charCodeAt(2);
+    u8[off + 3] = s.charCodeAt(3);
+  }
+
   function parseBoxes(u8, start, end) {
     const boxes = [];
     let pos = start;
@@ -72,17 +79,11 @@
     const out = new Uint8Array(total);
     if (useLarge) {
       writeU32(out, 0, 1);
-      out[4] = type.charCodeAt(0);
-      out[5] = type.charCodeAt(1);
-      out[6] = type.charCodeAt(2);
-      out[7] = type.charCodeAt(3);
+      writeFourcc(out, 4, type);
       writeU64(out, 8, total);
     } else {
       writeU32(out, 0, total);
-      out[4] = type.charCodeAt(0);
-      out[5] = type.charCodeAt(1);
-      out[6] = type.charCodeAt(2);
-      out[7] = type.charCodeAt(3);
+      writeFourcc(out, 4, type);
     }
     let off = headerSize;
     for (let i = 0; i < payloadChunks.length; i++) {
@@ -90,6 +91,18 @@
       off += payloadChunks[i].length;
     }
     return out;
+  }
+
+  function makeIsomFtypBox() {
+    // 32-byte standard ftyp: isom / minor 512 / compatible [isom, iso2, avc1, mp41]
+    const p = new Uint8Array(24);
+    writeFourcc(p, 0, 'isom');
+    writeU32(p, 4, 512);
+    writeFourcc(p, 8, 'isom');
+    writeFourcc(p, 12, 'iso2');
+    writeFourcc(p, 16, 'avc1');
+    writeFourcc(p, 20, 'mp41');
+    return makeBox('ftyp', [p]);
   }
 
   function concatU8(chunks) {
@@ -171,77 +184,15 @@
 
   function makeEdtsBox(segmentDuration) {
     const p = new Uint8Array(20);
-    // version 0 + flags 0, entry_count = 1
     writeU32(p, 4, 1);
     writeU32(p, 8, Math.min(0xffffffff, segmentDuration));
-    writeU32(p, 12, 0); // media_time = 0
-    p[16] = 0x00; p[17] = 0x01; // media_rate_integer = 1
-    p[18] = 0x00; p[19] = 0x00; // media_rate_fraction = 0
+    writeU32(p, 12, 0);
+    p[16] = 0x00; p[17] = 0x01;
+    p[18] = 0x00; p[19] = 0x00;
     return makeBox('edts', [makeBox('elst', [p])]);
   }
 
-  function findSmallestIdrSample(u8, stblKids, origFrames) {
-    const stszBox = stblKids.find((b) => b.type === 'stsz');
-    const stscBox = stblKids.find((b) => b.type === 'stsc');
-    const stcoBox = stblKids.find((b) => b.type === 'stco' || b.type === 'co64');
-    const stssBox = stblKids.find((b) => b.type === 'stss');
-    if (!stszBox || !stscBox || !stcoBox) return null;
-
-    const sampleSize = readU32(u8, stszBox.payloadStart + 4);
-    if (sampleSize !== 0) return null;
-
-    let bestIdx = -1;
-    let bestSize = 0xffffffff;
-
-    if (stssBox && stssBox.end - stssBox.payloadStart >= 12) {
-      const syncCount = readU32(u8, stssBox.payloadStart + 4);
-      for (let i = 0; i < syncCount; i++) {
-        const idx = readU32(u8, stssBox.payloadStart + 8 + i * 4) - 1;
-        if (idx < 0 || idx >= origFrames) continue;
-        const sz = readU32(u8, stszBox.payloadStart + 12 + idx * 4);
-        if (sz > 0 && sz < bestSize) {
-          bestSize = sz;
-          bestIdx = idx;
-        }
-      }
-    } else {
-      for (let idx = 0; idx < origFrames; idx++) {
-        const sz = readU32(u8, stszBox.payloadStart + 12 + idx * 4);
-        if (sz > 0 && sz < bestSize) {
-          bestSize = sz;
-          bestIdx = idx;
-        }
-      }
-    }
-
-    if (bestIdx < 0) return null;
-
-    const stscCount = readU32(u8, stscBox.payloadStart + 4);
-    const totalChunks = readU32(u8, stcoBox.payloadStart + 4);
-    const is64 = stcoBox.type === 'co64';
-    let sampleIdx = 0;
-
-    for (let i = 0; i < stscCount; i++) {
-      const firstChunk = readU32(u8, stscBox.payloadStart + 8 + i * 12);
-      const spc = readU32(u8, stscBox.payloadStart + 8 + i * 12 + 4);
-      const nextFirstChunk =
-        i + 1 < stscCount ? readU32(u8, stscBox.payloadStart + 8 + (i + 1) * 12) : totalChunks + 1;
-      for (let ch = firstChunk; ch < nextFirstChunk; ch++) {
-        if (bestIdx >= sampleIdx && bestIdx < sampleIdx + spc) {
-          const chunkOffPos = stcoBox.payloadStart + 8 + (ch - 1) * (is64 ? 8 : 4);
-          let fileOff = is64 ? readU64(u8, chunkOffPos) : readU32(u8, chunkOffPos);
-          for (let k = sampleIdx; k < bestIdx; k++) {
-            fileOff += readU32(u8, stszBox.payloadStart + 12 + k * 4);
-          }
-          return { sampleIdx: bestIdx, sampleSize: bestSize, oldOffset: fileOff };
-        }
-        sampleIdx += spc;
-      }
-    }
-    return null;
-  }
-
-  function patchVideoStbl(u8, stblBox, ghostCount, refSize) {
+  function patchVideoStbl(u8, stblBox, ghostCount) {
     const children = parseBoxes(u8, stblBox.payloadStart, stblBox.end);
     const stcoBox = children.find((b) => b.type === 'stco' || b.type === 'co64');
     const oldChunkCount = stcoBox ? readU32(u8, stcoBox.payloadStart + 4) : 0;
@@ -259,7 +210,7 @@
           newPayload.set(payload.subarray(0, 12 + origCount * 4), 0);
           writeU32(newPayload, 8, origCount + ghostCount);
           for (let g = 0; g < ghostCount; g++) {
-            writeU32(newPayload, 12 + (origCount + g) * 4, refSize);
+            writeU32(newPayload, 12 + (origCount + g) * 4, 8);
           }
           outChildren.push(makeBox('stsz', [newPayload]));
         } else {
@@ -306,7 +257,7 @@
     return makeBox('stbl', outChildren);
   }
 
-  function applyChunkOffsetFixupsInMoov(moovBoxBytes, ghostCount, delta, refNewOffset) {
+  function applyChunkOffsetFixupsInMoov(moovBoxBytes, ghostCount, delta, fillerFileOffset) {
     const moovBoxes = parseBoxes(moovBoxBytes, 0, moovBoxBytes.length);
     if (!moovBoxes.length) return;
     const moov = moovBoxes[0];
@@ -341,7 +292,7 @@
           }
           if (isVideo) {
             for (let g = 0; g < ghostCount; g++) {
-              writeU64(moovBoxBytes, tableStart + (origCount + g) * 8, refNewOffset);
+              writeU64(moovBoxBytes, tableStart + (origCount + g) * 8, fillerFileOffset);
             }
           }
         } else {
@@ -351,7 +302,7 @@
           }
           if (isVideo) {
             for (let g = 0; g < ghostCount; g++) {
-              writeU32(moovBoxBytes, tableStart + (origCount + g) * 4, refNewOffset);
+              writeU32(moovBoxBytes, tableStart + (origCount + g) * 4, fillerFileOffset);
             }
           }
         }
@@ -360,14 +311,15 @@
   }
 
   /**
-   * Patches an MP4 byte array by appending valid IDR-referenced ghost frame metadata
-   * entries (stsz/stts/stsc/stco/ctts + mdhd/tkhd/mvhd + edts) and forcing moov before mdat.
-   * Zero decoder errors and zero mdat bloat.
+   * Patches an MP4 container using the isom + 8-byte reusable filler block technique:
+   * normalizes ftyp=isom, places moov before mdat, inflates stsz/stts/stsc/stco/ctts
+   * without altering visual pixels or inflating declared bit_rate, and preserves exact
+   * playback duration via edts/elst.
    * @param {Uint8Array} mp4Bytes
    * @param {number} multiplier
    */
   function patchMp4ForTikTok(mp4Bytes, multiplier) {
-    const mult = Math.max(1, Math.min(10, Math.round(Number(multiplier) || 1)));
+    const mult = Math.max(1, Math.min(15, Math.round(Number(multiplier) || 1)));
     if (mult <= 1 || !mp4Bytes || mp4Bytes.length < 32) {
       return { bytes: mp4Bytes, originalFrames: 0, declaredFrames: 0, multiplier: 1, codec: 'none' };
     }
@@ -389,7 +341,6 @@
     let videoMdhdBox = null;
     let videoStsdBox = null;
     let videoStszBox = null;
-    let videoStblKids = null;
 
     for (let i = 0; i < moovChildren.length; i++) {
       const tb = moovChildren[i];
@@ -407,15 +358,15 @@
       const minfKids = parseBoxes(mp4Bytes, minf.payloadStart, minf.end);
       const stbl = minfKids.find((b) => b.type === 'stbl');
       if (!stbl) continue;
+      const stblKids = parseBoxes(mp4Bytes, stbl.payloadStart, stbl.end);
       videoTrak = tb;
       videoMdhdBox = mKids.find((b) => b.type === 'mdhd');
-      videoStblKids = parseBoxes(mp4Bytes, stbl.payloadStart, stbl.end);
-      videoStsdBox = videoStblKids.find((b) => b.type === 'stsd');
-      videoStszBox = videoStblKids.find((b) => b.type === 'stsz');
+      videoStsdBox = stblKids.find((b) => b.type === 'stsd');
+      videoStszBox = stblKids.find((b) => b.type === 'stsz');
       break;
     }
 
-    if (!videoTrak || !videoStszBox || !videoStblKids) {
+    if (!videoTrak || !videoStszBox) {
       return { bytes: mp4Bytes, originalFrames: 0, declaredFrames: 0, multiplier: 1, codec: 'none' };
     }
 
@@ -424,16 +375,11 @@
       return { bytes: mp4Bytes, originalFrames: 0, declaredFrames: 0, multiplier: 1, codec: 'none' };
     }
 
-    const idrRef = findSmallestIdrSample(mp4Bytes, videoStblKids, origFrames);
-    if (!idrRef) {
-      return { bytes: mp4Bytes, originalFrames: origFrames, declaredFrames: origFrames, multiplier: 1, codec: 'none' };
-    }
-
     const mdhdTs = videoMdhdBox
       ? getMdhdTimescale(mp4Bytes.subarray(videoMdhdBox.payloadStart, videoMdhdBox.end))
       : 60000;
     let ghostCount = origFrames * (mult - 1);
-    const maxGhostByDuration = Math.max(1, Math.floor(mdhdTs * 0.25));
+    const maxGhostByDuration = Math.max(1, Math.floor(mdhdTs * 0.5));
     if (ghostCount > maxGhostByDuration) {
       ghostCount = maxGhostByDuration;
     }
@@ -442,6 +388,7 @@
       ? detectVideoCodec(mp4Bytes.subarray(videoStsdBox.payloadStart, videoStsdBox.end))
       : 'avc1';
 
+    const fillerBlock = new Uint8Array([0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00]);
     const addMvhdTicks = Math.max(1, Math.ceil((ghostCount * mvhdInfo.timescale) / Math.max(1, mdhdTs)));
     let maxVideoTkhdDur = mvhdInfo.duration;
 
@@ -477,7 +424,7 @@
                 for (let m = 0; m < mfKids.length; m++) {
                   const mfk = mfKids[m];
                   if (mfk.type === 'stbl') {
-                    newMfKids.push(patchVideoStbl(mp4Bytes, mfk, ghostCount, idrRef.sampleSize));
+                    newMfKids.push(patchVideoStbl(mp4Bytes, mfk, ghostCount));
                   } else {
                     newMfKids.push(mp4Bytes.subarray(mfk.start, mfk.end));
                   }
@@ -505,25 +452,42 @@
 
     const newMoovBox = makeBox('moov', newMoovChildren);
 
-    const beforeBoxes = [];
+    const beforeBoxes = [makeIsomFtypBox()];
     for (let i = 0; i < topBoxes.length; i++) {
       const tb = topBoxes[i];
-      if (tb.type === 'moov' || tb.type === 'mdat' || tb.type === 'free') continue;
+      if (tb.type === 'ftyp' || tb.type === 'moov' || tb.type === 'mdat' || tb.type === 'free') continue;
       beforeBoxes.push(mp4Bytes.subarray(tb.start, tb.end));
     }
     let preMoovLen = 0;
     for (let i = 0; i < beforeBoxes.length; i++) preMoovLen += beforeBoxes[i].length;
 
-    const newMdatDataOffset = preMoovLen + newMoovBox.length + mdatBox.headerSize;
-    const delta = newMdatDataOffset - mdatBox.payloadStart;
-    const refNewOffset = idrRef.oldOffset + delta;
+    const oldMdatDataOffset = mdatBox.payloadStart;
+    const oldMdatPayloadLen = mdatBox.end - mdatBox.payloadStart;
+    const newMdatPayloadLen = oldMdatPayloadLen + fillerBlock.length;
+    const newMdatHeaderSize = newMdatPayloadLen + 8 > 0xffffffff ? 16 : 8;
+    const newMdatStart = preMoovLen + newMoovBox.length;
+    const newMdatDataOffset = newMdatStart + newMdatHeaderSize;
+    const delta = newMdatDataOffset - oldMdatDataOffset;
+    const fillerFileOffset = newMdatDataOffset + oldMdatPayloadLen;
 
-    applyChunkOffsetFixupsInMoov(newMoovBox, ghostCount, delta, refNewOffset);
+    applyChunkOffsetFixupsInMoov(newMoovBox, ghostCount, delta, fillerFileOffset);
+
+    const mdatHeader = new Uint8Array(newMdatHeaderSize);
+    if (newMdatHeaderSize === 16) {
+      writeU32(mdatHeader, 0, 1);
+      writeFourcc(mdatHeader, 4, 'mdat');
+      writeU64(mdatHeader, 8, newMdatHeaderSize + newMdatPayloadLen);
+    } else {
+      writeU32(mdatHeader, 0, newMdatHeaderSize + newMdatPayloadLen);
+      writeFourcc(mdatHeader, 4, 'mdat');
+    }
 
     const outBytes = concatU8([
       ...beforeBoxes,
       newMoovBox,
-      mp4Bytes.subarray(mdatBox.start, mdatBox.end),
+      mdatHeader,
+      mp4Bytes.subarray(mdatBox.payloadStart, mdatBox.end),
+      fillerBlock,
     ]);
 
     return {
