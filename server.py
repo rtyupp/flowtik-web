@@ -34,7 +34,7 @@ JOBS: dict[str, dict] = {}
 JOBS_LOCK = threading.Lock()
 _SVP_READY = False
 
-app = FastAPI(title="AbuAsrh Cloud Studio", version="4.0")
+app = FastAPI(title="AbuAsrh Cloud Studio", version="4.1")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -65,6 +65,87 @@ def probe_duration(path: Path) -> float:
         return max(0.0, float(out or 0.0))
     except Exception:
         return 0.0
+
+
+def probe_fps(path: Path) -> float:
+    def parse_frac(rate: str) -> float:
+        s = (rate or "").strip()
+        if not s:
+            return 0.0
+        try:
+            if "/" in s:
+                n, d = s.split("/", 1)
+                dn = float(d)
+                return float(n) / dn if dn > 0 else 0.0
+            return float(s)
+        except (ValueError, ZeroDivisionError):
+            return 0.0
+
+    try:
+        out = subprocess.check_output(
+            [
+                "ffprobe", "-v", "error",
+                "-select_streams", "v:0",
+                "-show_entries", "stream=avg_frame_rate,r_frame_rate",
+                "-of", "json",
+                str(path),
+            ],
+            text=True,
+            timeout=15,
+        )
+        stream = (json.loads(out).get("streams") or [{}])[0]
+        avg_val = parse_frac(stream.get("avg_frame_rate") or "")
+        if 1.0 <= avg_val <= 240.0:
+            return avg_val
+        r_val = parse_frac(stream.get("r_frame_rate") or "")
+        if 1.0 <= r_val <= 240.0:
+            return r_val
+    except Exception:
+        pass
+    return 30.0
+
+
+def tiktok_h264_args(out_fps: int, crf: int = 18, container: str = "mp4") -> list[str]:
+    fps_val = max(15, min(240, int(out_fps)))
+    level = "4.2" if fps_val <= 60 else "5.1"
+    maxrate = "12M" if fps_val <= 60 else "18M"
+    bufsize = "24M" if fps_val <= 60 else "36M"
+    gop = str(fps_val * 2)
+    keyint_min = str(fps_val)
+    timescale = "120000" if fps_val > 60 else "60000"
+    args = [
+        "-c:v", "libx264",
+        "-preset", "veryfast",
+        "-profile:v", "high",
+        "-level:v", level,
+        "-crf", str(crf),
+        "-maxrate", maxrate,
+        "-bufsize", bufsize,
+        "-g", gop,
+        "-keyint_min", keyint_min,
+        "-sc_threshold", "0",
+        "-bf", "2",
+        "-fps_mode", "cfr",
+        "-r", str(fps_val),
+        "-color_primaries", "bt709",
+        "-color_trc", "bt709",
+        "-colorspace", "bt709",
+        "-color_range", "tv",
+        "-x264-params", "colorprim=bt709:transfer=bt709:colormatrix=bt709:open-gop=0:ref=3:bframes=2",
+        "-map_metadata", "-1",
+        "-map_chapters", "-1",
+        "-metadata", "title=AbuAsrh",
+        "-metadata", "artist=AbuAsrh",
+        "-c:a", "aac",
+        "-ar", "48000",
+        "-ac", "2",
+        "-b:a", "192k",
+        "-avoid_negative_ts", "make_zero",
+        "-max_interleave_delta", "0",
+    ]
+    if container.lower() in ("mp4", "mov"):
+        args += ["-video_track_timescale", timescale, "-brand", "mp42", "-movflags", "+faststart"]
+    return args
 
 
 def compute_blur_weights_str(frames: int, cfg: dict) -> str:
@@ -229,19 +310,19 @@ def health():
     blur_ok = (BLUR_ENV / "scripts" / "blur.py").exists()
     return {
         "ok": True,
-        "version": "4.0",
+        "version": "4.1",
         "vapoursynth": vs_ok,
         "blur_env": blur_ok,
         "svp": _SVP_READY,
     }
 
 
-def _run_instant_worker(job_id: str, in_path: Path, job_dir: Path, fps: int, slow_mo: bool):
+def _run_instant_worker(job_id: str, in_path: Path, job_dir: Path, fps: int, slow_mo: bool, mode: str = "tiktok"):
     job = JOBS[job_id]
     out_path = job_dir / f"AbuAsrh_{fps}fps.mp4"
     duration_s = probe_duration(in_path)
 
-    def build_cmd(audio_copy: bool) -> list[str]:
+    def build_copy_cmd(audio_copy: bool) -> list[str]:
         cmd = ["ffmpeg", "-y", "-loglevel", "warning", "-stats"]
         if slow_mo:
             cmd += ["-itsscale", "2"]
@@ -250,8 +331,8 @@ def _run_instant_worker(job_id: str, in_path: Path, job_dir: Path, fps: int, slo
             "-map", "0:v:0",
             "-map", "0:a?",
             "-c:v", "copy",
-            *(["-c:a", "copy"] if audio_copy else ["-c:a", "aac", "-b:a", "192k"]),
-            "-video_track_timescale", "120000" if fps == 120 else "60000",
+            *(["-c:a", "copy"] if audio_copy else ["-c:a", "aac", "-ar", "48000", "-ac", "2", "-b:a", "192k"]),
+            "-video_track_timescale", "120000" if fps > 60 else "60000",
             "-color_primaries", "bt709",
             "-color_trc", "bt709",
             "-colorspace", "bt709",
@@ -269,6 +350,31 @@ def _run_instant_worker(job_id: str, in_path: Path, job_dir: Path, fps: int, slo
         ]
         return cmd
 
+    def build_tiktok_encode_cmd() -> list[str]:
+        vf = [
+            "scale=w='if(gte(iw,ih),min(1920,iw),-2)':h='if(gte(iw,ih),-2,min(1920,ih))':flags=lanczos",
+        ]
+        if slow_mo:
+            vf.append("setpts=2.0*PTS")
+        vf += [
+            "setsar=1",
+            f"fps={fps}",
+            "setparams=range=limited:colorspace=bt709:color_trc=bt709:color_primaries=bt709",
+        ]
+        cmd = [
+            "ffmpeg", "-y", "-loglevel", "warning", "-stats",
+            "-i", str(in_path),
+            "-map", "0:v:0",
+            "-map", "0:a?",
+            "-vf", ",".join(vf),
+            "-pix_fmt", "yuv420p",
+        ]
+        if slow_mo:
+            cmd += ["-af", "atempo=0.5"]
+        cmd += tiktok_h264_args(fps, crf=18, container="mp4")
+        cmd.append(str(out_path))
+        return cmd
+
     with RENDER_SEM:
         with JOBS_LOCK:
             if job["cancelled"]:
@@ -276,32 +382,93 @@ def _run_instant_worker(job_id: str, in_path: Path, job_dir: Path, fps: int, slo
                 job["updated_at"] = time.time()
                 return
             job["status"] = "running"
-            job["stage"] = f"Processing {fps} FPS..."
-            job["progress"] = 10
+            job["progress"] = 8
 
         try:
-            proc = subprocess.Popen(
-                build_cmd(True),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-            )
-            with JOBS_LOCK:
-                job["proc"] = proc
-            rc = stream_process(proc, job, duration_s)
-
-            if rc != 0 and not job["cancelled"]:
-                if out_path.exists():
-                    out_path.unlink(missing_ok=True)
+            rc = 1
+            if mode == "copy":
                 with JOBS_LOCK:
-                    job["stage"] = "Retrying audio as AAC..."
-                proc2 = subprocess.Popen(
-                    build_cmd(False),
+                    job["stage"] = f"Stream Copy {fps} FPS..."
+                proc = subprocess.Popen(
+                    build_copy_cmd(True),
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                 )
                 with JOBS_LOCK:
-                    job["proc"] = proc2
-                rc = stream_process(proc2, job, duration_s)
+                    job["proc"] = proc
+                rc = stream_process(proc, job, duration_s)
+
+                if rc != 0 and not job["cancelled"]:
+                    if out_path.exists():
+                        out_path.unlink(missing_ok=True)
+                    with JOBS_LOCK:
+                        job["stage"] = "Retrying audio as AAC..."
+                    proc2 = subprocess.Popen(
+                        build_copy_cmd(False),
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT,
+                    )
+                    with JOBS_LOCK:
+                        job["proc"] = proc2
+                    rc = stream_process(proc2, job, duration_s)
+            else:
+                in_fps = probe_fps(in_path)
+                svp_out = job_dir / "output_blur.mp4"
+                used_svp = False
+                if (not slow_mo) and (fps > in_fps + 5.0) and _SVP_READY:
+                    used_svp = True
+                    with JOBS_LOCK:
+                        job["stage"] = f"SVPFlow {int(round(in_fps))}→{fps} FPS (TikTok Pro)..."
+                    svp_cfg = {
+                        "blur": False,
+                        "blur_amount": 0.0,
+                        "blur_output_fps": fps,
+                        "interpolate": True,
+                        "interpolated_fps": str(fps),
+                        "interpolation_method": "svp",
+                        "deduplicate": True,
+                        "deduplicate_method": "svp",
+                        "encode_preset": "h264",
+                        "quality": 18,
+                        "video_container": "mp4",
+                        "svp_interpolation_preset": "weak",
+                        "svp_interpolation_algorithm": "13",
+                        "interpolation_blocksize": "8",
+                    }
+                    cfg_b64 = base64.b64encode(json.dumps(svp_cfg).encode("utf-8")).decode("ascii")
+                    svp_cmd = [
+                        sys.executable,
+                        str(BASE_DIR / "scripts" / "render_blur.py"),
+                        "--input", str(in_path),
+                        "--output-dir", str(job_dir),
+                        "--blur-env", str(BLUR_ENV),
+                        "--config-b64", cfg_b64,
+                        "--job-id", job_id,
+                    ]
+                    proc_svp = subprocess.Popen(svp_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                    with JOBS_LOCK:
+                        job["proc"] = proc_svp
+                    rc = stream_process(proc_svp, job, duration_s)
+                    if rc == 0 and svp_out.exists():
+                        svp_out.rename(out_path)
+                    else:
+                        svp_out.unlink(missing_ok=True)
+
+                if (not used_svp or rc != 0 or not out_path.exists()) and not job["cancelled"]:
+                    if out_path.exists():
+                        out_path.unlink(missing_ok=True)
+                    lvl = "4.2" if fps <= 60 else "5.1"
+                    with JOBS_LOCK:
+                        job["stage"] = f"TikTok Pro Encode {fps} FPS (High@L{lvl})..."
+                    eff_dur = duration_s * 2.0 if slow_mo else duration_s
+                    proc_enc = subprocess.Popen(
+                        build_tiktok_encode_cmd(),
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT,
+                    )
+                    with JOBS_LOCK:
+                        job["proc"] = proc_enc
+                    rc = stream_process(proc_enc, job, eff_dur)
 
             with JOBS_LOCK:
                 job["proc"] = None
@@ -372,15 +539,19 @@ def _run_ffmpeg_blur_fallback(job: dict, in_path: Path, out_path: Path, cfg: dic
         cont = float(cfg.get("contrast") or 1.0)
         vf.append(f"eq=brightness={br:.3f}:saturation={sat}:contrast={cont}")
 
+    vf.append("setsar=1")
+    vf.append("setparams=range=limited:colorspace=bt709:color_trc=bt709:color_primaries=bt709")
+
     crf = int(cfg.get("quality") or 18)
+    container = out_path.suffix.lstrip(".").lower() or "mp4"
     cmd = [
         "ffmpeg", "-y", "-loglevel", "warning", "-stats",
         "-i", str(in_path),
+        "-map", "0:v:0",
+        "-map", "0:a?",
         "-vf", ",".join(vf),
-        "-c:v", "libx264", "-preset", "veryfast", "-crf", str(crf), "-pix_fmt", "yuv420p",
-        "-metadata", "title=AbuAsrh Blur", "-metadata", "artist=AbuAsrh",
-        "-c:a", "aac", "-b:a", "192k",
-        "-movflags", "+faststart",
+        "-pix_fmt", "yuv420p",
+        *tiktok_h264_args(out_fps, crf=crf, container=container),
         str(out_path),
     ]
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -465,11 +636,13 @@ def _run_blur_worker(job_id: str, in_path: Path, job_dir: Path, cfg: dict):
 @app.post("/api/jobs/instant")
 def create_instant_job(
     file: UploadFile = File(...),
-    fps: int = Form(120),
+    fps: int = Form(60),
     slow_mo: str = Form("false"),
+    encode_mode: str = Form("tiktok"),
 ):
     fps_val = 120 if int(fps) >= 90 else 60
     is_slow = str(slow_mo).strip().lower() in ("1", "true", "yes", "on")
+    mode = "copy" if str(encode_mode).strip().lower() == "copy" else "tiktok"
     job_id = uuid.uuid4().hex[:10]
     job_dir = JOBS_ROOT / job_id
     job_dir.mkdir(parents=True, exist_ok=True)
@@ -499,7 +672,7 @@ def create_instant_job(
 
     t = threading.Thread(
         target=_run_instant_worker,
-        args=(job_id, in_path, job_dir, fps_val, is_slow),
+        args=(job_id, in_path, job_dir, fps_val, is_slow, mode),
         daemon=True,
     )
     t.start()

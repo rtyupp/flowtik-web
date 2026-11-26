@@ -62,6 +62,26 @@ DEFAULT_SETTINGS = {
 }
 
 
+def _parse_frac(rate_str: str) -> tuple[int, int, float]:
+    s = (rate_str or "").strip()
+    if not s:
+        return 0, 1, 0.0
+    try:
+        if "/" in s:
+            num_s, den_s = s.split("/", 1)
+            num, den = int(num_s), int(den_s)
+            if den <= 0 or num <= 0:
+                return 0, 1, 0.0
+            return num, den, num / den
+        val = float(s)
+        if val <= 0:
+            return 0, 1, 0.0
+        num = int(round(val * 1000))
+        return num, 1000, val
+    except (ValueError, ZeroDivisionError):
+        return 0, 1, 0.0
+
+
 def probe_video(video_path: Path) -> dict:
     cmd = [
         "ffprobe",
@@ -93,12 +113,19 @@ def probe_video(video_path: Path) -> dict:
     a_info = json.loads(subprocess.check_output(a_cmd, text=True))
     a_stream = (a_info.get("streams") or [{}])[0]
 
-    fr = stream.get("r_frame_rate") or stream.get("avg_frame_rate") or "60/1"
-    if "/" in fr:
-        num, den = fr.split("/", 1)
-        fps_num, fps_den = int(num), int(den)
+    r_num, r_den, r_val = _parse_frac(stream.get("r_frame_rate") or "")
+    a_num, a_den, a_val = _parse_frac(stream.get("avg_frame_rate") or "")
+
+    r_valid = 1.0 <= r_val <= 240.0
+    a_valid = 1.0 <= a_val <= 240.0
+    if a_valid and (not r_valid or abs(a_val - r_val) / max(r_val, 1e-6) > 0.02):
+        fps_num, fps_den = a_num, a_den
+    elif r_valid:
+        fps_num, fps_den = r_num, r_den
+    elif a_valid:
+        fps_num, fps_den = a_num, a_den
     else:
-        fps_num, fps_den = int(float(fr)), 1
+        fps_num, fps_den = 60, 1
 
     w = int(stream.get("width") or 1280)
     h = int(stream.get("height") or 720)
@@ -113,11 +140,24 @@ def probe_video(video_path: Path) -> dict:
     w = max(2, w - (w % 2))
     h = max(2, h - (h % 2))
 
+    needs_scale = False
+    if max(w, h) > 1920:
+        needs_scale = True
+        if w >= h:
+            target_w = 1920
+            target_h = int(round(h * (1920.0 / w)))
+        else:
+            target_h = 1920
+            target_w = int(round(w * (1920.0 / h)))
+        w = max(2, target_w - (target_w % 2))
+        h = max(2, target_h - (target_h % 2))
+
     return {
         "fps_num": fps_num,
         "fps_den": fps_den,
         "width": w,
         "height": h,
+        "needs_scale": needs_scale,
         "color_range": stream.get("color_range"),
         "color_space": stream.get("color_space"),
         "color_transfer": stream.get("color_transfer"),
@@ -128,11 +168,12 @@ def probe_video(video_path: Path) -> dict:
     }
 
 
-def load_plugins_wrapper(blur_env: Path, width: int, height: int) -> Path:
+def load_plugins_wrapper(blur_env: Path, width: int, height: int, needs_scale: bool = False) -> Path:
     """Create a thin wrapper script that preloads VapourSynth plugins from blur_env/plugins,
     provides a rawvideo source fallback if bestsource cannot load due to system FFmpeg ABI,
     and executes f0e/blur's official blur.py."""
     wrapper = blur_env / "scripts" / "run_blur_wrapper.py"
+    scale_expr = f'["scale={width}:{height}:flags=lanczos"]' if needs_scale else "[]"
     code = f"""import vapoursynth as vs
 from vapoursynth import core
 from pathlib import Path
@@ -163,7 +204,13 @@ if not hasattr(core, "bs"):
             tmp_fh = _tf.NamedTemporaryFile(prefix="blur_raw_", suffix=".yuv", delete=False)
             tmp_path = tmp_fh.name
             tmp_fh.close()
-            raw_cmd = ["ffmpeg", "-v", "error", "-y", "-i", str(source), "-f", "rawvideo", "-pix_fmt", "yuv420p", tmp_path]
+            vf_parts = {scale_expr}
+            raw_cmd = [
+                "ffmpeg", "-v", "error", "-y", "-i", str(source),
+                *(["-vf", ",".join(vf_parts)] if vf_parts else []),
+                "-fps_mode", "cfr", "-r", f"{{fn}}/{{fd}}",
+                "-f", "rawvideo", "-pix_fmt", "yuv420p", tmp_path,
+            ]
             _sp.check_call(raw_cmd)
             frame_sz = (w * h * 3) // 2
             file_sz = _os.path.getsize(tmp_path)
@@ -304,7 +351,7 @@ def main():
     print("Input video info:", info)
     print("Effective f0e/blur settings:", json.dumps(cfg, ensure_ascii=False))
 
-    wrapper = load_plugins_wrapper(blur_env, info["width"], info["height"])
+    wrapper = load_plugins_wrapper(blur_env, info["width"], info["height"], info.get("needs_scale", False))
 
     import shutil, importlib.util
     vspipe_bin = shutil.which("vspipe")
@@ -362,20 +409,29 @@ def main():
         "1:a?",
     ]
 
-    # Color metadata preservation matching f0e/blur rendering.cpp
-    setparams = []
-    if info.get("color_range"):
-        setparams.append("range=" + ("full" if info["color_range"] == "pc" else "limited"))
-    if info.get("color_space") and info["color_space"] != "unknown":
-        setparams.append("colorspace=" + info["color_space"])
-    if info.get("color_transfer") and info["color_transfer"] != "unknown":
-        setparams.append("color_trc=" + info["color_transfer"])
-    if info.get("color_primaries") and info["color_primaries"] != "unknown":
-        setparams.append("color_primaries=" + info["color_primaries"])
-    if setparams:
-        ff_cmd += ["-vf", "setparams=" + ":".join(setparams)]
+    in_fps = info["fps_num"] / max(1, info["fps_den"])
+    if cfg["blur"]:
+        out_fps = max(15, min(240, int(cfg["blur_output_fps"])))
+    elif cfg["interpolate"]:
+        raw_ifps = str(cfg.get("interpolated_fps") or "").strip().lower()
+        try:
+            if raw_ifps.endswith("x"):
+                out_fps = int(round(in_fps * float(raw_ifps[:-1] or 2)))
+            elif raw_ifps:
+                out_fps = int(round(float(raw_ifps)))
+            else:
+                out_fps = int(cfg["blur_output_fps"])
+        except ValueError:
+            out_fps = int(cfg["blur_output_fps"])
+        out_fps = max(15, min(240, out_fps))
+    else:
+        out_fps = max(15, min(240, int(round(in_fps))))
 
-    ff_cmd += ["-pix_fmt", "yuv420p"]
+    vf_parts = [
+        "setsar=1",
+        "setparams=range=limited:colorspace=bt709:color_trc=bt709:color_primaries=bt709",
+    ]
+    ff_cmd += ["-vf", ",".join(vf_parts), "-pix_fmt", "yuv420p"]
 
     # Audio timescale filters matching f0e/blur rendering.cpp
     audio_filters = []
@@ -406,17 +462,51 @@ def main():
     else:
         q = int(cfg["quality"])
         preset_name = str(cfg.get("encode_preset") or "h264").lower()
+        level = "4.2" if out_fps <= 60 else "5.1"
+        maxrate = "12M" if out_fps <= 60 else "18M"
+        bufsize = "24M" if out_fps <= 60 else "36M"
+        gop = str(out_fps * 2)
+        keyint_min = str(out_fps)
+        timescale = "120000" if out_fps > 60 else "60000"
         presets = {
-            "h264": ["-c:v", "libx264", "-preset", "veryfast", "-crf", str(q)],
-            "h265": ["-c:v", "libx265", "-preset", "veryfast", "-crf", str(q)],
-            "vp9": ["-c:v", "libvpx-vp9", "-deadline", "good", "-crf", str(q), "-b:v", "0"],
-            "av1": ["-c:v", "libaom-av1", "-cpu-used", "4", "-crf", str(q)],
+            "h264": [
+                "-c:v", "libx264",
+                "-preset", "veryfast",
+                "-profile:v", "high",
+                "-level:v", level,
+                "-crf", str(q),
+                "-maxrate", maxrate,
+                "-bufsize", bufsize,
+                "-g", gop,
+                "-keyint_min", keyint_min,
+                "-sc_threshold", "0",
+                "-bf", "2",
+                "-fps_mode", "cfr",
+                "-r", str(out_fps),
+                "-color_primaries", "bt709",
+                "-color_trc", "bt709",
+                "-colorspace", "bt709",
+                "-color_range", "tv",
+                "-x264-params", "colorprim=bt709:transfer=bt709:colormatrix=bt709:open-gop=0:ref=3:bframes=2",
+            ],
+            "h265": ["-c:v", "libx265", "-preset", "veryfast", "-crf", str(q), "-fps_mode", "cfr", "-r", str(out_fps)],
+            "vp9": ["-c:v", "libvpx-vp9", "-deadline", "good", "-crf", str(q), "-b:v", "0", "-fps_mode", "cfr", "-r", str(out_fps)],
+            "av1": ["-c:v", "libaom-av1", "-cpu-used", "4", "-crf", str(q), "-fps_mode", "cfr", "-r", str(out_fps)],
         }
         ff_cmd += presets.get(preset_name, presets["h264"])
+        if container in ("mp4", "mov"):
+            ff_cmd += ["-video_track_timescale", timescale, "-brand", "mp42", "-movflags", "+faststart"]
         ff_cmd += [
-            "-metadata", "title=AbuAsrh Blur",
+            "-map_metadata", "-1",
+            "-map_chapters", "-1",
+            "-metadata", "title=AbuAsrh",
             "-metadata", "artist=AbuAsrh",
-            "-c:a", "aac", "-b:a", "320k", "-movflags", "+faststart",
+            "-c:a", "aac",
+            "-ar", "48000",
+            "-ac", "2",
+            "-b:a", "192k",
+            "-avoid_negative_ts", "make_zero",
+            "-max_interleave_delta", "0",
         ]
 
     ff_cmd.append(str(out_file))

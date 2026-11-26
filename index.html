@@ -995,13 +995,13 @@
           <p class="brand-sub">PRO VIDEO STUDIO · CLOUD</p>
         </div>
       </div>
-      <div class="ver-pill" id="verPill">v4.0 · سحابي</div>
+      <div class="ver-pill" id="verPill">v4.1 · سحابي</div>
     </header>
 
     <div class="engine-tabs" role="tablist">
       <button class="engine-tab active" data-tab="instant" onclick="switchMainTab('instant')">
-        <span>أبو عسرة 120/60</span>
-        <span class="tab-badge">فوري</span>
+        <span>أبو عسرة 60/120</span>
+        <span class="tab-badge">تيك توك</span>
       </button>
       <button class="engine-tab" data-tab="blur" onclick="switchMainTab('blur')">
         <span>استوديو البلور</span>
@@ -1009,7 +1009,7 @@
       </button>
     </div>
 
-    <!-- TAB 1: AbuAsrh 120 / 60 -->
+    <!-- TAB 1: AbuAsrh 60 / 120 -->
     <section class="studio-card active" id="paneInstant">
       <div class="drop-zone" id="dropArea">
         <div class="upload-orb">
@@ -1019,7 +1019,7 @@
         </div>
         <div>
           <div class="drop-title">اختر فيديو من الألبوم أو الملفات</div>
-          <div class="drop-hint">MP4 · MOV · ZERO RE-ENCODING</div>
+          <div class="drop-hint">MP4 · MOV · ترميز تيك توك مضاد للتقطيع</div>
         </div>
       </div>
       <input type="file" id="mediaInput" accept="video/mp4,video/quicktime,video/*">
@@ -1040,22 +1040,23 @@
       <div>
         <div class="section-head" style="margin-bottom:8px;">
           <span>اختر التوقيت والإخراج</span>
-          <span class="section-code">STREAM COPY · BT.709</span>
+          <span class="section-code">TIKTOK PRO · CFR · BT.709</span>
         </div>
         <div class="mode-grid">
-          <div class="fps-option active" data-fps="120" onclick="setFps(120)">
-            <div class="fps-top">
-              <span class="fps-num">120 FPS</span>
-              <span class="fps-tag">الأسرع</span>
-            </div>
-            <div class="fps-desc">توقيت 120K وألوان BT.709 بدون ضغط</div>
-          </div>
-
-          <div class="fps-option" data-fps="60" onclick="setFps(60)">
+          <div class="fps-option active" data-fps="60" onclick="setFps(60)">
             <div class="fps-top">
               <span class="fps-num">60 FPS</span>
+              <span class="fps-tag">الأفضل لتيك توك</span>
             </div>
-            <div class="fps-desc">توقيت 60K · سرعة طبيعية · بدون ضغط</div>
+            <div class="fps-desc">SVP 60 حقيقي · High@L4.2 · ثابت بدون تقطيع</div>
+          </div>
+
+          <div class="fps-option" data-fps="120" onclick="setFps(120)">
+            <div class="fps-top">
+              <span class="fps-num">120 FPS</span>
+              <span class="fps-tag">ألترا</span>
+            </div>
+            <div class="fps-desc">توليد 120 حقيقي · High@L5.1 · أعلى سلاسة</div>
           </div>
         </div>
       </div>
@@ -1065,8 +1066,13 @@
         <span class="ios-switch"><input type="checkbox" id="i_slow_mo"><span class="ios-slider"></span></span>
       </label>
 
+      <label class="toggle-row">
+        <span>نسخ فوري بدون إعادة ترميز (Stream Copy)</span>
+        <span class="ios-switch"><input type="checkbox" id="i_stream_copy"><span class="ios-slider"></span></span>
+      </label>
+
       <button class="btn-primary" id="btnProcess" disabled onclick="runProcess()">
-        <span>بدء معالجة 120 FPS</span>
+        <span>بدء معالجة 60 FPS</span>
       </button>
 
       <div class="progress-wrap" id="instantProgressWrap">
@@ -1093,7 +1099,7 @@
         </div>
         <div class="result-actions">
           <button class="btn-share" id="btnInstantShare" type="button" onclick="shareInstantResult()">حفظ / مشاركة</button>
-          <a class="btn-download" id="btnDownload" download="AbuAsrh_120fps.mp4">تنزيل الملف</a>
+          <a class="btn-download" id="btnDownload" download="AbuAsrh_60fps.mp4">تنزيل الملف</a>
         </div>
         <button class="btn-secondary" type="button" onclick="resetFile()">معالجة فيديو آخر</button>
       </div>
@@ -1224,8 +1230,8 @@
           </div>
 
           <div class="field full">
-            <label><span>الجودة (CRF أقل = أوضح)</span><span class="val" id="v_quality">20</span></label>
-            <input type="range" id="b_quality" min="0" max="51" step="1" value="20" oninput="v_quality.textContent=this.value">
+            <label><span>الجودة (CRF أقل = أوضح)</span><span class="val" id="v_quality">18</span></label>
+            <input type="range" id="b_quality" min="0" max="51" step="1" value="18" oninput="v_quality.textContent=this.value">
           </div>
         </div>
       </div>
@@ -1257,7 +1263,7 @@
             </div>
             <div class="field">
               <label><span>interpolated fps</span></label>
-              <input type="text" id="b_interpolated_fps" value="600" placeholder="600 أو 5x">
+              <input type="text" id="b_interpolated_fps" value="480" placeholder="480 أو 5x">
             </div>
             <div class="field">
               <label><span>interpolation method</span></label>
@@ -1474,7 +1480,7 @@
   </main>
 
   <script>
-    // ===== AbuAsrh Pro Studio v4.0 (Cloud-First Railway + Offline Fallback) =====
+    // ===== AbuAsrh Pro Studio v4.1 (TikTok Anti-30fps Cloud + Offline Fallback) =====
     'use strict';
 
     const CLOUD_API_URL = window.location.hostname.endsWith('github.io') ? 'https://abuasrh-cloud-production.up.railway.app' : '';
@@ -1488,7 +1494,7 @@
       const pill = document.getElementById('verPill');
       if (!hasCloudEndpoint()) {
         cloudOnline = false;
-        if (pill) pill.textContent = 'v4.0 · محلي';
+        if (pill) pill.textContent = 'v4.1 · محلي';
         return false;
       }
       try {
@@ -1501,7 +1507,7 @@
       } catch (_) {
         cloudOnline = false;
       }
-      if (pill) pill.textContent = cloudOnline ? 'v4.0 · سحابي' : 'v4.0 · محلي';
+      if (pill) pill.textContent = cloudOnline ? 'v4.1 · سحابي' : 'v4.1 · محلي';
       return cloudOnline;
     }
 
@@ -1552,7 +1558,7 @@
     }
 
     let currentFile = null;
-    let selectedFps = 120;
+    let selectedFps = 60;
     let lastUrl = null;
     let lastBlob = null;
     let lastCloudDl = null;
@@ -1644,7 +1650,7 @@
     }
 
     async function shareInstantResult() {
-      const name = btnDownload.download || 'AbuAsrh_120fps.mp4';
+      const name = btnDownload.download || 'AbuAsrh_60fps.mp4';
       if (lastBlob) {
         await shareOrDownload(lastBlob, name, btnDownload);
         return;
@@ -1801,6 +1807,8 @@
       const fpsNum = selectedFps === 120 ? 120 : 60;
       const fpsLabel = String(fpsNum);
       const slowMo = !!($('i_slow_mo') && $('i_slow_mo').checked);
+      const streamCopy = !!($('i_stream_copy') && $('i_stream_copy').checked);
+      const encodeMode = streamCopy ? 'copy' : 'tiktok';
       const forceLocal = !!($('i_local_only') && $('i_local_only').checked);
       const useCloud = !forceLocal && hasCloudEndpoint();
 
@@ -1814,11 +1822,12 @@
         const tStart = performance.now();
 
         if (useCloud) {
-          appendLog(`# Cloud ${fpsLabel} FPS (Railway · slow_mo=${slowMo})...`);
+          appendLog(`# Cloud ${fpsLabel} FPS (Railway · mode=${encodeMode} · slow_mo=${slowMo})...`);
           const fd = new FormData();
           fd.append('file', currentFile);
           fd.append('fps', fpsLabel);
           fd.append('slow_mo', slowMo ? 'true' : 'false');
+          fd.append('encode_mode', encodeMode);
 
           const created = await uploadJobWithProgress('/api/jobs/instant', fd, (upPct) => {
             const p = Math.round(upPct * 0.45);
@@ -1969,11 +1978,12 @@
         $('b_blur_amount').value = '1.0';
         $('v_blur_amount').textContent = '1.0';
         $('b_blur_output_fps').value = '60';
+        $('b_interpolated_fps').value = '480';
         $('b_blur_weighting').value = 'gaussian_sym';
         $('b_local_mode').value = 'fast';
         $('b_local_max_res').value = '1080';
-        $('b_quality').value = '20';
-        $('v_quality').textContent = '20';
+        $('b_quality').value = '18';
+        $('v_quality').textContent = '18';
       } else if (name === 'cinema') {
         $('b_blur_amount').value = '1.4';
         $('v_blur_amount').textContent = '1.4';
@@ -2023,7 +2033,7 @@
         blur_weighting: wVal,
         blur_gamma: parseFloat($('b_blur_gamma').value || '1.0'),
         interpolate: $('b_interpolate').checked,
-        interpolated_fps: $('b_interpolated_fps').value.trim() || '600',
+        interpolated_fps: $('b_interpolated_fps').value.trim() || '480',
         interpolation_method: $('b_interpolation_method').value,
         pre_interpolate: $('b_pre_interpolate').checked,
         pre_interpolated_fps: $('b_pre_interpolated_fps').value.trim() || '360',
