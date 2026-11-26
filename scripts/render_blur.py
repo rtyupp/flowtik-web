@@ -70,7 +70,7 @@ def probe_video(video_path: Path) -> dict:
         "-select_streams",
         "v:0",
         "-show_entries",
-        "stream=r_frame_rate,avg_frame_rate,color_range,color_space,color_transfer,color_primaries,pix_fmt,width,height",
+        "stream=r_frame_rate,avg_frame_rate,color_range,color_space,color_transfer,color_primaries,pix_fmt,width,height:stream_side_data=rotation",
         "-of",
         "json",
         str(video_path),
@@ -100,11 +100,24 @@ def probe_video(video_path: Path) -> dict:
     else:
         fps_num, fps_den = int(float(fr)), 1
 
+    w = int(stream.get("width") or 1280)
+    h = int(stream.get("height") or 720)
+    for sd in stream.get("side_data_list") or []:
+        rot = sd.get("rotation")
+        if rot is not None:
+            try:
+                if abs(int(round(float(rot)))) % 180 == 90:
+                    w, h = h, w
+            except (TypeError, ValueError):
+                pass
+    w = max(2, w - (w % 2))
+    h = max(2, h - (h % 2))
+
     return {
         "fps_num": fps_num,
         "fps_den": fps_den,
-        "width": int(stream.get("width") or 1280),
-        "height": int(stream.get("height") or 720),
+        "width": w,
+        "height": h,
         "color_range": stream.get("color_range"),
         "color_space": stream.get("color_space"),
         "color_transfer": stream.get("color_transfer"),
@@ -358,8 +371,7 @@ def main():
     if setparams:
         ff_cmd += ["-vf", "setparams=" + ":".join(setparams)]
 
-    if info.get("pix_fmt"):
-        ff_cmd += ["-pix_fmt", info["pix_fmt"]]
+    ff_cmd += ["-pix_fmt", "yuv420p"]
 
     # Audio timescale filters matching f0e/blur rendering.cpp
     audio_filters = []
@@ -397,11 +409,17 @@ def main():
             "av1": ["-c:v", "libaom-av1", "-cpu-used", "4", "-crf", str(q)],
         }
         ff_cmd += presets.get(preset_name, presets["h264"])
-        ff_cmd += ["-c:a", "aac", "-b:a", "320k", "-movflags", "+faststart"]
+        ff_cmd += [
+            "-metadata", "title=AbuAsrh Blur",
+            "-metadata", "artist=AbuAsrh",
+            "-c:a", "aac", "-b:a", "320k", "-movflags", "+faststart",
+        ]
 
     ff_cmd.append(str(out_file))
 
     print("Running vspipe -> ffmpeg...")
+    sys.stdout.flush()
+    sys.stderr.flush()
     env = os.environ.copy()
     env["PYTHONPATH"] = str(blur_env / "scripts") + os.pathsep + env.get("PYTHONPATH", "")
     import importlib.util

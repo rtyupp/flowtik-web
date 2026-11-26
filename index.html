@@ -15,7 +15,7 @@
 
   <link rel="icon" type="image/png" href="icon-192.png?v=3">
   <link rel="apple-touch-icon" sizes="512x512" href="apple-touch-icon.png?v=3">
-  <link rel="manifest" href="manifest.json?v=6">
+  <link rel="manifest" href="manifest.json?v=7">
 
   <style>
     :root {
@@ -992,10 +992,10 @@
         <img src="apple-touch-icon.png?v=3" alt="أبو عسرة" class="brand-icon">
         <div class="brand-text">
           <h1 class="brand-title">أبو عسرة</h1>
-          <p class="brand-sub">PRO VIDEO STUDIO · OFFLINE</p>
+          <p class="brand-sub">PRO VIDEO STUDIO · CLOUD</p>
         </div>
       </div>
-      <div class="ver-pill">v3.2</div>
+      <div class="ver-pill" id="verPill">v4.0 · سحابي</div>
     </header>
 
     <div class="engine-tabs" role="tablist">
@@ -1055,10 +1055,15 @@
             <div class="fps-top">
               <span class="fps-num">60 FPS</span>
             </div>
-            <div class="fps-desc">تعديل زمني 2× بنفس الجودة الأصلية</div>
+            <div class="fps-desc">توقيت 60K · سرعة طبيعية · بدون ضغط</div>
           </div>
         </div>
       </div>
+
+      <label class="toggle-row">
+        <span>تبطيء زمني 2× (Slow-Mo)</span>
+        <span class="ios-switch"><input type="checkbox" id="i_slow_mo"><span class="ios-slider"></span></span>
+      </label>
 
       <button class="btn-primary" id="btnProcess" disabled onclick="runProcess()">
         <span>بدء معالجة 120 FPS</span>
@@ -1095,9 +1100,13 @@
 
       <details class="log-drawer" id="instantLogDrawer">
         <summary>
-          <span>سجل المحرك</span>
+          <span>سجل المحرك وخيارات التشغيل</span>
           <span class="section-code">LOG</span>
         </summary>
+        <label class="toggle-row" style="margin-top:8px;">
+          <span>معالجة محلية على الجهاز (Offline)</span>
+          <span class="ios-switch"><input type="checkbox" id="i_local_only"><span class="ios-slider"></span></span>
+        </label>
         <div class="log-box" id="terminalBox"></div>
       </details>
     </section>
@@ -1112,7 +1121,7 @@
         </div>
         <div>
           <div class="drop-title">اختر الفيديو لإضافة البلور</div>
-          <div class="drop-hint">معالجة محلية آمنة · بدون رفع لسيرفر</div>
+          <div class="drop-hint">معالجة سحابية على Railway · f0e/blur الحقيقي</div>
         </div>
       </div>
       <input type="file" id="blurMediaInput" accept="video/mp4,video/quicktime,video/*">
@@ -1395,6 +1404,10 @@
           </div>
 
           <label class="toggle-row">
+            <span>معالجة محلية على الجهاز (Offline)</span>
+            <span class="ios-switch"><input type="checkbox" id="b_local_only"><span class="ios-slider"></span></span>
+          </label>
+          <label class="toggle-row">
             <span>debug overlay</span>
             <span class="ios-switch"><input type="checkbox" id="b_debug"><span class="ios-slider"></span></span>
           </label>
@@ -1402,7 +1415,7 @@
       </details>
 
       <button class="btn-primary" id="btnBlurLocal" disabled onclick="runLocalBlur()">
-        <span>معالجة البلور داخل التطبيق</span>
+        <span>معالجة البلور (سحابي سريع)</span>
       </button>
 
       <div class="progress-wrap" id="blurProgressWrap">
@@ -1434,28 +1447,15 @@
         <button class="btn-secondary" type="button" onclick="resetBlurFile()">معالجة فيديو آخر</button>
       </div>
 
-      <!-- Cloud & Config Export -->
+      <!-- Config Export -->
       <details class="adv-accordion">
         <summary>
-          <span>خيارات السحابة وتصدير الإعدادات (RIFE/SVP)</span>
-          <span class="section-code">CLOUD</span>
+          <span>تصدير إعدادات f0e/blur (.cfg / تيليجرام)</span>
+          <span class="section-code">CONFIG</span>
         </summary>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div class="field-grid">
-            <div class="field full">
-              <label><span>رابط الفيديو المباشر</span></label>
-              <input type="text" id="b_video_url" placeholder="https://.../clip.mp4">
-            </div>
-            <div class="field full">
-              <label><span>GitHub PAT Token</span></label>
-              <input type="text" id="b_gh_token" placeholder="github_pat_...">
-            </div>
-          </div>
-          <button class="btn-secondary" type="button" id="btnBlurCloud" onclick="dispatchCloudBlur()">تشغيل الرندر السحابي (GitHub Actions)</button>
-          <div class="blur-actions">
-            <button class="btn-secondary" type="button" onclick="downloadBlurCfg()">تصدير .blur-config.cfg</button>
-            <button class="btn-secondary" type="button" onclick="copyBlurBotCmd()">نسخ أوامر البوت</button>
-          </div>
+        <div class="blur-actions">
+          <button class="btn-secondary" type="button" onclick="downloadBlurCfg()">تصدير .blur-config.cfg</button>
+          <button class="btn-secondary" type="button" onclick="copyBlurBotCmd()">نسخ أوامر البوت</button>
         </div>
       </details>
 
@@ -1474,16 +1474,92 @@
   </main>
 
   <script>
-    // ===== AbuAsrh Pro Studio v3.1 =====
+    // ===== AbuAsrh Pro Studio v4.0 (Cloud-First Railway + Offline Fallback) =====
     'use strict';
+
+    const CLOUD_API_URL = window.location.hostname.endsWith('github.io') ? '__RAILWAY_URL__' : '';
+    let cloudOnline = false;
+
+    function hasCloudEndpoint() {
+      return !CLOUD_API_URL || !CLOUD_API_URL.includes('__RAILWAY_URL__');
+    }
+
+    async function checkCloudHealth() {
+      const pill = document.getElementById('verPill');
+      if (!hasCloudEndpoint()) {
+        cloudOnline = false;
+        if (pill) pill.textContent = 'v4.0 · محلي';
+        return false;
+      }
+      try {
+        const ctrl = new AbortController();
+        const tm = setTimeout(() => ctrl.abort(), 4000);
+        const r = await fetch(`${CLOUD_API_URL}/api/health`, { signal: ctrl.signal });
+        clearTimeout(tm);
+        const j = await r.json();
+        cloudOnline = !!(r.ok && j && j.ok);
+      } catch (_) {
+        cloudOnline = false;
+      }
+      if (pill) pill.textContent = cloudOnline ? 'v4.0 · سحابي' : 'v4.0 · محلي';
+      return cloudOnline;
+    }
+
+    function uploadJobWithProgress(path, formData, onUploadPct, stateRef) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        stateRef.xhr = xhr;
+        xhr.open('POST', `${CLOUD_API_URL}${path}`, true);
+        xhr.upload.onprogress = (ev) => {
+          if (ev.lengthComputable && ev.total > 0) {
+            onUploadPct(Math.round((ev.loaded / ev.total) * 100));
+          }
+        };
+        xhr.onload = () => {
+          stateRef.xhr = null;
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              resolve(JSON.parse(xhr.responseText));
+            } catch {
+              reject(new Error('Invalid server response'));
+            }
+          } else {
+            reject(new Error(`Server HTTP ${xhr.status}: ${xhr.responseText || 'Upload failed'}`));
+          }
+        };
+        xhr.onerror = () => { stateRef.xhr = null; reject(new Error('تعذر الاتصال بالسيرفر السحابي')); };
+        xhr.onabort = () => { stateRef.xhr = null; reject(new Error('ABORTED')); };
+        xhr.send(formData);
+      });
+    }
+
+    async function pollCloudJob(jobId, onTick, stateRef) {
+      stateRef.jobId = jobId;
+      while (!stateRef.cancelled) {
+        const r = await fetch(`${CLOUD_API_URL}/api/jobs/${jobId}`);
+        if (!r.ok) throw new Error(`Job status HTTP ${r.status}`);
+        const data = await r.json();
+        onTick(data);
+        if (data.status === 'done') return data;
+        if (data.status === 'error') {
+          const tail = (data.logs_tail || []).slice(-6).join('\n');
+          throw new Error((data.error || 'فشلت المعالجة السحابية') + (tail ? '\n' + tail : ''));
+        }
+        if (data.status === 'cancelled') throw new Error('ABORTED');
+        await new Promise((res) => setTimeout(res, 700));
+      }
+      throw new Error('ABORTED');
+    }
 
     let currentFile = null;
     let selectedFps = 120;
     let lastUrl = null;
     let lastBlob = null;
+    let lastCloudDl = null;
     let instantPreviewUrl = null;
     let busy = false;
     let instantWorker = null;
+    let instantCloudState = { xhr: null, jobId: null, cancelled: false };
 
     const $ = (id) => document.getElementById(id);
     const dropArea = $('dropArea'), mediaInput = $('mediaInput'), fileBox = $('fileBox'),
@@ -1567,9 +1643,21 @@
       if (fallbackLinkEl) fallbackLinkEl.click();
     }
 
-    function shareInstantResult() {
-      if (!lastBlob) return;
-      shareOrDownload(lastBlob, btnDownload.download || 'AbuAsrh_120fps.mp4', btnDownload);
+    async function shareInstantResult() {
+      const name = btnDownload.download || 'AbuAsrh_120fps.mp4';
+      if (lastBlob) {
+        await shareOrDownload(lastBlob, name, btnDownload);
+        return;
+      }
+      if (lastCloudDl) {
+        try {
+          const resp = await fetch(lastCloudDl);
+          const blob = await resp.blob();
+          await shareOrDownload(blob, name, btnDownload);
+        } catch (_) {
+          btnDownload.click();
+        }
+      }
     }
     window.shareInstantResult = shareInstantResult;
 
@@ -1601,6 +1689,15 @@
     }
 
     function cancelInstantProcess() {
+      instantCloudState.cancelled = true;
+      if (instantCloudState.xhr) {
+        try { instantCloudState.xhr.abort(); } catch (_) {}
+        instantCloudState.xhr = null;
+      }
+      if (instantCloudState.jobId) {
+        fetch(`${CLOUD_API_URL}/api/jobs/${instantCloudState.jobId}`, { method: 'DELETE' }).catch(() => {});
+        instantCloudState.jobId = null;
+      }
       if (instantWorker) {
         try { instantWorker.terminate(); } catch (_) {}
         instantWorker = null;
@@ -1658,9 +1755,9 @@
     }
     window.resetFile = resetFile;
 
-    function buildInstantArgs(fpsNum, inName, outName, audioCopy) {
+    function buildInstantArgs(fpsNum, inName, outName, audioCopy, slowMo) {
       const args = [];
-      if (fpsNum === 60) args.push('-itsscale', '2');
+      if (slowMo) args.push('-itsscale', '2');
       args.push(
         '-i', inName,
         '-map', '0:v:0',
@@ -1692,7 +1789,9 @@
       btnProcess.disabled = true;
       instantResultCard.style.display = 'none';
       btnDownload.style.display = 'none';
-      // Release input video hardware decoder RAM before WASM allocation
+      lastCloudDl = null;
+      instantCloudState = { xhr: null, jobId: null, cancelled: false };
+
       try { instantPreviewVideo.pause(); } catch (_) {}
       instantPreviewVideo.removeAttribute('src');
       instantPreviewVideo.load();
@@ -1701,23 +1800,74 @@
 
       const fpsNum = selectedFps === 120 ? 120 : 60;
       const fpsLabel = String(fpsNum);
+      const slowMo = !!($('i_slow_mo') && $('i_slow_mo').checked);
+      const forceLocal = !!($('i_local_only') && $('i_local_only').checked);
+      const useCloud = !forceLocal && hasCloudEndpoint();
+
       setLabel('جارٍ المعالجة...');
       terminalBox.innerHTML = '';
       instantProgressWrap.style.display = 'flex';
       btnInstantCancel.style.display = 'flex';
-      setInstantProgress(0, 'جارٍ قراءة الفيديو...');
+      setInstantProgress(0, useCloud ? 'جارٍ الرفع للسحابة...' : 'جارٍ قراءة الفيديو...');
 
       try {
         const tStart = performance.now();
+
+        if (useCloud) {
+          appendLog(`# Cloud ${fpsLabel} FPS (Railway · slow_mo=${slowMo})...`);
+          const fd = new FormData();
+          fd.append('file', currentFile);
+          fd.append('fps', fpsLabel);
+          fd.append('slow_mo', slowMo ? 'true' : 'false');
+
+          const created = await uploadJobWithProgress('/api/jobs/instant', fd, (upPct) => {
+            const p = Math.round(upPct * 0.45);
+            setLabel(`جارٍ الرفع ${upPct}%`);
+            setInstantProgress(p, `رفع الفيديو: ${upPct}%`);
+          }, instantCloudState);
+
+          appendLog(`# Job ${created.job_id} running on Railway...`);
+          const doneJob = await pollCloudJob(created.job_id, (st) => {
+            const p = Math.max(45, Math.min(99, 45 + Math.round((st.progress || 0) * 0.55)));
+            setLabel(`معالجة سحابية ${st.progress || 0}%`);
+            setInstantProgress(p, st.stage || 'جارٍ المعالجة...');
+          }, instantCloudState);
+
+          const dlUrl = `${CLOUD_API_URL}/api/jobs/${doneJob.id}/download`;
+          lastCloudDl = dlUrl;
+          lastBlob = null;
+          btnDownload.href = dlUrl;
+          btnDownload.download = doneJob.output_name || `AbuAsrh_${fpsLabel}fps.mp4`;
+          btnDownload.style.display = 'flex';
+
+          const resStage = instantResultVideo.parentElement;
+          if ((doneJob.output_size || 0) <= 80 * 1024 * 1024) {
+            instantResultVideo.src = dlUrl;
+            resStage.style.display = 'flex';
+          } else {
+            instantResultVideo.removeAttribute('src');
+            instantResultVideo.load();
+            resStage.style.display = 'none';
+          }
+          const secs = ((performance.now() - tStart) / 1000).toFixed(2);
+          const mb = ((doneJob.output_size || 0) / 1048576).toFixed(2);
+          instantResultMeta.textContent = `${mb} MB · ${secs}s · Cloud`;
+          instantResultCard.style.display = 'flex';
+          btnProcess.style.display = 'none';
+          hideInstantProgress();
+          appendLog(`✅ اكتمل سحابياً (${secs}s) — ${mb} MB`, 'success');
+          return;
+        }
+
         let fileBuffer = await currentFile.arrayBuffer();
         const inName = 'in_video.mp4';
         const outName = 'out_video.mp4';
-        const cmdArgs = buildInstantArgs(fpsNum, inName, outName, true);
-        const fallbackCmdArgs = buildInstantArgs(fpsNum, inName, outName, false);
+        const cmdArgs = buildInstantArgs(fpsNum, inName, outName, true, slowMo);
+        const fallbackCmdArgs = buildInstantArgs(fpsNum, inName, outName, false, slowMo);
         const coreUrl = new URL('ffmpeg-core.js', location.href).href;
         const wasmUrl = new URL('ffmpeg-core.wasm', location.href).href;
 
-        appendLog(`# AbuAsrh ${fpsLabel} FPS Engine (Zero Re-encoding · BT.709 · FastStart)...`);
+        appendLog(`# AbuAsrh Local ${fpsLabel} FPS Engine (slow_mo=${slowMo})...`);
 
         if (instantWorker) {
           try { instantWorker.terminate(); } catch (_) {}
@@ -1784,11 +1934,14 @@
         });
       } catch (err) {
         hideInstantProgress();
-        appendLog('Error: ' + err.message, 'warning');
-        btnProcess.disabled = false;
-        setLabel('إعادة المحاولة');
+        if (err && err.message !== 'ABORTED') {
+          appendLog('Error: ' + err.message, 'warning');
+          btnProcess.disabled = false;
+          setLabel('إعادة المحاولة');
+        }
       } finally {
         busy = false;
+        instantCloudState.xhr = null;
       }
     }
     window.runProcess = runProcess;
@@ -1859,16 +2012,6 @@
       customWeightWrap.style.display = blurWeightSel.value === 'custom' ? 'flex' : 'none';
     });
 
-    const ghTokInput = $('b_gh_token');
-    try {
-      const savedTok = localStorage.getItem('abuasrh_gh_pat');
-      if (savedTok) ghTokInput.value = savedTok;
-      ghTokInput.addEventListener('change', () => {
-        if (ghTokInput.value.trim()) localStorage.setItem('abuasrh_gh_pat', ghTokInput.value.trim());
-        else localStorage.removeItem('abuasrh_gh_pat');
-      });
-    } catch (_) {}
-
     function getBlurConfig() {
       const wVal = blurWeightSel.value === 'custom'
         ? ($('b_custom_weights').value.trim() || '1, 2, 3, 2, 1')
@@ -1928,9 +2071,11 @@
     let blurFile = null;
     let blurOutUrl = null;
     let blurOutBlob = null;
+    let blurCloudDl = null;
     let blurPreviewUrl = null;
     let blurBusy = false;
     let blurWorker = null;
+    let blurCloudState = { xhr: null, jobId: null, cancelled: false };
 
     const blurDropArea = $('blurDropArea'), blurMediaInput = $('blurMediaInput'),
           blurFileBox = $('blurFileBox'), blurPreviewVideo = $('blurPreviewVideo'),
@@ -1957,13 +2102,34 @@
       setBlurProgress(0, 'جارٍ التجهيز...');
     }
 
-    function shareBlurResult() {
-      if (!blurOutBlob) return;
-      shareOrDownload(blurOutBlob, btnBlurDownload.download || 'AbuAsrh_Blur.mp4', btnBlurDownload);
+    async function shareBlurResult() {
+      const name = btnBlurDownload.download || 'AbuAsrh_Blur.mp4';
+      if (blurOutBlob) {
+        await shareOrDownload(blurOutBlob, name, btnBlurDownload);
+        return;
+      }
+      if (blurCloudDl) {
+        try {
+          const resp = await fetch(blurCloudDl);
+          const blob = await resp.blob();
+          await shareOrDownload(blob, name, btnBlurDownload);
+        } catch (_) {
+          btnBlurDownload.click();
+        }
+      }
     }
     window.shareBlurResult = shareBlurResult;
 
     function cancelLocalBlur() {
+      blurCloudState.cancelled = true;
+      if (blurCloudState.xhr) {
+        try { blurCloudState.xhr.abort(); } catch (_) {}
+        blurCloudState.xhr = null;
+      }
+      if (blurCloudState.jobId) {
+        fetch(`${CLOUD_API_URL}/api/jobs/${blurCloudState.jobId}`, { method: 'DELETE' }).catch(() => {});
+        blurCloudState.jobId = null;
+      }
       if (blurWorker) {
         try { blurWorker.terminate(); } catch (_) {}
         blurWorker = null;
@@ -1972,7 +2138,7 @@
       hideBlurProgress();
       btnBlurLocal.style.display = 'flex';
       btnBlurLocal.disabled = !blurFile;
-      setBlurBtnText('معالجة البلور داخل التطبيق');
+      setBlurBtnText('معالجة البلور (سحابي سريع)');
       appendBlurLog('تم إيقاف المعالجة وتحرير الذاكرة', 'warning');
     }
     window.cancelLocalBlur = cancelLocalBlur;
@@ -2000,7 +2166,7 @@
       hideBlurProgress();
       $('blurLogBox').innerHTML = ''; $('blurLogBox').style.display = 'none';
       blurLogDrawer.open = false;
-      setBlurBtnText('معالجة البلور داخل التطبيق');
+      setBlurBtnText('معالجة البلور (سحابي سريع)');
     }
 
     function resetBlurFile() {
@@ -2013,7 +2179,7 @@
       blurResultVideo.load();
       blurFileBox.style.display = 'none'; blurDropArea.style.display = '';
       btnBlurLocal.disabled = true; btnBlurLocal.style.display = 'flex';
-      setBlurBtnText('معالجة البلور داخل التطبيق');
+      setBlurBtnText('معالجة البلور (سحابي سريع)');
       blurResultCard.style.display = 'none';
       btnBlurDownload.style.display = 'none';
       hideBlurProgress();
@@ -2077,7 +2243,9 @@
       btnBlurLocal.disabled = true;
       blurResultCard.style.display = 'none';
       btnBlurDownload.style.display = 'none';
-      // Release input video hardware decoder RAM before WASM allocation
+      blurCloudDl = null;
+      blurCloudState = { xhr: null, jobId: null, cancelled: false };
+
       try { blurPreviewVideo.pause(); } catch (_) {}
       blurPreviewVideo.removeAttribute('src');
       blurPreviewVideo.load();
@@ -2086,13 +2254,63 @@
 
       const box = $('blurLogBox');
       box.innerHTML = '';
-      setBlurBtnText('جارٍ تحميل محرك المعالجة...');
+      const c = getBlurConfig();
+      const forceLocal = !!($('b_local_only') && $('b_local_only').checked);
+      const useCloud = !forceLocal && hasCloudEndpoint();
+
+      setBlurBtnText(useCloud ? 'جارٍ الرفع للسحابة...' : 'جارٍ تحميل محرك المعالجة...');
       blurProgressWrap.style.display = 'flex';
       btnBlurCancelRun.style.display = 'flex';
-      setBlurProgress(0, 'جارٍ قراءة الفيديو...');
+      setBlurProgress(0, useCloud ? 'جارٍ رفع الفيديو لسيرفر Railway...' : 'جارٍ قراءة الفيديو...');
 
       try {
-        const c = getBlurConfig();
+        const tStart = performance.now();
+
+        if (useCloud) {
+          appendBlurLog(`# Cloud f0e/blur (Railway VapourSynth · ${c.interpolated_fps} -> ${c.blur_output_fps}fps, amount=${c.blur_amount})...`);
+          const fd = new FormData();
+          fd.append('file', blurFile);
+          fd.append('config_json', JSON.stringify(c));
+
+          const created = await uploadJobWithProgress('/api/jobs/blur', fd, (upPct) => {
+            const p = Math.round(upPct * 0.25);
+            setBlurBtnText(`جارٍ الرفع ${upPct}%`);
+            setBlurProgress(p, `رفع الفيديو: ${upPct}%`);
+          }, blurCloudState);
+
+          appendBlurLog(`# Job ${created.job_id} queued on Railway VapourSynth...`);
+          const doneJob = await pollCloudJob(created.job_id, (st) => {
+            const p = Math.max(25, Math.min(99, 25 + Math.round((st.progress || 0) * 0.75)));
+            setBlurBtnText(`رندر سحابي ${st.progress || 0}%`);
+            setBlurProgress(p, st.stage || 'جارٍ معالجة البلور...');
+          }, blurCloudState);
+
+          const dlUrl = `${CLOUD_API_URL}/api/jobs/${doneJob.id}/download`;
+          blurCloudDl = dlUrl;
+          blurOutBlob = null;
+          btnBlurDownload.href = dlUrl;
+          btnBlurDownload.download = doneJob.output_name || `AbuAsrh_Blur_${c.blur_output_fps}fps.${c.video_container || 'mp4'}`;
+          btnBlurDownload.style.display = 'flex';
+
+          const resStage = blurResultVideo.parentElement;
+          if ((doneJob.output_size || 0) <= 80 * 1024 * 1024) {
+            blurResultVideo.src = dlUrl;
+            resStage.style.display = 'flex';
+          } else {
+            blurResultVideo.removeAttribute('src');
+            blurResultVideo.load();
+            resStage.style.display = 'none';
+          }
+          const secs = ((performance.now() - tStart) / 1000).toFixed(1);
+          const mb = ((doneJob.output_size || 0) / 1048576).toFixed(2);
+          blurResultMeta.textContent = `${mb} MB · ${secs}s · Cloud`;
+          blurResultCard.style.display = 'flex';
+          btnBlurLocal.style.display = 'none';
+          hideBlurProgress();
+          appendBlurLog(`✅ اكتمل البلور السحابي (${secs}s) — ${mb} MB`, 'success');
+          return;
+        }
+
         const localMode = $('b_local_mode') ? $('b_local_mode').value : 'fast';
         const localMaxRes = $('b_local_max_res') ? $('b_local_max_res').value : '1080';
 
@@ -2100,7 +2318,6 @@
           appendBlurLog('تنبيه: حجم الفيديو كبير (>80MB)؛ يُنصح بدقة 720p أو الرندر السحابي لتفادي امتلاء ذاكرة المتصفح.', 'warning');
         }
 
-        const tStart = performance.now();
         let fileBuffer = await blurFile.arrayBuffer();
 
         const inName = 'blur_in.mp4';
@@ -2292,11 +2509,14 @@
         });
       } catch (err) {
         hideBlurProgress();
-        appendBlurLog('Error: ' + err.message, 'warning');
-        btnBlurLocal.disabled = false;
-        setBlurBtnText('إعادة المحاولة');
+        if (err && err.message !== 'ABORTED') {
+          appendBlurLog('Error: ' + err.message, 'warning');
+          btnBlurLocal.disabled = false;
+          setBlurBtnText('إعادة المحاولة');
+        }
       } finally {
         blurBusy = false;
+        blurCloudState.xhr = null;
       }
     }
     window.runLocalBlur = runLocalBlur;
@@ -2384,51 +2604,7 @@
     }
     window.copyBlurBotCmd = copyBlurBotCmd;
 
-    async function dispatchCloudBlur() {
-      const videoUrl = $('b_video_url').value.trim();
-      const token = $('b_gh_token').value.trim();
-      const box = $('blurLogBox');
-      box.innerHTML = '';
-      if (!videoUrl) {
-        appendBlurLog('أدخل رابط الفيديو المباشر أو استخدم بوت تيليجرام.', 'warning');
-        return;
-      }
-      if (!token) {
-        appendBlurLog('أدخل GitHub PAT Token لتشغيل GitHub Actions من المتصفح.', 'warning');
-        return;
-      }
-      const cfg = getBlurConfig();
-      const jsonBytes = new TextEncoder().encode(JSON.stringify(cfg));
-      let binStr = '';
-      jsonBytes.forEach(b => { binStr += String.fromCharCode(b); });
-      const cfgB64 = btoa(binStr);
-      const jobId = Math.random().toString(36).slice(2, 10);
-
-      appendBlurLog(`Dispatching f0e/blur job ${jobId} to GitHub Actions...`);
-      try {
-        const resp = await fetch('https://api.github.com/repos/rtyupp/flowtik-web/actions/workflows/render_blur.yml/dispatches', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/vnd.github+json',
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            ref: 'main',
-            inputs: { video_url: videoUrl, blur_config_b64: cfgB64, job_id: jobId },
-          }),
-        });
-        if (!resp.ok) {
-          const errTxt = await resp.text();
-          throw new Error(`HTTP ${resp.status}: ${errTxt}`);
-        }
-        appendBlurLog(`✅ Job ${jobId} started! Check Actions or Telegram in 1-4 min.`, 'success');
-        appendBlurLog(`https://github.com/rtyupp/flowtik-web/actions/workflows/render_blur.yml`, 'normal');
-      } catch (e) {
-        appendBlurLog('Error: ' + e.message, 'warning');
-      }
-    }
-    window.dispatchCloudBlur = dispatchCloudBlur;
+    checkCloudHealth();
 
     if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.protocol === 'http:')) {
       window.addEventListener('load', () => {

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'abuasrh-studio-v3.2';
+const CACHE_NAME = 'abuasrh-studio-v4.0';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -28,8 +28,9 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
+  if (url.pathname.startsWith('/api/')) return;
 
-  // Cache-first for heavy WASM engine files (instant offline startup on iPhone)
+  // Cache-first for heavy WASM engine files (instant offline fallback on iPhone)
   if (url.pathname.endsWith('ffmpeg-core.wasm') || url.pathname.endsWith('ffmpeg-core.js')) {
     event.respondWith(
       caches.match(req, { ignoreSearch: true }).then((cached) => {
