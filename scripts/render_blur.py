@@ -136,21 +136,52 @@ for plugin in sorted(plugin_dir.glob("*.so")):
             print("Plugin load warning:", plugin.name, e, file=sys.stderr)
 
 # If bestsource failed to load (e.g. libavutil.so.60 ABI mismatch on Ubuntu 24.04),
-# fall back to FFmpeg-decoded raw YUV420P8 clip in VapourSynth.
+# fall back to FFmpeg-decoded raw YUV420P8 clip streamed to disk and mmap'd in VapourSynth.
 if not hasattr(core, "bs"):
-    import subprocess as _sp, numpy as _np
+    import atexit as _atexit, mmap as _mmap, os as _os, subprocess as _sp, tempfile as _tf, numpy as _np
     class _RawBSFallback:
         @staticmethod
         def VideoSource(source, cachemode=0, fpsnum=None, fpsden=None):
             w, h = {width}, {height}
             fn = int(fpsnum or 60)
             fd = int(fpsden or 1)
-            raw_cmd = ["ffmpeg", "-v", "error", "-i", str(source), "-f", "rawvideo", "-pix_fmt", "yuv420p", "-"]
-            raw_bytes = _sp.check_output(raw_cmd)
+            tmp_fh = _tf.NamedTemporaryFile(prefix="blur_raw_", suffix=".yuv", delete=False)
+            tmp_path = tmp_fh.name
+            tmp_fh.close()
+            raw_cmd = ["ffmpeg", "-v", "error", "-y", "-i", str(source), "-f", "rawvideo", "-pix_fmt", "yuv420p", tmp_path]
+            _sp.check_call(raw_cmd)
             frame_sz = (w * h * 3) // 2
-            n_frames = len(raw_bytes) // frame_sz
+            file_sz = _os.path.getsize(tmp_path)
+            n_frames = file_sz // frame_sz if frame_sz > 0 else 0
+            if n_frames <= 0:
+                try:
+                    _os.unlink(tmp_path)
+                except OSError:
+                    pass
+                raise RuntimeError("Rawvideo fallback decoded 0 frames")
+            fh = open(tmp_path, "rb")
+            mm = _mmap.mmap(fh.fileno(), 0, access=_mmap.ACCESS_READ)
+            mv = memoryview(mm)
+            def _cleanup():
+                try:
+                    mv.release()
+                except Exception:
+                    pass
+                try:
+                    mm.close()
+                except Exception:
+                    pass
+                try:
+                    fh.close()
+                except Exception:
+                    pass
+                try:
+                    if _os.path.exists(tmp_path):
+                        _os.unlink(tmp_path)
+                except OSError:
+                    pass
+            _atexit.register(_cleanup)
             blank = core.std.BlankClip(width=w, height=h, format=vs.YUV420P8, length=n_frames, fpsnum=fn, fpsden=fd)
-            mv = memoryview(raw_bytes)
             y_sz = w * h
             uv_sz = (w // 2) * (h // 2)
             def _fill(n, f):
@@ -174,7 +205,7 @@ if not hasattr(core, "bs"):
         )
         src = src.replace(
             '            case _:  # svp',
-            '            case "svp":\\n                video = blur.interpolate.interpolate_mvtools(video, int(interpolated_fps), blocksize=interpolation_blocksize, masking=interpolation_mask_area)\\n            case _:  # svp_disabled'
+            '            case "svp":\\n                video = blur.interpolate.interpolate_mvtools(video, int(round(float(interpolated_fps))), blocksize=interpolation_blocksize, masking=interpolation_mask_area)\\n            case _:  # svp_disabled'
         )
     globals_dict = globals().copy()
     globals_dict["__file__"] = str(blur_py_path)

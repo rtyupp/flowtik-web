@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="أبو عسرة">
   <meta name="theme-color" content="#05070B">
-  <title>أبو عسرة · Flowtik 120 FPS</title>
+  <title>أبو عسرة · محرك 120 FPS والبلور</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +15,7 @@
 
   <link rel="icon" type="image/png" href="icon-192.png?v=3">
   <link rel="apple-touch-icon" sizes="512x512" href="apple-touch-icon.png?v=3">
-  <link rel="manifest" href="manifest.json?v=3">
+  <link rel="manifest" href="manifest.json?v=4">
 
   <style>
     :root {
@@ -735,6 +735,64 @@
       color: var(--accent);
       font-size: 10.5px;
     }
+
+    .progress-wrap {
+      display: none;
+      flex-direction: column;
+      gap: 7px;
+      padding: 11px 13px;
+      border-radius: var(--radius-sm);
+      background: rgba(5, 7, 11, 0.72);
+      border: 1px solid var(--border);
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #38BDF8, #2DD4BF);
+      transition: width 0.2s ease;
+    }
+
+    .btn-danger-outline {
+      display: none;
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(251, 113, 133, 0.4);
+      background: rgba(251, 113, 133, 0.12);
+      color: var(--danger);
+      font-family: 'Tajawal', sans-serif;
+      font-size: 14.5px;
+      font-weight: 800;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-danger-outline:hover {
+      background: rgba(251, 113, 133, 0.22);
+    }
   </style>
 </head>
 <body>
@@ -745,25 +803,25 @@
         <img src="apple-touch-icon.png?v=3" alt="أبو عسرة" class="brand-icon">
         <div class="brand-text">
           <h1 class="brand-title">أبو عسرة</h1>
-          <p class="brand-sub">معالجة 60 / 120 FPS بدون ضغط</p>
+          <p class="brand-sub">محرك أبو عسرة · 60 / 120 FPS وبلور احترافي</p>
         </div>
       </div>
-      <div class="ver-pill">v2.8</div>
+      <div class="ver-pill">v3.0</div>
     </header>
 
     <div class="engine-tabs" role="tablist">
-      <button class="engine-tab active" data-tab="flowtik" onclick="switchMainTab('flowtik')">
-        <span>Flowtik 120/60</span>
+      <button class="engine-tab active" data-tab="instant" onclick="switchMainTab('instant')">
+        <span>أبو عسرة 120/60</span>
         <span class="tab-badge">فوري</span>
       </button>
       <button class="engine-tab" data-tab="blur" onclick="switchMainTab('blur')">
-        <span>f0e/blur</span>
-        <span class="tab-badge">كامل</span>
+        <span>أبو عسرة Blur</span>
+        <span class="tab-badge">متقدم</span>
       </button>
     </div>
 
-    <!-- TAB 1: Flowtik 120 / 60 (untouched dual engine) -->
-    <section class="studio-card tab-pane active" id="paneFlowtik">
+    <!-- TAB 1: AbuAsrh 120 / 60 (100% Native Worker Engine, Zero Re-encoding) -->
+    <section class="studio-card tab-pane active" id="paneInstant">
       <div class="drop-zone" id="dropArea">
         <div class="upload-orb">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -795,7 +853,7 @@
       <div class="mode-section">
         <div class="mode-label">
           <span>وضع الفريمات</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);">DUAL ENGINE</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);">ABUASRH ENGINE</span>
         </div>
         <div class="mode-grid">
           <div class="fps-option active" data-fps="120" onclick="setFps(120)">
@@ -803,14 +861,14 @@
               <span class="fps-num">120 FPS</span>
               <span class="fps-tag">الأسرع</span>
             </div>
-            <div class="fps-desc">محرك Flowtik المباشر</div>
+            <div class="fps-desc">تحضير فوري 120K · BT.709 · بدون ضغط</div>
           </div>
 
           <div class="fps-option" data-fps="60" onclick="setFps(60)">
             <div class="fps-top">
               <span class="fps-num">60 FPS</span>
             </div>
-            <div class="fps-desc">تعديل التوقيت الزمني</div>
+            <div class="fps-desc">تعديل التوقيت 2× · BT.709 · بدون ضغط</div>
           </div>
         </div>
       </div>
@@ -819,14 +877,28 @@
         <span>بدء معالجة 120 FPS</span>
       </button>
 
-      <a class="btn-download" id="btnDownload" download="Flowtik_120fps.mp4">
+      <div class="progress-wrap" id="instantProgressWrap">
+        <div class="progress-meta">
+          <span id="instantProgressLabel">جارٍ التجهيز...</span>
+          <span id="instantProgressPct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar" id="instantProgressBar"></div>
+        </div>
+      </div>
+
+      <button class="btn-danger-outline" id="btnInstantCancel" type="button" onclick="cancelInstantProcess()">
+        <span>إيقاف المعالجة</span>
+      </button>
+
+      <a class="btn-download" id="btnDownload" download="AbuAsrh_120fps.mp4">
         <span>حفظ الفيديو الجاهز</span>
       </a>
 
       <div class="log-box" id="terminalBox"></div>
     </section>
 
-    <!-- TAB 2: Official f0e/blur Engine (In-App WASM + Cloud Option) -->
+    <!-- TAB 2: AbuAsrh Blur Engine (Worker WASM + Cloud Option) -->
     <section class="studio-card tab-pane" id="paneBlur">
       <!-- Local In-App Video Picker -->
       <div class="drop-zone" id="blurDropArea">
@@ -930,6 +1002,22 @@
           <div class="field full">
             <label><span>pre-interpolated fps</span></label>
             <input type="text" id="b_pre_interpolated_fps" value="360" placeholder="360 أو 3x">
+          </div>
+          <div class="field">
+            <label><span>وضع المحرك داخل التطبيق</span></label>
+            <select id="b_local_mode">
+              <option value="fast" selected>سريع ومستقر — بدون كرش (موصى به)</option>
+              <option value="mci">توليد حركة MCI (أبطأ — حد أقصى 720p)</option>
+              <option value="blend_only">بلور خفيف بدون توليد فريمات (الأخف للآيفون)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label><span>أقصى دقة للمعالجة المحلية</span></label>
+            <select id="b_local_max_res">
+              <option value="1080" selected>1080p (آمن ومستقر)</option>
+              <option value="720">720p (أسرع وأخف للآيفون)</option>
+              <option value="orig">الأصلية بدون تصغير</option>
+            </select>
           </div>
         </div>
       </div>
@@ -1094,6 +1182,20 @@
         <span>معالجة البلور داخل التطبيق</span>
       </button>
 
+      <div class="progress-wrap" id="blurProgressWrap">
+        <div class="progress-meta">
+          <span id="blurProgressLabel">جارٍ التجهيز...</span>
+          <span id="blurProgressPct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar" id="blurProgressBar"></div>
+        </div>
+      </div>
+
+      <button class="btn-danger-outline" id="btnBlurCancelRun" type="button" onclick="cancelLocalBlur()">
+        <span>إيقاف المعالجة</span>
+      </button>
+
       <a class="btn-download" id="btnBlurDownload" download="AbuAsrh_Blur.mp4">
         <span>حفظ الفيديو بالبلور</span>
       </a>
@@ -1132,29 +1234,79 @@
   </main>
 
   <script>
-    const FLOWTIK_WASM_BASE64 = "AGFzbQEAAAABTw1gAX8Bf2ABfwF+YAJ/fwBgA39/fwBgAn9/AX9gA39/fwF/YAJ+fgF+YAF/AGAAAX9gAABgBn9/f39/fwBgBX9/f39/AGAHf39/f39/fwADR0YAAAECAgMABAQFAAYGBQcHBwcHAgAHBAAICAkCAAcHCgICAwkJCQkDCwQHAgcCBwQEAwgMCQkICQQJAAUFAAAAAAcCAAcFBQMBAAEG9AJKfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFB6AcLfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfgFCAAt+AUIAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALfwFBAAsHWAYGbWVtb3J5AgAFcGF0Y2gAOA5nZXRfb3V0cHV0X3B0cgAYCWdldF9lcnJvcgAZD2RlY3J5cHRfc2VjcmV0cwA5FGdlbmVyYXRlX2FwcF9zeW5jX2lkAEUKyz5GKwAgAC0AAEEYdCAAQQFqLQAAQRB0ciAAQQJqLQAAQQh0IABBA2otAABycgsTACAALQAAQQh0IABBAWotAAByCxMAIAAQAK1CIIYgAEEEahAArYQLMAAgACABQRh2OgAAIABBAWogAUEQdjoAACAAQQJqIAFBCHY6AAAgAEEDaiABOgAACxYAIAAgAUEIdjoAACAAQQFqIAE6AAALLgEBf0EAIQMCQANAIAMgAk8NASAAIANqIAEgA2otAAA6AAAgA0EBaiEDDAALCwsKACAAQQ9qQXBxC2wBAX8gAEEIaiABSwRAQQAPCyAAEAAhAiACQQFGBEAgAEEQaiABSwRAQQAPCyAAQQhqEABBAEcEQEEADwsgAEEMahAAIQIFIAJBAEYEQCABIABrDwsLIAJBCEkgACACaiABS3IEQEEADwsgAgscAQF/IAAgARAHIQIgAkEARgR/QQAFIAAgAmoLCzgBAn8gACEDAkADQCADIAEQCCEEIARBAEYEQAwCCyADQQRqEAAgAkYEQCADDwsgBCEDDAALC0EACxMBAX8jBhAGIQEgASAAaiQGIAELKAECfiAAIAF/IQIgACABgSEDIANCAFMgAUIAVXEEfiACQgF9BSACCwsNACAAIAF8QgF9IAF/CxkAIACsIAGtfkICfiACrXwgAq1CAn4QC6cLKQEDfyMBIABqIQE/ACECIAFBEHZBAWohAyADIAJLBEAgAyACa0AAGgsLFABBARAOIwEgADoAACMBQQFqJAELEwBBAhAOIwEgABAEIwFBAmokAQsTAEEEEA4jASAAEAMjAUEEaiQBCzMBAX8gABAOQQAhAQJAA0AgASAATw0BIwEgAWpBADoAACABQQFqIQEMAAsLIwEgAGokAQsVACABEA4jASAAIAEQBSMBIAFqJAELEgEBfyMBIQFBABARIAAQESABCxEBAX8jASAAayEBIAAgARADCxABAX8gABAUIQIgARARIAILCAAgACQAQQALBAAjAgsEACMACy4AQYCABBARQQAQEUEAEBFBABARQYCABBARQQAQEUEAEBFBABARQYCAgIAEEBELHgEBf0H05NGTBhAUIQJBABARIAAQESABEBEgAhAVCyEBAX8gABAPIwEhAUGAARAPQYABEA9BgAEQD0EAEA8gAQsSACAAQQNqIwEgAEEEams6AAALRgEBf0Hk0NnrBkEAEBYhAUEAEBFBABARQegHEBEgABARQYCABBARQYACEBBBABAQQQAQEUEAEBEQGkEYEBJBBBARIAEQFQtKAQF/QeTQraMHQQMQFiEGQQAQEUEAEBEgABARQQAQESABEBFBABARQQAQEUEAEBAgAxAQIAIQEEEAEBAQGiAEEBEgBRARIAYQFQsmAQF/QfTmsasGQQAQFiECQQEQESAAEBEgARARQYCABBARIAIQFQsuAQF/QeTQkesGQQAQFiECQQAQEUEAEBEgABARIAEQEUHEqwEQEEEAEBAgAhAVCyYBAX9B8tiRwwZBABAWIQNBABARIAAQEUEMEBIgASACEBMgAxAVCxgB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";
-
-    // ===== Port of the original Flowtik v2.8 sandbox (chunks/sandbox-D1QuYD8F.js) =====
+    // ===== AbuAsrh Studio v3.0 Engine (100% Native Worker + Zero Re-encoding Remux) =====
     'use strict';
-    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-    const FAST = new URLSearchParams(location.search).has('fast');
-    const wait = (ms) => FAST ? Promise.resolve() : sleep(ms);
 
-    let flowtikWasm = null;
-    let ffCore = null, ffDuration = 0;
     let currentFile = null;
     let selectedFps = 120;
     let lastUrl = null;
     let busy = false;
+    let instantWorker = null;
 
     const $ = (id) => document.getElementById(id);
     const dropArea = $('dropArea'), mediaInput = $('mediaInput'), fileBox = $('fileBox'),
           labelName = $('labelName'), labelSize = $('labelSize'), btnCancel = $('btnCancel'),
-          btnProcess = $('btnProcess'), btnDownload = $('btnDownload'), terminalBox = $('terminalBox');
+          btnProcess = $('btnProcess'), btnDownload = $('btnDownload'), terminalBox = $('terminalBox'),
+          instantProgressWrap = $('instantProgressWrap'), instantProgressBar = $('instantProgressBar'),
+          instantProgressLabel = $('instantProgressLabel'), instantProgressPct = $('instantProgressPct'),
+          btnInstantCancel = $('btnInstantCancel');
 
     function setLabel(t) { btnProcess.querySelector('span').textContent = t; }
     function idleLabel() {
       setLabel(selectedFps === 120 ? 'بدء معالجة 120 FPS' : 'بدء معالجة 60 FPS');
+    }
+
+    function setInstantProgress(pct, labelText) {
+      const clamped = Math.max(0, Math.min(100, Math.round(pct || 0)));
+      instantProgressBar.style.width = clamped + '%';
+      instantProgressPct.textContent = clamped + '%';
+      if (labelText) instantProgressLabel.textContent = labelText;
+    }
+
+    function hideInstantProgress() {
+      instantProgressWrap.style.display = 'none';
+      btnInstantCancel.style.display = 'none';
+      setInstantProgress(0, 'جارٍ التجهيز...');
+    }
+
+    function inspectVideoFile(file, onMeta) {
+      try {
+        const v = document.createElement('video');
+        const url = URL.createObjectURL(file);
+        let settled = false;
+        const finish = (meta) => {
+          if (settled) return;
+          settled = true;
+          try { URL.revokeObjectURL(url); } catch (_) {}
+          v.removeAttribute('src');
+          v.load();
+          if (meta) onMeta(meta);
+        };
+        const timer = setTimeout(() => finish(null), 3000);
+        v.preload = 'metadata';
+        v.onloadedmetadata = () => {
+          clearTimeout(timer);
+          finish({
+            width: v.videoWidth || 0,
+            height: v.videoHeight || 0,
+            duration: Number.isFinite(v.duration) ? v.duration : 0,
+          });
+        };
+        v.onerror = () => {
+          clearTimeout(timer);
+          finish(null);
+        };
+        v.src = url;
+      } catch (_) {}
+    }
+
+    function formatFileSummary(file, meta) {
+      const mb = (file.size / 1048576).toFixed(2) + ' MB';
+      if (!meta || (!meta.width && !meta.duration)) return mb;
+      const parts = [mb];
+      if (meta.width && meta.height) parts.push(`${meta.width}×${meta.height}`);
+      if (meta.duration > 0) parts.push(`${meta.duration.toFixed(1)}s`);
+      return parts.join(' · ');
     }
 
     function setFps(fps) {
@@ -1178,89 +1330,35 @@
       terminalBox.scrollTop = terminalBox.scrollHeight;
     }
 
-    async function initFlowtikWasm() {
-      if (flowtikWasm) return flowtikWasm;
-      const bin = Uint8Array.from(atob(FLOWTIK_WASM_BASE64), c => c.charCodeAt(0));
-      flowtikWasm = (await WebAssembly.instantiate(bin)).instance;
-      flowtikWasm.exports.decrypt_secrets();
-      return flowtikWasm;
-    }
-
-    function loadScript(src) {
-      return new Promise((res, rej) => {
-        if (typeof createFFmpegCore === 'function') return res();
-        const el = document.createElement('script');
-        el.src = src; el.onload = res; el.onerror = () => rej(new Error('تعذر تحميل ' + src));
-        document.head.appendChild(el);
-      });
-    }
-    function parseTime(t) { const e = t.trim().split(':'); return 3600 * parseFloat(e[0] || '0') + 60 * parseFloat(e[1] || '0') + parseFloat(e[2] || '0'); }
-    async function initFfmpegCore() {
-      if (ffCore) return ffCore;
-      appendLog('# Loading encoding core (~32MB)');
-      await loadScript('ffmpeg-core.js');
-      ffDuration = 0;
-      ffCore = await createFFmpegCore({ locateFile: (f) => f.endsWith('.wasm') ? 'ffmpeg-core.wasm' : f });
-      ffCore.setLogger(({ type, message }) => {
-        if (type !== 'stderr' || !message) return;
-        if (message.startsWith('  Duration')) { const m = message.match(/Duration: (\S+)/); if (m) ffDuration = parseTime(m[1]); }
-        else if (message.startsWith('frame=') && ffDuration > 0) { const m = message.match(/time=(\S+)/); if (m) setLabel('جارٍ المعالجة ' + Math.round(Math.min(parseTime(m[1]) / ffDuration, .99) * 100) + '%'); }
-      });
-      appendLog('Core ready', 'success');
-      return ffCore;
-    }
-    function ffClean() { if (ffCore) ['input.mp4', 'output.mp4'].forEach(f => { try { ffCore.FS.unlink(f); } catch (e) {} }); }
-    function ffExit() { if (ffCore) { try { ffCore.exit && ffCore.exit(); } catch (e) {} ffCore = null; ffDuration = 0; } }
-
-    async function processBuffer(data, fpsLabel) {
-      const itsscale = fpsLabel === '60' ? '2' : '1';
-      appendLog('# Loading security protocols'); await wait(1000);
-      const o = await initFlowtikWasm();
-      if (!o) throw new Error('Security verification failed: WASM module is missing or corrupted.');
-      if (fpsLabel === '120') {
-        appendLog('# Initializing bytecode engine'); await wait(1500);
-        const p = o.exports.memory, g = 65536, F = data.byteLength, L = g + F * 2 + 8 * 1024 * 1024;
-        if (p.buffer.byteLength < L) p.grow(Math.ceil(L / 65536) - p.buffer.byteLength / 65536);
-        new Uint8Array(p.buffer).set(new Uint8Array(data), g); data = null;
-        appendLog('# Parsing MP4 structure'); await wait(1500);
-        appendLog('# Establishing frame injection'); await wait(1500);
-        const x = o.exports.patch(g, F);
-        if (!x) throw new Error('Processing failed (error code ' + o.exports.get_error() + ').');
-        appendLog('# Injecting temporal frames'); await wait(1500);
-        const P = o.exports.get_output_ptr();
-        const v = p.buffer.slice(P, P + x);
-        appendLog('# Finalizing output buffer — complete', 'success'); await wait(500);
-        return v;
+    function cancelInstantProcess() {
+      if (instantWorker) {
+        try { instantWorker.terminate(); } catch (_) {}
+        instantWorker = null;
       }
-      appendLog('# Initializing slow-motion engine'); await wait(1500);
-      const c = await initFfmpegCore(); ffClean();
-      appendLog('# Loading input stream'); await wait(1500);
-      c.FS.writeFile('input.mp4', new Uint8Array(data)); data = null;
-      appendLog('# Applying temporal scaling'); await wait(1500);
-      const h = c.exec('-itsscale', itsscale, '-i', 'input.mp4', '-c:v', 'copy', '-c:a', 'copy',
-        '-map_metadata', '-1', '-map_metadata:s:v', '-1', '-map_metadata:s:a', '-1', '-map_chapters', '-1',
-        '-metadata', 'title=Flowtik', '-metadata', 'comment=flowtik.org',
-        '-metadata', 'artist=flowtik.org', 'output.mp4');
-      if (h !== 0) throw new Error('Core exited with code ' + h);
-      const b = c.FS.readFile('output.mp4').buffer.slice(0);
-      ffClean();
-      appendLog('# Finalizing output buffer — complete', 'success'); await wait(500);
-      ffExit();
-      return b;
+      busy = false;
+      hideInstantProgress();
+      btnProcess.style.display = 'flex';
+      btnProcess.disabled = !currentFile;
+      idleLabel();
+      appendLog('تم إيقاف المعالجة وتحرير الذاكرة', 'warning');
     }
-    window.processBuffer = processBuffer;
+    window.cancelInstantProcess = cancelInstantProcess;
 
     function pickFile(file) {
       if (!file || busy) return;
       if (file.type && !file.type.startsWith('video/')) { alert('الملف لازم يكون فيديو'); return; }
       currentFile = file;
       labelName.textContent = file.name;
-      labelSize.textContent = (file.size / 1048576).toFixed(2) + ' MB';
+      labelSize.textContent = formatFileSummary(file, null);
+      inspectVideoFile(file, (meta) => {
+        if (currentFile === file) labelSize.textContent = formatFileSummary(file, meta);
+      });
       fileBox.style.display = 'flex';
       dropArea.style.display = 'none';
       btnProcess.style.display = 'flex';
       btnProcess.disabled = false;
       btnDownload.style.display = 'none';
+      hideInstantProgress();
       terminalBox.innerHTML = ''; terminalBox.style.display = 'none';
       idleLabel();
     }
@@ -1271,30 +1369,121 @@
       fileBox.style.display = 'none'; dropArea.style.display = '';
       btnProcess.disabled = true; idleLabel(); btnProcess.style.display = 'flex';
       btnDownload.style.display = 'none';
+      hideInstantProgress();
       terminalBox.innerHTML = ''; terminalBox.style.display = 'none';
+    }
+
+    function buildInstantArgs(fpsNum, inName, outName, audioCopy) {
+      const args = [];
+      if (fpsNum === 60) args.push('-itsscale', '2');
+      args.push(
+        '-i', inName,
+        '-map', '0:v:0',
+        '-map', '0:a?',
+        '-c:v', 'copy',
+        ...(audioCopy ? ['-c:a', 'copy'] : ['-c:a', 'aac', '-b:a', '192k']),
+        '-video_track_timescale', fpsNum === 120 ? '120000' : '60000',
+        '-color_primaries', 'bt709',
+        '-color_trc', 'bt709',
+        '-colorspace', 'bt709',
+        '-color_range', 'tv',
+        '-map_metadata', '-1',
+        '-map_metadata:s:v', '-1',
+        '-map_metadata:s:a', '-1',
+        '-map_chapters', '-1',
+        '-metadata', 'title=AbuAsrh',
+        '-metadata', 'artist=AbuAsrh',
+        '-metadata', `comment=AbuAsrh Studio ${fpsNum}FPS`,
+        '-brand', 'mp42',
+        '-movflags', '+faststart',
+        outName
+      );
+      return args;
     }
 
     async function runProcess() {
       if (!currentFile || busy) return;
-      busy = true; btnProcess.disabled = true;
-      const fpsLabel = selectedFps === 120 ? '120' : '60';
+      busy = true;
+      btnProcess.disabled = true;
+      btnDownload.style.display = 'none';
+      const fpsNum = selectedFps === 120 ? 120 : 60;
+      const fpsLabel = String(fpsNum);
       setLabel('جارٍ المعالجة...');
       terminalBox.innerHTML = '';
+      instantProgressWrap.style.display = 'flex';
+      btnInstantCancel.style.display = 'flex';
+      setInstantProgress(0, 'جارٍ قراءة الفيديو...');
+
       try {
-        const out = await processBuffer(await currentFile.arrayBuffer(), fpsLabel);
-        const blob = new Blob([out], { type: 'video/mp4' });
-        if (lastUrl) URL.revokeObjectURL(lastUrl);
-        lastUrl = URL.createObjectURL(blob);
-        btnDownload.href = lastUrl;
-        btnDownload.download = 'Flowtik_' + fpsLabel + 'fps.mp4';
-        btnDownload.style.display = 'flex';
-        btnProcess.style.display = 'none';
-        appendLog('✅ تم — ' + (blob.size / 1048576).toFixed(2) + ' MB', 'success');
+        const tStart = performance.now();
+        let fileBuffer = await currentFile.arrayBuffer();
+        const inName = 'in_video.mp4';
+        const outName = 'out_video.mp4';
+        const cmdArgs = buildInstantArgs(fpsNum, inName, outName, true);
+        const fallbackCmdArgs = buildInstantArgs(fpsNum, inName, outName, false);
+        const coreUrl = new URL('ffmpeg-core.js', location.href).href;
+        const wasmUrl = new URL('ffmpeg-core.wasm', location.href).href;
+
+        appendLog(`# AbuAsrh ${fpsLabel} FPS Engine (Zero Re-encoding · BT.709 · FastStart)...`);
+
+        if (instantWorker) {
+          try { instantWorker.terminate(); } catch (_) {}
+          instantWorker = null;
+        }
+        instantWorker = new Worker('abuasrh-worker.js?v=5');
+
+        await new Promise((resolve, reject) => {
+          instantWorker.onmessage = (ev) => {
+            const msg = ev.data || {};
+            if (msg.type === 'status') {
+              appendLog(msg.text, msg.level || 'normal');
+              setInstantProgress(15, 'جارٍ تعديل التوقيت والبيانات...');
+            } else if (msg.type === 'progress') {
+              const pct = msg.pct || 0;
+              setLabel(`جارٍ المعالجة ${pct}%`);
+              setInstantProgress(pct, `الوقت المعالج: ${msg.timeStr || ''}`);
+            } else if (msg.type === 'done') {
+              try { instantWorker.terminate(); } catch (_) {}
+              instantWorker = null;
+              const blob = new Blob([msg.buffer], { type: 'video/mp4' });
+              if (lastUrl) URL.revokeObjectURL(lastUrl);
+              lastUrl = URL.createObjectURL(blob);
+              btnDownload.href = lastUrl;
+              btnDownload.download = `AbuAsrh_${fpsLabel}fps.mp4`;
+              btnDownload.style.display = 'flex';
+              btnProcess.style.display = 'none';
+              hideInstantProgress();
+              const secs = ((performance.now() - tStart) / 1000).toFixed(2);
+              appendLog(`✅ تم بنجاح (${secs}s) — ${(blob.size / 1048576).toFixed(2)} MB`, 'success');
+              resolve();
+            } else if (msg.type === 'error') {
+              try { instantWorker.terminate(); } catch (_) {}
+              instantWorker = null;
+              if (msg.details) appendLog(msg.details, 'normal');
+              reject(new Error(msg.message || 'Worker processing failed'));
+            }
+          };
+
+          instantWorker.onerror = (err) => {
+            try { instantWorker && instantWorker.terminate(); } catch (_) {}
+            instantWorker = null;
+            reject(new Error(err.message || 'حدث خطأ في Worker المعالجة'));
+          };
+
+          instantWorker.postMessage(
+            { type: 'run', coreUrl, wasmUrl, fileBuffer, inName, outName, cmdArgs, fallbackCmdArgs, ext: 'mp4' },
+            [fileBuffer]
+          );
+          fileBuffer = null;
+        });
       } catch (err) {
-        ffClean(); ffExit();
+        hideInstantProgress();
         appendLog('Error: ' + err.message, 'warning');
-        btnProcess.disabled = false; setLabel('إعادة المحاولة');
-      } finally { busy = false; }
+        btnProcess.disabled = false;
+        setLabel('إعادة المحاولة');
+      } finally {
+        busy = false;
+      }
     }
     window.runProcess = runProcess;
 
@@ -1305,11 +1494,11 @@
     dropArea.addEventListener('drop', (e) => { e.preventDefault(); dropArea.classList.remove('dragover'); pickFile(e.dataTransfer.files[0]); });
     btnCancel.addEventListener('click', resetFile);
 
-    // ===== f0e/blur Tab Logic (isolated from Flowtik 120/60 engine) =====
+    // ===== AbuAsrh Blur Tab Logic (isolated Worker WASM + Cloud) =====
     function switchMainTab(tab) {
       document.querySelectorAll('.engine-tab').forEach(el =>
         el.classList.toggle('active', el.dataset.tab === tab));
-      $('paneFlowtik').classList.toggle('active', tab === 'flowtik');
+      $('paneInstant').classList.toggle('active', tab === 'instant');
       $('paneBlur').classList.toggle('active', tab === 'blur');
     }
     window.switchMainTab = switchMainTab;
@@ -1385,29 +1574,64 @@
       box.scrollTop = box.scrollHeight;
     }
 
-    // ===== In-App f0e/blur WASM Engine (runs 100% locally in browser, zero server load) =====
+    // ===== In-App f0e/blur WASM Engine (Worker-isolated, low-memory, zero server load) =====
     let blurFile = null;
     let blurOutUrl = null;
     let blurBusy = false;
+    let blurWorker = null;
 
     const blurDropArea = $('blurDropArea'), blurMediaInput = $('blurMediaInput'),
           blurFileBox = $('blurFileBox'), blurLabelName = $('blurLabelName'),
           blurLabelSize = $('blurLabelSize'), blurBtnCancel = $('blurBtnCancel'),
-          btnBlurLocal = $('btnBlurLocal'), btnBlurDownload = $('btnBlurDownload');
+          btnBlurLocal = $('btnBlurLocal'), btnBlurDownload = $('btnBlurDownload'),
+          blurProgressWrap = $('blurProgressWrap'), blurProgressBar = $('blurProgressBar'),
+          blurProgressLabel = $('blurProgressLabel'), blurProgressPct = $('blurProgressPct'),
+          btnBlurCancelRun = $('btnBlurCancelRun');
 
     function setBlurBtnText(t) { btnBlurLocal.querySelector('span').textContent = t; }
+
+    function setBlurProgress(pct, labelText) {
+      const clamped = Math.max(0, Math.min(100, Math.round(pct || 0)));
+      blurProgressBar.style.width = clamped + '%';
+      blurProgressPct.textContent = clamped + '%';
+      if (labelText) blurProgressLabel.textContent = labelText;
+    }
+
+    function hideBlurProgress() {
+      blurProgressWrap.style.display = 'none';
+      btnBlurCancelRun.style.display = 'none';
+      setBlurProgress(0, 'جارٍ التجهيز...');
+    }
+
+    function cancelLocalBlur() {
+      if (blurWorker) {
+        try { blurWorker.terminate(); } catch (_) {}
+        blurWorker = null;
+      }
+      blurBusy = false;
+      hideBlurProgress();
+      btnBlurLocal.style.display = 'flex';
+      btnBlurLocal.disabled = !blurFile;
+      setBlurBtnText('معالجة البلور داخل التطبيق');
+      appendBlurLog('تم إيقاف المعالجة وتحرير الذاكرة', 'warning');
+    }
+    window.cancelLocalBlur = cancelLocalBlur;
 
     function pickBlurFile(file) {
       if (!file || blurBusy) return;
       if (file.type && !file.type.startsWith('video/')) { alert('الملف لازم يكون فيديو'); return; }
       blurFile = file;
       blurLabelName.textContent = file.name;
-      blurLabelSize.textContent = (file.size / 1048576).toFixed(2) + ' MB';
+      blurLabelSize.textContent = formatFileSummary(file, null);
+      inspectVideoFile(file, (meta) => {
+        if (blurFile === file) blurLabelSize.textContent = formatFileSummary(file, meta);
+      });
       blurFileBox.style.display = 'flex';
       blurDropArea.style.display = 'none';
       btnBlurLocal.style.display = 'flex';
       btnBlurLocal.disabled = false;
       btnBlurDownload.style.display = 'none';
+      hideBlurProgress();
       $('blurLogBox').innerHTML = ''; $('blurLogBox').style.display = 'none';
       setBlurBtnText('معالجة البلور داخل التطبيق');
     }
@@ -1419,6 +1643,7 @@
       btnBlurLocal.disabled = true; btnBlurLocal.style.display = 'flex';
       setBlurBtnText('معالجة البلور داخل التطبيق');
       btnBlurDownload.style.display = 'none';
+      hideBlurProgress();
       $('blurLogBox').innerHTML = ''; $('blurLogBox').style.display = 'none';
     }
 
@@ -1476,46 +1701,55 @@
       if (!blurFile || blurBusy) return;
       blurBusy = true;
       btnBlurLocal.disabled = true;
+      btnBlurDownload.style.display = 'none';
       const box = $('blurLogBox');
       box.innerHTML = '';
       setBlurBtnText('جارٍ تحميل محرك المعالجة...');
+      blurProgressWrap.style.display = 'flex';
+      btnBlurCancelRun.style.display = 'flex';
+      setBlurProgress(0, 'جارٍ قراءة الفيديو...');
+
       try {
         const c = getBlurConfig();
-        const data = await blurFile.arrayBuffer();
-        appendBlurLog('# Loading FFmpeg WASM core (~32MB)...');
-        await loadScript('ffmpeg-core.js');
-        if (ffCore) ffExit();
-        let dur = 0;
-        const core = await createFFmpegCore({ locateFile: (f) => f.endsWith('.wasm') ? 'ffmpeg-core.wasm' : f });
-        core.setLogger(({ type, message }) => {
-          if (type !== 'stderr' || !message) return;
-          if (message.startsWith('  Duration')) {
-            const m = message.match(/Duration: (\S+)/);
-            if (m) dur = parseTime(m[1]);
-          } else if (message.startsWith('frame=') && dur > 0) {
-            const m = message.match(/time=(\S+)/);
-            if (m) setBlurBtnText('جارٍ الرندر ' + Math.round(Math.min(parseTime(m[1]) / dur, 0.99) * 100) + '%');
-          }
-        });
-        appendBlurLog('Core ready', 'success');
+        const localMode = $('b_local_mode') ? $('b_local_mode').value : 'fast';
+        const localMaxRes = $('b_local_max_res') ? $('b_local_max_res').value : '1080';
+
+        if (blurFile.size > 80 * 1024 * 1024) {
+          appendBlurLog('تنبيه: حجم الفيديو كبير (>80MB)؛ يُنصح بدقة 720p أو الرندر السحابي لتفادي امتلاء ذاكرة المتصفح.', 'warning');
+        }
+
+        const tStart = performance.now();
+        let fileBuffer = await blurFile.arrayBuffer();
 
         const inName = 'blur_in.mp4';
         const ext = ['mp4', 'mkv', 'mov', 'avi'].includes(c.video_container) ? c.video_container : 'mp4';
         const outName = `blur_out.${ext}`;
-        core.FS.writeFile(inName, new Uint8Array(data));
 
-        // Build video filter chain matching f0e/blur settings
         const vFilters = [];
         const outFps = Math.max(15, Math.min(240, c.blur_output_fps || 60));
 
-        // 1. Input timescale
+        // 1. Resolution guard to prevent WASM OOM crashes on 4K / high-res portrait clips
+        let maxLongSide = 0;
+        if (localMode === 'mci') {
+          maxLongSide = localMaxRes === '720' ? 1280 : 1280;
+        } else if (localMaxRes === '720') {
+          maxLongSide = 1280;
+        } else if (localMaxRes === '1080') {
+          maxLongSide = 1920;
+        }
+        if (maxLongSide > 0) {
+          vFilters.push(`scale=w='if(gte(iw\\,ih)\\,min(${maxLongSide}\\,iw)\\,-2)':h='if(gte(iw\\,ih)\\,-2\\,min(${maxLongSide}\\,ih))'`);
+          appendBlurLog(`# Resolution guard: max ${maxLongSide}px (${localMode})`);
+        }
+
+        // 2. Input timescale
         if (c.timescale && c.input_timescale > 0 && c.input_timescale !== 1.0) {
           vFilters.push(`setpts=PTS/${c.input_timescale}`);
         }
 
-        // 2. Motion Interpolation (WASM minterpolate MCI)
+        // 3. Interpolation (safe modes)
         let workingFps = outFps;
-        if (c.interpolate) {
+        if (c.interpolate && localMode !== 'blend_only') {
           let targetFps = 180;
           const rawFps = String(c.interpolated_fps || '600').trim();
           if (rawFps.endsWith('x')) {
@@ -1524,18 +1758,26 @@
           } else {
             targetFps = parseInt(rawFps, 10) || 180;
           }
-          // Cap browser CPU minterpolate to practical rate while preserving smooth optical flow
-          workingFps = Math.max(outFps * 2, Math.min(240, targetFps));
-          appendBlurLog(`# Motion interpolation -> ${workingFps} fps (requested ${rawFps})...`);
-          vFilters.push(`minterpolate=fps=${workingFps}:mi_mode=mci:mc_mode=aobmc:vsbmc=1`);
+          if (localMode === 'mci') {
+            workingFps = Math.min(120, Math.max(outFps * 2, targetFps));
+            appendBlurLog(`# Motion interpolation (MCI 720p cap) -> ${workingFps} fps...`);
+            vFilters.push(`minterpolate=fps=${workingFps}:mi_mode=mci:mc_mode=obmc:me_mode=bidir:me=epzs:mb_size=16:search_param=8`);
+          } else {
+            const fastCap = Math.max(180, outFps * 2);
+            workingFps = Math.min(fastCap, Math.max(outFps * 2, targetFps));
+            appendBlurLog(`# Fast frame interpolation -> ${workingFps} fps (requested ${rawFps})...`);
+            vFilters.push(`framerate=fps=${workingFps}:interp_start=0:interp_end=255:scene=100`);
+          }
+        } else if (localMode === 'blend_only') {
+          appendBlurLog('# Mode: blend_only (skipping interpolation for minimal RAM)');
         }
 
-        // 3. Weighted Frame Blending (f0e/blur formula)
+        // 4. Weighted Frame Blending (f0e/blur formula, capped at 13 frames for WASM stability)
         if (c.blur && c.blur_amount > 0) {
           const frameGap = Math.max(2, Math.round(workingFps / outFps));
-          let blurFrames = Math.max(3, Math.round(frameGap * c.blur_amount) + 2);
+          let blurFrames = Math.max(3, Math.round(frameGap * c.blur_amount) + 1);
           if (blurFrames % 2 === 0) blurFrames += 1;
-          blurFrames = Math.min(31, blurFrames);
+          blurFrames = Math.min(13, blurFrames);
           const weightsStr = computeBlurWeights(blurFrames, c);
           if (c.blur_gamma && c.blur_gamma !== 1.0) {
             vFilters.push(`eq=gamma=${c.blur_gamma}`);
@@ -1547,13 +1789,13 @@
           appendBlurLog(`# Frame blending: ${blurFrames} frames | weighting=${c.blur_weighting}`);
         }
 
-        // 4. Exact output fps + output timescale
+        // 5. Exact output fps + output timescale
         vFilters.push(`fps=${outFps}`);
         if (c.timescale && c.output_timescale > 0 && c.output_timescale !== 1.0) {
           vFilters.push(`setpts=PTS/${c.output_timescale}`);
         }
 
-        // 5. Color filters (brightness / saturation / contrast)
+        // 6. Color filters (brightness / saturation / contrast)
         if (c.filters && (c.brightness !== 1.0 || c.saturation !== 1.0 || c.contrast !== 1.0)) {
           const br = (c.brightness - 1.0).toFixed(3);
           vFilters.push(`eq=brightness=${br}:saturation=${c.saturation}:contrast=${c.contrast}`);
@@ -1575,30 +1817,82 @@
         if (c.ffmpeg_override) {
           cmdArgs.push(...c.ffmpeg_override.split(/\s+/).filter(Boolean));
         } else {
-          const codec = c.encode_preset === 'h265' ? 'libx265' : 'libx264';
-          cmdArgs.push('-c:v', codec, '-preset', 'ultrafast', '-crf', String(c.quality ?? 16), '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k');
+          if (c.encode_preset && c.encode_preset !== 'h264') {
+            appendBlurLog(`ملاحظة: المعالجة المحلية تستخدم H.264 للاستقرار بدلاً من ${c.encode_preset}.`);
+          }
+          cmdArgs.push(
+            '-c:v', 'libx264',
+            '-preset', 'ultrafast',
+            '-crf', String(c.quality ?? 16),
+            '-pix_fmt', 'yuv420p',
+            '-threads', '1',
+            '-x264-params', 'rc-lookahead=0:ref=1:bframes=0:sync-lookahead=0:threads=1',
+            '-metadata', 'title=AbuAsrh Blur',
+            '-metadata', 'artist=AbuAsrh',
+            '-metadata', 'comment=AbuAsrh Studio Blur',
+            '-c:a', 'aac',
+            '-b:a', '192k'
+          );
           if (ext === 'mp4' || ext === 'mov') cmdArgs.push('-movflags', '+faststart');
         }
         cmdArgs.push(outName);
 
-        appendBlurLog('# Rendering inside app (no server)...');
-        setBlurBtnText('جارٍ الرندر داخل التطبيق...');
-        const rc = core.exec(...cmdArgs);
-        if (rc !== 0) throw new Error('FFmpeg exited with code ' + rc);
+        const coreUrl = new URL('ffmpeg-core.js', location.href).href;
+        const wasmUrl = new URL('ffmpeg-core.wasm', location.href).href;
 
-        const outBuf = core.FS.readFile(outName).buffer.slice(0);
-        try { core.FS.unlink(inName); core.FS.unlink(outName); } catch {}
-        try { core.exit && core.exit(); } catch {}
+        if (blurWorker) {
+          try { blurWorker.terminate(); } catch (_) {}
+          blurWorker = null;
+        }
+        blurWorker = new Worker('abuasrh-worker.js?v=5');
 
-        const blob = new Blob([outBuf], { type: ext === 'mkv' ? 'video/x-matroska' : 'video/mp4' });
-        if (blurOutUrl) URL.revokeObjectURL(blurOutUrl);
-        blurOutUrl = URL.createObjectURL(blob);
-        btnBlurDownload.href = blurOutUrl;
-        btnBlurDownload.download = `AbuAsrh_Blur_${outFps}fps.${ext}`;
-        btnBlurDownload.style.display = 'flex';
-        btnBlurLocal.style.display = 'none';
-        appendBlurLog(`✅ تم الرندر داخل التطبيق — ${(blob.size / 1048576).toFixed(2)} MB`, 'success');
+        await new Promise((resolve, reject) => {
+          blurWorker.onmessage = (ev) => {
+            const msg = ev.data || {};
+            if (msg.type === 'status') {
+              appendBlurLog(msg.text, msg.level || 'normal');
+              setBlurBtnText('جارٍ الرندر داخل التطبيق...');
+              setBlurProgress(2, 'جارٍ الرندر...');
+            } else if (msg.type === 'progress') {
+              const pct = msg.pct || 0;
+              setBlurBtnText(`جارٍ الرندر ${pct}%`);
+              setBlurProgress(pct, `الوقت المعالج: ${msg.timeStr || ''}`);
+            } else if (msg.type === 'done') {
+              try { blurWorker.terminate(); } catch (_) {}
+              blurWorker = null;
+              const blob = new Blob([msg.buffer], { type: ext === 'mkv' ? 'video/x-matroska' : 'video/mp4' });
+              if (blurOutUrl) URL.revokeObjectURL(blurOutUrl);
+              blurOutUrl = URL.createObjectURL(blob);
+              btnBlurDownload.href = blurOutUrl;
+              btnBlurDownload.download = `AbuAsrh_Blur_${outFps}fps.${ext}`;
+              btnBlurDownload.style.display = 'flex';
+              btnBlurLocal.style.display = 'none';
+              hideBlurProgress();
+              const secs = ((performance.now() - tStart) / 1000).toFixed(1);
+              appendBlurLog(`✅ تم الرندر داخل التطبيق (${secs}s) — ${(blob.size / 1048576).toFixed(2)} MB`, 'success');
+              resolve();
+            } else if (msg.type === 'error') {
+              try { blurWorker.terminate(); } catch (_) {}
+              blurWorker = null;
+              if (msg.details) appendBlurLog(msg.details, 'normal');
+              reject(new Error(msg.message || 'Worker render failed'));
+            }
+          };
+
+          blurWorker.onerror = (err) => {
+            try { blurWorker && blurWorker.terminate(); } catch (_) {}
+            blurWorker = null;
+            reject(new Error(err.message || 'حدث خطأ في Worker المعالجة'));
+          };
+
+          blurWorker.postMessage(
+            { type: 'run', coreUrl, wasmUrl, fileBuffer, inName, outName, cmdArgs, ext },
+            [fileBuffer]
+          );
+          fileBuffer = null;
+        });
       } catch (err) {
+        hideBlurProgress();
         appendBlurLog('Error: ' + err.message, 'warning');
         btnBlurLocal.disabled = false;
         setBlurBtnText('إعادة المحاولة');
@@ -1737,7 +2031,7 @@
     }
     window.dispatchCloudBlur = dispatchCloudBlur;
 
-    window.__flowtikReady = true;
+    window.__abuasrhReady = true;
   </script>
 </body>
 </html>
