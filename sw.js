@@ -1,4 +1,4 @@
-const CACHE_NAME = 'abuasrh-studio-v3.1';
+const CACHE_NAME = 'abuasrh-studio-v3.2';
 const CORE_ASSETS = [
   './',
   './index.html',

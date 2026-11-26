@@ -80,16 +80,18 @@ self.onmessage = async (ev) => {
       return;
     }
 
-    const outU8 = core.FS.readFile(outName);
-    const outCopy = outU8.slice();
     try { core.FS.unlink(inName); } catch (_) {}
+    const outU8 = core.FS.readFile(outName);
     try { core.FS.unlink(outName); } catch (_) {}
+    const outBuf = (outU8.buffer !== core.HEAPU8.buffer && outU8.byteOffset === 0 && outU8.byteLength === outU8.buffer.byteLength)
+      ? outU8.buffer
+      : outU8.slice().buffer;
     try { core.exit && core.exit(); } catch (_) {}
     core = null;
 
     self.postMessage(
-      { type: 'done', buffer: outCopy.buffer, ext },
-      [outCopy.buffer]
+      { type: 'done', buffer: outBuf, ext },
+      [outBuf]
     );
   } catch (err) {
     try {

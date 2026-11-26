@@ -15,7 +15,7 @@
 
   <link rel="icon" type="image/png" href="icon-192.png?v=3">
   <link rel="apple-touch-icon" sizes="512x512" href="apple-touch-icon.png?v=3">
-  <link rel="manifest" href="manifest.json?v=5">
+  <link rel="manifest" href="manifest.json?v=6">
 
   <style>
     :root {
@@ -995,7 +995,7 @@
           <p class="brand-sub">PRO VIDEO STUDIO · OFFLINE</p>
         </div>
       </div>
-      <div class="ver-pill">v3.1</div>
+      <div class="ver-pill">v3.2</div>
     </header>
 
     <div class="engine-tabs" role="tablist">
@@ -1084,7 +1084,7 @@
           <span class="result-meta" id="instantResultMeta"></span>
         </div>
         <div class="preview-stage">
-          <video id="instantResultVideo" playsinline controls></video>
+          <video id="instantResultVideo" preload="metadata" playsinline controls></video>
         </div>
         <div class="result-actions">
           <button class="btn-share" id="btnInstantShare" type="button" onclick="shareInstantResult()">حفظ / مشاركة</button>
@@ -1215,8 +1215,8 @@
           </div>
 
           <div class="field full">
-            <label><span>الجودة (CRF أقل = أوضح)</span><span class="val" id="v_quality">16</span></label>
-            <input type="range" id="b_quality" min="0" max="51" step="1" value="16" oninput="v_quality.textContent=this.value">
+            <label><span>الجودة (CRF أقل = أوضح)</span><span class="val" id="v_quality">20</span></label>
+            <input type="range" id="b_quality" min="0" max="51" step="1" value="20" oninput="v_quality.textContent=this.value">
           </div>
         </div>
       </div>
@@ -1425,7 +1425,7 @@
           <span class="result-meta" id="blurResultMeta"></span>
         </div>
         <div class="preview-stage">
-          <video id="blurResultVideo" playsinline controls></video>
+          <video id="blurResultVideo" preload="metadata" playsinline controls></video>
         </div>
         <div class="result-actions">
           <button class="btn-share" id="btnBlurShare" type="button" onclick="shareBlurResult()">حفظ / مشاركة</button>
@@ -1623,6 +1623,7 @@
       if (instantPreviewUrl) URL.revokeObjectURL(instantPreviewUrl);
       instantPreviewUrl = URL.createObjectURL(file);
       instantPreviewVideo.src = instantPreviewUrl;
+      instantPreviewVideo.parentElement.style.display = 'flex';
       inspectVideoFile(file, (meta) => {
         if (currentFile === file) labelSize.textContent = formatFileSummary(file, meta);
       });
@@ -1691,6 +1692,13 @@
       btnProcess.disabled = true;
       instantResultCard.style.display = 'none';
       btnDownload.style.display = 'none';
+      // Release input video hardware decoder RAM before WASM allocation
+      try { instantPreviewVideo.pause(); } catch (_) {}
+      instantPreviewVideo.removeAttribute('src');
+      instantPreviewVideo.load();
+      instantPreviewVideo.parentElement.style.display = 'none';
+      if (instantPreviewUrl) { URL.revokeObjectURL(instantPreviewUrl); instantPreviewUrl = null; }
+
       const fpsNum = selectedFps === 120 ? 120 : 60;
       const fpsLabel = String(fpsNum);
       setLabel('جارٍ المعالجة...');
@@ -1715,7 +1723,7 @@
           try { instantWorker.terminate(); } catch (_) {}
           instantWorker = null;
         }
-        instantWorker = new Worker('abuasrh-worker.js?v=5');
+        instantWorker = new Worker('abuasrh-worker.js?v=6');
 
         await new Promise((resolve, reject) => {
           instantWorker.onmessage = (ev) => {
@@ -1737,7 +1745,16 @@
               btnDownload.href = lastUrl;
               btnDownload.download = `AbuAsrh_${fpsLabel}fps.mp4`;
               btnDownload.style.display = 'flex';
-              instantResultVideo.src = lastUrl;
+              const resStage = instantResultVideo.parentElement;
+              if (blob.size <= 35 * 1024 * 1024) {
+                instantResultVideo.src = lastUrl;
+                resStage.style.display = 'flex';
+              } else {
+                instantResultVideo.removeAttribute('src');
+                instantResultVideo.load();
+                resStage.style.display = 'none';
+                appendLog('ملاحظة: تم تخطي المعاينة التلقائية للملف الكبير لحماية ذاكرة الآيفون — الملف جاهز للحفظ.', 'normal');
+              }
               const secs = ((performance.now() - tStart) / 1000).toFixed(2);
               instantResultMeta.textContent = `${(blob.size / 1048576).toFixed(2)} MB · ${secs}s`;
               instantResultCard.style.display = 'flex';
@@ -1802,8 +1819,8 @@
         $('b_blur_weighting').value = 'gaussian_sym';
         $('b_local_mode').value = 'fast';
         $('b_local_max_res').value = '1080';
-        $('b_quality').value = '16';
-        $('v_quality').textContent = '16';
+        $('b_quality').value = '20';
+        $('v_quality').textContent = '20';
       } else if (name === 'cinema') {
         $('b_blur_amount').value = '1.4';
         $('v_blur_amount').textContent = '1.4';
@@ -1811,8 +1828,8 @@
         $('b_blur_weighting').value = 'gaussian_sym';
         $('b_local_mode').value = 'fast';
         $('b_local_max_res').value = '1080';
-        $('b_quality').value = '14';
-        $('v_quality').textContent = '14';
+        $('b_quality').value = '18';
+        $('v_quality').textContent = '18';
       } else if (name === 'iphone') {
         $('b_blur_amount').value = '0.9';
         $('v_blur_amount').textContent = '0.9';
@@ -1820,8 +1837,8 @@
         $('b_blur_weighting').value = 'pyramid';
         $('b_local_mode').value = 'blend_only';
         $('b_local_max_res').value = '720';
-        $('b_quality').value = '18';
-        $('v_quality').textContent = '18';
+        $('b_quality').value = '21';
+        $('v_quality').textContent = '21';
       } else if (name === 'ultra120') {
         $('b_blur_amount').value = '1.1';
         $('v_blur_amount').textContent = '1.1';
@@ -1829,8 +1846,8 @@
         $('b_blur_weighting').value = 'gaussian_sym';
         $('b_local_mode').value = 'fast';
         $('b_local_max_res').value = '720';
-        $('b_quality').value = '16';
-        $('v_quality').textContent = '16';
+        $('b_quality').value = '20';
+        $('v_quality').textContent = '20';
       }
       $('customWeightWrap').style.display = $('b_blur_weighting').value === 'custom' ? 'flex' : 'none';
     }
@@ -1969,6 +1986,7 @@
       if (blurPreviewUrl) URL.revokeObjectURL(blurPreviewUrl);
       blurPreviewUrl = URL.createObjectURL(file);
       blurPreviewVideo.src = blurPreviewUrl;
+      blurPreviewVideo.parentElement.style.display = 'flex';
       inspectVideoFile(file, (meta) => {
         if (blurFile === file) blurLabelSize.textContent = formatFileSummary(file, meta);
       });
@@ -2059,6 +2077,13 @@
       btnBlurLocal.disabled = true;
       blurResultCard.style.display = 'none';
       btnBlurDownload.style.display = 'none';
+      // Release input video hardware decoder RAM before WASM allocation
+      try { blurPreviewVideo.pause(); } catch (_) {}
+      blurPreviewVideo.removeAttribute('src');
+      blurPreviewVideo.load();
+      blurPreviewVideo.parentElement.style.display = 'none';
+      if (blurPreviewUrl) { URL.revokeObjectURL(blurPreviewUrl); blurPreviewUrl = null; }
+
       const box = $('blurLogBox');
       box.innerHTML = '';
       setBlurBtnText('جارٍ تحميل محرك المعالجة...');
@@ -2176,10 +2201,15 @@
           if (c.encode_preset && c.encode_preset !== 'h264') {
             appendBlurLog(`ملاحظة: المعالجة المحلية تستخدم H.264 للاستقرار بدلاً من ${c.encode_preset}.`);
           }
+          const crf = Number.isFinite(c.quality) ? c.quality : 20;
+          const maxBitrate = crf <= 16 ? '20M' : '14M';
+          const bufSize = crf <= 16 ? '40M' : '28M';
           cmdArgs.push(
             '-c:v', 'libx264',
-            '-preset', 'ultrafast',
-            '-crf', String(c.quality ?? 16),
+            '-preset', 'superfast',
+            '-crf', String(crf),
+            '-maxrate', maxBitrate,
+            '-bufsize', bufSize,
             '-pix_fmt', 'yuv420p',
             '-threads', '1',
             '-x264-params', 'rc-lookahead=0:ref=1:bframes=0:sync-lookahead=0:threads=1',
@@ -2187,7 +2217,7 @@
             '-metadata', 'artist=AbuAsrh',
             '-metadata', 'comment=AbuAsrh Studio Blur',
             '-c:a', 'aac',
-            '-b:a', '192k'
+            '-b:a', '128k'
           );
           if (ext === 'mp4' || ext === 'mov') cmdArgs.push('-movflags', '+faststart');
         }
@@ -2200,7 +2230,7 @@
           try { blurWorker.terminate(); } catch (_) {}
           blurWorker = null;
         }
-        blurWorker = new Worker('abuasrh-worker.js?v=5');
+        blurWorker = new Worker('abuasrh-worker.js?v=6');
 
         await new Promise((resolve, reject) => {
           blurWorker.onmessage = (ev) => {
@@ -2223,7 +2253,16 @@
               btnBlurDownload.href = blurOutUrl;
               btnBlurDownload.download = `AbuAsrh_Blur_${outFps}fps.${ext}`;
               btnBlurDownload.style.display = 'flex';
-              blurResultVideo.src = blurOutUrl;
+              const resStage = blurResultVideo.parentElement;
+              if (blob.size <= 35 * 1024 * 1024) {
+                blurResultVideo.src = blurOutUrl;
+                resStage.style.display = 'flex';
+              } else {
+                blurResultVideo.removeAttribute('src');
+                blurResultVideo.load();
+                resStage.style.display = 'none';
+                appendBlurLog('ملاحظة: تم تخطي المعاينة التلقائية للملف الكبير لحماية ذاكرة الآيفون — الملف جاهز للحفظ.', 'normal');
+              }
               const secs = ((performance.now() - tStart) / 1000).toFixed(1);
               blurResultMeta.textContent = `${(blob.size / 1048576).toFixed(2)} MB · ${secs}s`;
               blurResultCard.style.display = 'flex';
