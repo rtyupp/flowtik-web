@@ -32,6 +32,7 @@ RENDER_SEM = threading.Semaphore(2)
 
 JOBS: dict[str, dict] = {}
 JOBS_LOCK = threading.Lock()
+_SVP_READY = False
 
 app = FastAPI(title="AbuAsrh Cloud Studio", version="4.0")
 app.add_middleware(
@@ -199,9 +200,25 @@ def cleanup_loop():
             shutil.rmtree(d, ignore_errors=True)
 
 
+def _probe_svp_ready() -> bool:
+    try:
+        code = (
+            "import vapoursynth as vs; c = vs.core; "
+            "c.std.LoadPlugin('/opt/blur_env/plugins/libsvpflow1_vs64.so'); "
+            "c.std.LoadPlugin('/opt/blur_env/plugins/libsvpflow2_vs64.so'); "
+            "print('1' if (hasattr(c, 'svp1') and hasattr(c, 'svp2')) else '0')"
+        )
+        out = subprocess.check_output([sys.executable, "-c", code], text=True, timeout=10).strip()
+        return out.endswith("1")
+    except Exception:
+        return False
+
+
 @app.on_event("startup")
 def on_startup():
+    global _SVP_READY
     JOBS_ROOT.mkdir(parents=True, exist_ok=True)
+    _SVP_READY = _probe_svp_ready()
     t = threading.Thread(target=cleanup_loop, daemon=True)
     t.start()
 
@@ -215,6 +232,7 @@ def health():
         "version": "4.0",
         "vapoursynth": vs_ok,
         "blur_env": blur_ok,
+        "svp": _SVP_READY,
     }
 
 
