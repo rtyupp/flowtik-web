@@ -6,35 +6,39 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="أبو عسرة">
-  <meta name="theme-color" content="#05070B">
-  <title>أبو عسرة · محرك 120 FPS والبلور</title>
+  <meta name="theme-color" content="#050608">
+  <title>أبو عسرة · Pro Video Studio</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Tajawal:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Lalezar&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
   <link rel="icon" type="image/png" href="icon-192.png?v=3">
   <link rel="apple-touch-icon" sizes="512x512" href="apple-touch-icon.png?v=3">
-  <link rel="manifest" href="manifest.json?v=4">
+  <link rel="manifest" href="manifest.json?v=5">
 
   <style>
     :root {
-      --bg: #05070B;
-      --surface: rgba(16, 20, 29, 0.78);
-      --surface-elevated: rgba(24, 30, 44, 0.85);
-      --border: rgba(255, 255, 255, 0.08);
-      --border-strong: rgba(56, 189, 248, 0.42);
+      --bg: #050608;
+      --surface: #101217;
+      --surface-2: #171A22;
+      --surface-3: #1E222D;
+      --hairline: rgba(255, 255, 255, 0.08);
+      --hairline-strong: rgba(255, 255, 255, 0.16);
       --accent: #38BDF8;
-      --accent-2: #2DD4BF;
-      --accent-soft: rgba(56, 189, 248, 0.14);
+      --accent-soft: rgba(56, 189, 248, 0.13);
+      --accent-border: rgba(56, 189, 248, 0.42);
       --success: #34D399;
+      --success-soft: rgba(52, 211, 153, 0.14);
       --danger: #FB7185;
+      --danger-soft: rgba(251, 113, 133, 0.12);
       --text: #F8FAFC;
-      --text-muted: #94A3B8;
-      --text-dim: #64748B;
-      --radius-lg: 24px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
+      --text-2: #94A3B8;
+      --text-3: #64748B;
+      --r-xl: 24px;
+      --r-lg: 18px;
+      --r-md: 14px;
+      --r-sm: 10px;
     }
 
     * {
@@ -45,10 +49,10 @@
     }
 
     html, body {
-      background-color: var(--bg);
+      background: var(--bg);
       color: var(--text);
-      font-family: 'Tajawal', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-      min-height: 100vh;
+      font-family: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      min-height: 100dvh;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
@@ -57,78 +61,75 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: calc(env(safe-area-inset-top, 18px) + 20px) 16px calc(env(safe-area-inset-bottom, 18px) + 28px);
-      position: relative;
+      padding: calc(env(safe-area-inset-top, 14px) + 14px) 14px calc(env(safe-area-inset-bottom, 18px) + 30px);
       background-image:
-        radial-gradient(80% 50% at 50% -10%, rgba(56, 189, 248, 0.18) 0%, transparent 70%),
-        radial-gradient(60% 45% at 85% 95%, rgba(45, 212, 191, 0.12) 0%, transparent 70%),
-        radial-gradient(50% 40% at 10% 80%, rgba(129, 140, 248, 0.12) 0%, transparent 70%);
+        radial-gradient(65% 38% at 50% 0%, rgba(56, 189, 248, 0.12) 0%, transparent 72%),
+        radial-gradient(45% 30% at 10% 95%, rgba(52, 211, 153, 0.05) 0%, transparent 70%);
     }
 
     .app-shell {
       width: 100%;
-      max-width: 430px;
+      max-width: 460px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
-      position: relative;
-      z-index: 2;
-      animation: fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      gap: 14px;
+      animation: fadeSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Header */
     .brand-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
-      padding: 6px 4px;
+      gap: 12px;
+      padding: 4px 2px;
     }
 
     .brand-identity {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
     .brand-icon {
-      width: 58px;
-      height: 58px;
-      border-radius: 16px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
       object-fit: cover;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55), 0 0 24px rgba(56, 189, 248, 0.18);
+      border: 1px solid var(--hairline-strong);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
       flex-shrink: 0;
     }
 
     .brand-text {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 1px;
     }
 
     .brand-title {
-      font-family: 'Lalezar', 'Tajawal', sans-serif;
-      font-size: 36px;
+      font-family: 'Lalezar', 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 31px;
       font-weight: 400;
-      letter-spacing: 0.2px;
-      line-height: 1.05;
-      background: linear-gradient(135deg, #FFFFFF 20%, #BAE6FD 65%, #38BDF8 100%);
+      line-height: 1.02;
+      background: linear-gradient(135deg, #FFFFFF 25%, #BAE6FD 72%, #38BDF8 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 2px 14px rgba(56, 189, 248, 0.28));
     }
 
     .brand-sub {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
+      font-family: 'JetBrains Mono', 'IBM Plex Sans Arabic', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.7px;
+      color: var(--text-3);
+      text-transform: uppercase;
     }
 
     .ver-pill {
@@ -137,13 +138,12 @@
       gap: 6px;
       padding: 6px 11px;
       border-radius: 999px;
-      background: rgba(52, 211, 153, 0.1);
-      border: 1px solid rgba(52, 211, 153, 0.28);
-      color: var(--success);
+      background: var(--surface);
+      border: 1px solid var(--hairline-strong);
+      color: var(--text);
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.4px;
       flex-shrink: 0;
     }
 
@@ -156,111 +156,176 @@
       box-shadow: 0 0 8px var(--success);
     }
 
-    .studio-card {
+    /* Segmented Tab Bar */
+    .engine-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      padding: 4px;
+      border-radius: 16px;
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--hairline);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
     }
 
+    .engine-tab {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-2);
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 10px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .engine-tab.active {
+      background: var(--surface-3);
+      color: #FFFFFF;
+      border-color: var(--hairline-strong);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .tab-badge {
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-2);
+    }
+
+    .engine-tab.active .tab-badge {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    /* Studio Card */
+    .studio-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: var(--r-xl);
+      padding: 16px;
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 24px 54px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .studio-card.active {
+      display: flex;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* Dropzone */
     .drop-zone {
-      border: 1.5px dashed rgba(255, 255, 255, 0.16);
-      border-radius: var(--radius-md);
-      padding: 34px 18px;
+      position: relative;
+      border: 1.5px dashed rgba(255, 255, 255, 0.14);
+      border-radius: var(--r-lg);
+      padding: 32px 18px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 14px;
+      gap: 12px;
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.02);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08), transparent 65%),
+        var(--surface-2);
+      transition: border-color 0.2s ease, transform 0.18s ease, background-color 0.2s ease;
       text-align: center;
     }
 
     .drop-zone:hover, .drop-zone.dragover {
       border-color: var(--accent);
-      background: rgba(56, 189, 248, 0.06);
-      transform: translateY(-1px);
+      background-color: rgba(56, 189, 248, 0.05);
     }
 
     .drop-zone:active {
-      transform: scale(0.985);
+      transform: scale(0.99);
     }
 
     .upload-orb {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(45, 212, 191, 0.12));
-      border: 1px solid rgba(56, 189, 248, 0.35);
+      width: 52px;
+      height: 52px;
+      border-radius: 15px;
+      background: var(--surface-3);
+      border: 1px solid var(--hairline-strong);
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--accent);
-      box-shadow: 0 8px 24px rgba(56, 189, 248, 0.15);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
     }
 
     .upload-orb svg {
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       stroke-width: 2;
     }
 
     .drop-title {
-      font-size: 16px;
-      font-weight: 800;
+      font-size: 15px;
+      font-weight: 700;
       color: var(--text);
     }
 
     .drop-hint {
-      font-size: 12px;
-      color: var(--text-dim);
-      font-family: 'Plus Jakarta Sans', 'JetBrains Mono', sans-serif;
+      font-family: 'JetBrains Mono', 'IBM Plex Sans Arabic', monospace;
+      font-size: 11px;
       font-weight: 600;
+      color: var(--text-3);
+      margin-top: 2px;
     }
 
-    .file-pill {
+    /* Studio Video Preview Card */
+    .preview-card {
       display: none;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 13px 14px;
-      border-radius: var(--radius-md);
-      background: var(--surface-elevated);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      animation: fadeUp 0.25s ease;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px;
+      border-radius: var(--r-lg);
+      background: var(--surface-2);
+      border: 1px solid var(--hairline-strong);
+      animation: fadeSlide 0.25s ease;
     }
 
-    .file-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .file-badge {
-      width: 42px;
-      height: 42px;
+    .preview-stage {
+      position: relative;
+      width: 100%;
       border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #031018;
+      overflow: hidden;
+      background: #000000;
+      border: 1px solid var(--hairline);
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
-      font-weight: 800;
     }
 
-    .file-badge svg {
-      width: 20px;
-      height: 20px;
+    .preview-stage video {
+      width: 100%;
+      max-height: 220px;
+      display: block;
+      object-fit: contain;
+      background: #000;
+    }
+
+    .preview-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 2px 4px;
     }
 
     .file-meta {
@@ -271,59 +336,62 @@
     }
 
     .file-name {
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
       color: var(--text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 220px;
     }
 
     .file-size {
-      font-size: 12px;
       font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
       color: var(--accent);
-      font-weight: 700;
+      direction: ltr;
+      text-align: right;
     }
 
     .btn-clear {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      border: 1px solid rgba(251, 113, 133, 0.28);
-      background: rgba(251, 113, 133, 0.1);
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(251, 113, 133, 0.3);
+      background: var(--danger-soft);
       color: var(--danger);
       cursor: pointer;
-      font-size: 14px;
-      font-weight: 800;
+      font-size: 13px;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      transition: all 0.2s ease;
+      transition: background 0.18s ease;
     }
 
     .btn-clear:hover {
-      background: rgba(251, 113, 133, 0.22);
-      border-color: var(--danger);
+      background: rgba(251, 113, 133, 0.24);
     }
 
-    .mode-section {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .mode-label {
-      font-size: 12.5px;
-      font-weight: 700;
-      color: var(--text-muted);
+    /* Section Headers */
+    .section-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-2);
     }
 
+    .section-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-3);
+      letter-spacing: 0.4px;
+    }
+
+    /* FPS Mode Cards */
     .mode-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -332,27 +400,26 @@
 
     .fps-option {
       padding: 14px 12px;
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.025);
-      border: 1.5px solid var(--border);
+      border-radius: var(--r-md);
+      background: var(--surface-2);
+      border: 1.5px solid var(--hairline);
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 5px;
-      transition: all 0.22s ease;
+      gap: 6px;
+      transition: all 0.2s ease;
       position: relative;
     }
 
     .fps-option:hover {
-      border-color: rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--hairline-strong);
     }
 
     .fps-option.active {
-      background: linear-gradient(145deg, rgba(56, 189, 248, 0.14), rgba(45, 212, 191, 0.07));
-      border-color: var(--border-strong);
-      box-shadow: 0 8px 24px rgba(56, 189, 248, 0.12);
+      background: linear-gradient(160deg, rgba(56, 189, 248, 0.14), rgba(56, 189, 248, 0.03));
+      border-color: var(--accent-border);
+      box-shadow: 0 8px 20px rgba(56, 189, 248, 0.09);
     }
 
     .fps-top {
@@ -364,242 +431,91 @@
     }
 
     .fps-num {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 18px;
-      font-weight: 800;
+      font-family: 'JetBrains Mono', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
       color: #FFFFFF;
-      letter-spacing: -0.3px;
     }
 
     .fps-tag {
       font-size: 10px;
-      font-weight: 800;
+      font-weight: 700;
       padding: 2px 7px;
       border-radius: 999px;
       background: var(--accent-soft);
       color: var(--accent);
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      border: 1px solid var(--accent-border);
     }
 
     .fps-desc {
-      font-size: 11.5px;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    .btn-primary {
-      width: 100%;
-      padding: 16px 20px;
-      border-radius: var(--radius-md);
-      border: none;
-      background: linear-gradient(135deg, #38BDF8 0%, #2DD4BF 100%);
-      color: #041019;
-      font-family: 'Tajawal', sans-serif;
-      font-size: 16.5px;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.25);
-      transition: all 0.22s ease;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      transform: translateY(-1px);
-      filter: brightness(1.06);
-      box-shadow: 0 16px 34px rgba(56, 189, 248, 0.35);
-    }
-
-    .btn-primary:active:not(:disabled) {
-      transform: scale(0.985);
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-      box-shadow: none;
-      filter: grayscale(0.4);
-    }
-
-    .btn-download {
-      display: none;
-      width: 100%;
-      padding: 16px 20px;
-      border-radius: var(--radius-md);
-      background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
-      color: #03150E;
-      font-family: 'Tajawal', sans-serif;
-      font-size: 16.5px;
-      font-weight: 800;
-      text-decoration: none;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 12px 30px rgba(52, 211, 153, 0.28);
-      transition: all 0.22s ease;
-    }
-
-    .btn-download:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.06);
-    }
-
-    .log-box {
-      display: none;
-      background: rgba(5, 7, 11, 0.85);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-      font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
-      line-height: 1.75;
-      color: var(--text-muted);
-      max-height: 135px;
-      overflow-y: auto;
-      direction: ltr;
-      text-align: left;
+      color: var(--text-2);
+      line-height: 1.45;
     }
 
-    .status-line {
-      display: flex;
-      align-items: center;
+    /* Quick Presets Strip */
+    .preset-strip {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
       gap: 8px;
     }
 
-    .status-line .dot {
-      color: var(--accent);
-      font-size: 8px;
-    }
-
-    .status-line.success {
-      color: var(--success);
-      font-weight: 700;
-    }
-    .status-line.success .dot {
-      color: var(--success);
-    }
-
-    .status-line.warning {
-      color: var(--danger);
-      font-weight: 700;
-    }
-    .status-line.warning .dot {
-      color: var(--danger);
-    }
-
-    .pwa-hint {
-      text-align: center;
-      font-size: 12.5px;
-      color: var(--text-dim);
-      padding: 12px 16px;
-      border-radius: var(--radius-md);
-      background: rgba(16, 20, 29, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      line-height: 1.6;
-    }
-
-    .pwa-hint b {
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    input[type="file"] {
-      display: none;
-    }
-
-    /* Main Mode Tabs */
-    .engine-tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      padding: 5px;
-      border-radius: 16px;
-      background: rgba(16, 20, 29, 0.72);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(20px);
-    }
-
-    .engine-tab {
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-family: 'Tajawal', sans-serif;
-      font-size: 14px;
-      font-weight: 800;
-      padding: 11px 10px;
-      border-radius: 12px;
+    .preset-chip {
+      padding: 10px 10px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--hairline);
+      background: var(--surface-2);
+      color: var(--text-2);
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      transition: all 0.22s ease;
-    }
-
-    .engine-tab.active {
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(45, 212, 191, 0.12));
-      color: #FFFFFF;
-      border: 1px solid var(--border-strong);
-      box-shadow: 0 6px 18px rgba(56, 189, 248, 0.12);
-    }
-
-    .tab-badge {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px;
-      padding: 2px 6px;
-      border-radius: 999px;
-      background: rgba(56, 189, 248, 0.18);
-      color: var(--accent);
-    }
-
-    .tab-pane {
-      display: none;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .tab-pane.active {
-      display: flex;
-    }
-
-    /* Blur Settings Controls */
-    .blur-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 14px;
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border);
-    }
-
-    .blur-group-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 13px;
-      font-weight: 800;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+
+    .preset-chip:hover {
+      border-color: var(--hairline-strong);
       color: var(--text);
     }
 
-    .blur-group-sub {
+    .preset-chip.active {
+      background: var(--accent-soft);
+      border-color: var(--accent-border);
+      color: #FFFFFF;
+    }
+
+    .preset-chip span.mini {
       font-family: 'JetBrains Mono', monospace;
       font-size: 10px;
-      color: var(--text-dim);
+      color: var(--accent);
+    }
+
+    /* Settings Blocks */
+    .blur-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 14px;
+      border-radius: var(--r-lg);
+      background: var(--surface-2);
+      border: 1px solid var(--hairline);
     }
 
     .field-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
+      align-items: end;
     }
 
     .field {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
     }
 
     .field.full {
@@ -608,17 +524,22 @@
 
     .field label {
       font-size: 11.5px;
-      font-weight: 700;
-      color: var(--text-muted);
+      font-weight: 600;
+      color: var(--text-2);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 6px;
     }
 
     .field label span.val {
       font-family: 'JetBrains Mono', monospace;
-      color: var(--accent);
       font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 1px 7px;
+      border-radius: 6px;
     }
 
     .field input[type="text"],
@@ -626,15 +547,15 @@
     .field select {
       width: 100%;
       padding: 10px 11px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(5, 7, 11, 0.72);
+      border-radius: var(--r-sm);
+      border: 1px solid var(--hairline);
+      background: var(--bg);
       color: var(--text);
-      font-family: 'Tajawal', 'JetBrains Mono', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
+      font-family: 'IBM Plex Sans Arabic', 'JetBrains Mono', sans-serif;
+      font-size: 12.5px;
+      font-weight: 600;
       outline: none;
-      transition: border-color 0.2s ease;
+      transition: border-color 0.18s ease;
     }
 
     .field input:focus,
@@ -642,37 +563,119 @@
       border-color: var(--accent);
     }
 
+    /* Custom Range Slider */
     .field input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
       width: 100%;
-      accent-color: var(--accent);
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      cursor: pointer;
+      margin: 6px 0;
+    }
+
+    .field input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 2px solid var(--accent);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
       cursor: pointer;
     }
 
+    .mini-chips {
+      display: inline-flex;
+      gap: 4px;
+    }
+
+    .mini-chip {
+      border: 1px solid var(--hairline);
+      background: var(--bg);
+      color: var(--text-2);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .mini-chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Native iOS Toggle Switch */
     .toggle-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 9px 11px;
-      border-radius: 10px;
-      background: rgba(5, 7, 11, 0.55);
-      border: 1px solid var(--border);
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--r-sm);
+      background: var(--bg);
+      border: 1px solid var(--hairline);
       font-size: 12.5px;
-      font-weight: 700;
-      color: var(--text-muted);
+      font-weight: 600;
+      color: var(--text);
       cursor: pointer;
     }
 
-    .toggle-row input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--accent);
-      cursor: pointer;
+    .ios-switch {
+      position: relative;
+      display: inline-block;
+      width: 42px;
+      height: 24px;
+      flex-shrink: 0;
+      direction: ltr;
     }
 
+    .ios-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .ios-slider {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      transition: background 0.2s ease;
+    }
+
+    .ios-slider::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      top: 3px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ios-switch input:checked + .ios-slider {
+      background: var(--accent);
+    }
+
+    .ios-switch input:checked + .ios-slider::before {
+      transform: translateX(18px);
+    }
+
+    /* Accordions */
     details.adv-accordion {
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.018);
-      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      background: var(--surface-2);
+      border: 1px solid var(--hairline);
       padding: 12px 14px;
     }
 
@@ -682,9 +685,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--text);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-2);
+    }
+
+    details.adv-accordion summary::-webkit-details-marker {
+      display: none;
     }
 
     details.adv-accordion[open] summary {
@@ -692,73 +699,108 @@
       color: var(--accent);
     }
 
-    .blur-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    /* Primary & Action Buttons */
+    .btn-primary {
+      width: 100%;
+      padding: 15px 18px;
+      border-radius: var(--r-md);
+      border: none;
+      background: #FFFFFF;
+      color: #050608;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 10px 26px rgba(255, 255, 255, 0.08);
+      transition: transform 0.16s ease, opacity 0.18s ease, background 0.18s ease;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #E2E8F0;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: scale(0.985);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.28;
+      cursor: not-allowed;
+      box-shadow: none;
     }
 
     .btn-secondary {
       width: 100%;
-      padding: 14px 12px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-strong);
-      background: rgba(56, 189, 248, 0.12);
-      color: var(--accent);
-      font-family: 'Tajawal', sans-serif;
-      font-size: 14px;
-      font-weight: 800;
+      padding: 12px 14px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--hairline-strong);
+      background: var(--surface-3);
+      color: var(--text);
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: all 0.2s ease;
+      transition: background 0.18s ease;
     }
 
     .btn-secondary:hover {
-      background: rgba(56, 189, 248, 0.22);
+      background: rgba(255, 255, 255, 0.09);
     }
 
-    .cloud-note {
-      font-size: 11.5px;
-      color: var(--text-muted);
-      line-height: 1.6;
-      padding: 10px 12px;
-      border-radius: 10px;
-      background: rgba(56, 189, 248, 0.06);
-      border: 1px solid rgba(56, 189, 248, 0.2);
+    .btn-danger-outline {
+      display: none;
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: var(--r-md);
+      border: 1px solid rgba(251, 113, 133, 0.38);
+      background: var(--danger-soft);
+      color: var(--danger);
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
-    .cloud-note code {
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--accent);
-      font-size: 10.5px;
+    .btn-danger-outline:hover {
+      background: rgba(251, 113, 133, 0.2);
     }
 
+    /* Progress Card */
     .progress-wrap {
       display: none;
       flex-direction: column;
-      gap: 7px;
-      padding: 11px 13px;
-      border-radius: var(--radius-sm);
-      background: rgba(5, 7, 11, 0.72);
-      border: 1px solid var(--border);
+      gap: 8px;
+      padding: 12px 14px;
+      border-radius: var(--r-md);
+      background: var(--bg);
+      border: 1px solid var(--hairline-strong);
     }
 
     .progress-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'JetBrains Mono', 'IBM Plex Sans Arabic', monospace;
       font-size: 11px;
       font-weight: 700;
-      color: var(--text-muted);
+      color: var(--text-2);
     }
 
     .progress-track {
       width: 100%;
-      height: 7px;
+      height: 6px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.08);
       overflow: hidden;
@@ -768,30 +810,177 @@
       width: 0%;
       height: 100%;
       border-radius: 999px;
-      background: linear-gradient(90deg, #38BDF8, #2DD4BF);
+      background: linear-gradient(90deg, var(--accent), var(--success));
       transition: width 0.2s ease;
     }
 
-    .btn-danger-outline {
+    /* Studio Output Result Card */
+    .result-card {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px;
+      border-radius: var(--r-lg);
+      background: linear-gradient(180deg, rgba(52, 211, 153, 0.08), var(--surface-2) 55%);
+      border: 1px solid rgba(52, 211, 153, 0.35);
+      animation: fadeSlide 0.3s ease;
+    }
+
+    .result-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 2px;
+    }
+
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    .result-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-2);
+      direction: ltr;
+    }
+
+    .result-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .btn-download {
       display: none;
       width: 100%;
-      padding: 12px 16px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(251, 113, 133, 0.4);
-      background: rgba(251, 113, 133, 0.12);
-      color: var(--danger);
-      font-family: 'Tajawal', sans-serif;
-      font-size: 14.5px;
-      font-weight: 800;
-      cursor: pointer;
+      padding: 13px 14px;
+      border-radius: var(--r-md);
+      background: var(--success);
+      color: #03150E;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: all 0.2s ease;
+      transition: filter 0.18s ease;
     }
 
-    .btn-danger-outline:hover {
-      background: rgba(251, 113, 133, 0.22);
+    .btn-download:hover {
+      filter: brightness(1.06);
+    }
+
+    .btn-share {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--accent-border);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-share:hover {
+      background: rgba(56, 189, 248, 0.22);
+    }
+
+    /* Collapsible Log Drawer */
+    details.log-drawer {
+      border-radius: var(--r-md);
+      background: var(--bg);
+      border: 1px solid var(--hairline);
+      padding: 9px 12px;
+    }
+
+    details.log-drawer summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', 'IBM Plex Sans Arabic', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-3);
+    }
+
+    details.log-drawer summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .log-box {
+      display: none;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--hairline);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      line-height: 1.7;
+      color: var(--text-2);
+      max-height: 130px;
+      overflow-y: auto;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .status-line {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+    }
+
+    .status-line .dot {
+      color: var(--accent);
+      font-size: 8px;
+      margin-top: 3px;
+    }
+
+    .status-line.success {
+      color: var(--success);
+      font-weight: 700;
+    }
+    .status-line.success .dot { color: var(--success); }
+
+    .status-line.warning {
+      color: var(--danger);
+      font-weight: 700;
+    }
+    .status-line.warning .dot { color: var(--danger); }
+
+    .blur-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .pwa-hint {
+      text-align: center;
+      font-size: 11.5px;
+      color: var(--text-3);
+      padding: 10px 14px;
+      border-radius: var(--r-md);
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      line-height: 1.6;
+    }
+
+    .pwa-hint b {
+      color: var(--text);
+      font-weight: 700;
     }
   </style>
 </head>
@@ -803,10 +992,10 @@
         <img src="apple-touch-icon.png?v=3" alt="أبو عسرة" class="brand-icon">
         <div class="brand-text">
           <h1 class="brand-title">أبو عسرة</h1>
-          <p class="brand-sub">محرك أبو عسرة · 60 / 120 FPS وبلور احترافي</p>
+          <p class="brand-sub">PRO VIDEO STUDIO · OFFLINE</p>
         </div>
       </div>
-      <div class="ver-pill">v3.0</div>
+      <div class="ver-pill">v3.1</div>
     </header>
 
     <div class="engine-tabs" role="tablist">
@@ -815,13 +1004,13 @@
         <span class="tab-badge">فوري</span>
       </button>
       <button class="engine-tab" data-tab="blur" onclick="switchMainTab('blur')">
-        <span>أبو عسرة Blur</span>
-        <span class="tab-badge">متقدم</span>
+        <span>استوديو البلور</span>
+        <span class="tab-badge">احترافي</span>
       </button>
     </div>
 
-    <!-- TAB 1: AbuAsrh 120 / 60 (100% Native Worker Engine, Zero Re-encoding) -->
-    <section class="studio-card tab-pane active" id="paneInstant">
+    <!-- TAB 1: AbuAsrh 120 / 60 -->
+    <section class="studio-card active" id="paneInstant">
       <div class="drop-zone" id="dropArea">
         <div class="upload-orb">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -829,31 +1018,29 @@
           </svg>
         </div>
         <div>
-          <div class="drop-title">اختر الفيديو من جهازك</div>
-          <div class="drop-hint">MP4 · MOV · Zero Re-encoding</div>
+          <div class="drop-title">اختر فيديو من الألبوم أو الملفات</div>
+          <div class="drop-hint">MP4 · MOV · ZERO RE-ENCODING</div>
         </div>
       </div>
       <input type="file" id="mediaInput" accept="video/mp4,video/quicktime,video/*">
 
-      <div class="file-pill" id="fileBox">
-        <div class="file-info">
-          <div class="file-badge">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
-            </svg>
-          </div>
+      <div class="preview-card" id="fileBox">
+        <div class="preview-stage">
+          <video id="instantPreviewVideo" muted playsinline preload="metadata" controls></video>
+        </div>
+        <div class="preview-footer">
           <div class="file-meta">
             <div class="file-name" id="labelName">video.mp4</div>
             <div class="file-size" id="labelSize">0.0 MB</div>
           </div>
+          <button class="btn-clear" id="btnCancel" title="إزالة">✕</button>
         </div>
-        <button class="btn-clear" id="btnCancel" title="إزالة">✕</button>
       </div>
 
-      <div class="mode-section">
-        <div class="mode-label">
-          <span>وضع الفريمات</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);">ABUASRH ENGINE</span>
+      <div>
+        <div class="section-head" style="margin-bottom:8px;">
+          <span>اختر التوقيت والإخراج</span>
+          <span class="section-code">STREAM COPY · BT.709</span>
         </div>
         <div class="mode-grid">
           <div class="fps-option active" data-fps="120" onclick="setFps(120)">
@@ -861,14 +1048,14 @@
               <span class="fps-num">120 FPS</span>
               <span class="fps-tag">الأسرع</span>
             </div>
-            <div class="fps-desc">تحضير فوري 120K · BT.709 · بدون ضغط</div>
+            <div class="fps-desc">توقيت 120K وألوان BT.709 بدون ضغط</div>
           </div>
 
           <div class="fps-option" data-fps="60" onclick="setFps(60)">
             <div class="fps-top">
               <span class="fps-num">60 FPS</span>
             </div>
-            <div class="fps-desc">تعديل التوقيت 2× · BT.709 · بدون ضغط</div>
+            <div class="fps-desc">تعديل زمني 2× بنفس الجودة الأصلية</div>
           </div>
         </div>
       </div>
@@ -891,16 +1078,32 @@
         <span>إيقاف المعالجة</span>
       </button>
 
-      <a class="btn-download" id="btnDownload" download="AbuAsrh_120fps.mp4">
-        <span>حفظ الفيديو الجاهز</span>
-      </a>
+      <div class="result-card" id="instantResultCard">
+        <div class="result-head">
+          <span class="result-badge">✓ الفيديو جاهز</span>
+          <span class="result-meta" id="instantResultMeta"></span>
+        </div>
+        <div class="preview-stage">
+          <video id="instantResultVideo" playsinline controls></video>
+        </div>
+        <div class="result-actions">
+          <button class="btn-share" id="btnInstantShare" type="button" onclick="shareInstantResult()">حفظ / مشاركة</button>
+          <a class="btn-download" id="btnDownload" download="AbuAsrh_120fps.mp4">تنزيل الملف</a>
+        </div>
+        <button class="btn-secondary" type="button" onclick="resetFile()">معالجة فيديو آخر</button>
+      </div>
 
-      <div class="log-box" id="terminalBox"></div>
+      <details class="log-drawer" id="instantLogDrawer">
+        <summary>
+          <span>سجل المحرك</span>
+          <span class="section-code">LOG</span>
+        </summary>
+        <div class="log-box" id="terminalBox"></div>
+      </details>
     </section>
 
-    <!-- TAB 2: AbuAsrh Blur Engine (Worker WASM + Cloud Option) -->
-    <section class="studio-card tab-pane" id="paneBlur">
-      <!-- Local In-App Video Picker -->
+    <!-- TAB 2: AbuAsrh Blur Studio -->
+    <section class="studio-card" id="paneBlur">
       <div class="drop-zone" id="blurDropArea">
         <div class="upload-orb">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -908,52 +1111,73 @@
           </svg>
         </div>
         <div>
-          <div class="drop-title">اختر الفيديو من جهازك</div>
-          <div class="drop-hint">معالجة مباشرة داخل التطبيق · Zero Server</div>
+          <div class="drop-title">اختر الفيديو لإضافة البلور</div>
+          <div class="drop-hint">معالجة محلية آمنة · بدون رفع لسيرفر</div>
         </div>
       </div>
       <input type="file" id="blurMediaInput" accept="video/mp4,video/quicktime,video/*">
 
-      <div class="file-pill" id="blurFileBox">
-        <div class="file-info">
-          <div class="file-badge">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
-            </svg>
-          </div>
+      <div class="preview-card" id="blurFileBox">
+        <div class="preview-stage">
+          <video id="blurPreviewVideo" muted playsinline preload="metadata" controls></video>
+        </div>
+        <div class="preview-footer">
           <div class="file-meta">
             <div class="file-name" id="blurLabelName">video.mp4</div>
             <div class="file-size" id="blurLabelSize">0.0 MB</div>
           </div>
+          <button class="btn-clear" id="blurBtnCancel" title="إزالة">✕</button>
         </div>
-        <button class="btn-clear" id="blurBtnCancel" title="إزالة">✕</button>
       </div>
 
-      <!-- Blur Core -->
-      <div class="blur-group">
-        <div class="blur-group-head">
-          <span>البلور الأساسي</span>
-          <span class="blur-group-sub">- blur</span>
+      <!-- Quick Studio Presets -->
+      <div>
+        <div class="section-head" style="margin-bottom:8px;">
+          <span>قوالب جاهزة بضغطة واحدة</span>
+          <span class="section-code">PRESETS</span>
         </div>
-        <label class="toggle-row">
-          <span>تفعيل البلور (blur)</span>
-          <input type="checkbox" id="b_blur" checked>
-        </label>
+        <div class="preset-strip">
+          <button type="button" class="preset-chip active" data-preset="tiktok" onclick="applyBlurPreset('tiktok')">
+            <span>تيك توك ناعم</span><span class="mini">60FPS</span>
+          </button>
+          <button type="button" class="preset-chip" data-preset="cinema" onclick="applyBlurPreset('cinema')">
+            <span>سينمائي قوي</span><span class="mini">1.4×</span>
+          </button>
+          <button type="button" class="preset-chip" data-preset="iphone" onclick="applyBlurPreset('iphone')">
+            <span>خفيف للآيفون</span><span class="mini">720p</span>
+          </button>
+          <button type="button" class="preset-chip" data-preset="ultra120" onclick="applyBlurPreset('ultra120')">
+            <span>120 FPS ألترا</span><span class="mini">120FPS</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Essential Studio Controls -->
+      <div class="blur-group">
+        <div class="section-head">
+          <span>الإعدادات الأساسية</span>
+          <span class="section-code">MOTION BLUR</span>
+        </div>
+
         <div class="field-grid">
-          <div class="field">
-            <label><span>blur amount</span><span class="val" id="v_blur_amount">1.0</span></label>
+          <div class="field full">
+            <label><span>قوة البلور (blur amount)</span><span class="val" id="v_blur_amount">1.0</span></label>
             <input type="range" id="b_blur_amount" min="0" max="2.5" step="0.05" value="1.0" oninput="v_blur_amount.textContent=this.value">
           </div>
+
           <div class="field">
-            <label><span>blur gamma</span><span class="val" id="v_blur_gamma">1.0</span></label>
-            <input type="range" id="b_blur_gamma" min="0.5" max="2.2" step="0.05" value="1.0" oninput="v_blur_gamma.textContent=this.value">
-          </div>
-          <div class="field">
-            <label><span>blur output fps</span></label>
+            <label>
+              <span>فريمات المخرج</span>
+              <span class="mini-chips">
+                <button type="button" class="mini-chip" onclick="b_blur_output_fps.value=60">60</button>
+                <button type="button" class="mini-chip" onclick="b_blur_output_fps.value=120">120</button>
+              </span>
+            </label>
             <input type="number" id="b_blur_output_fps" value="60" min="15" max="240">
           </div>
+
           <div class="field">
-            <label><span>blur weighting</span></label>
+            <label><span>توزيع الوزن</span></label>
             <select id="b_blur_weighting">
               <option value="gaussian_sym" selected>gaussian_sym</option>
               <option value="equal">equal</option>
@@ -966,114 +1190,111 @@
               <option value="custom">custom weights</option>
             </select>
           </div>
+
           <div class="field full" id="customWeightWrap" style="display:none;">
-            <label><span>custom weights (comma-separated)</span></label>
+            <label><span>أوزان مخصصة (مفصولة بفاصلة)</span></label>
             <input type="text" id="b_custom_weights" value="1, 2, 3, 2, 1" placeholder="5, 3, 3, 2, 1">
           </div>
-        </div>
-      </div>
 
-      <!-- Interpolation & Pre-interpolation -->
-      <div class="blur-group">
-        <div class="blur-group-head">
-          <span>توليد الفريمات</span>
-          <span class="blur-group-sub">- interpolation</span>
-        </div>
-        <label class="toggle-row">
-          <span>تفعيل التوليد (interpolate)</span>
-          <input type="checkbox" id="b_interpolate" checked>
-        </label>
-        <div class="field-grid">
           <div class="field">
-            <label><span>interpolated fps</span></label>
-            <input type="text" id="b_interpolated_fps" value="600" placeholder="600 أو 5x">
-          </div>
-          <div class="field">
-            <label><span>interpolation method</span></label>
-            <select id="b_interpolation_method">
-              <option value="svp" selected>svp (سريع/دقيق)</option>
-              <option value="rife">rife (AI)</option>
-            </select>
-          </div>
-          <label class="toggle-row" style="grid-column:1/-1;">
-            <span>pre-interpolate (RIFE قبل SVP)</span>
-            <input type="checkbox" id="b_pre_interpolate">
-          </label>
-          <div class="field full">
-            <label><span>pre-interpolated fps</span></label>
-            <input type="text" id="b_pre_interpolated_fps" value="360" placeholder="360 أو 3x">
-          </div>
-          <div class="field">
-            <label><span>وضع المحرك داخل التطبيق</span></label>
+            <label><span>وضع المحرك</span></label>
             <select id="b_local_mode">
-              <option value="fast" selected>سريع ومستقر — بدون كرش (موصى به)</option>
-              <option value="mci">توليد حركة MCI (أبطأ — حد أقصى 720p)</option>
-              <option value="blend_only">بلور خفيف بدون توليد فريمات (الأخف للآيفون)</option>
+              <option value="fast" selected>سريع ومستقر</option>
+              <option value="blend_only">خفيف للآيفون</option>
+              <option value="mci">حركة MCI (720p)</option>
             </select>
           </div>
-          <div class="field">
-            <label><span>أقصى دقة للمعالجة المحلية</span></label>
-            <select id="b_local_max_res">
-              <option value="1080" selected>1080p (آمن ومستقر)</option>
-              <option value="720">720p (أسرع وأخف للآيفون)</option>
-              <option value="orig">الأصلية بدون تصغير</option>
-            </select>
-          </div>
-        </div>
-      </div>
 
-      <!-- Deduplication & Rendering -->
-      <div class="blur-group">
-        <div class="blur-group-head">
-          <span>الرندر وتنظيف التكرار</span>
-          <span class="blur-group-sub">- rendering</span>
-        </div>
-        <label class="toggle-row">
-          <span>deduplicate (معالجة التقطيع)</span>
-          <input type="checkbox" id="b_deduplicate" checked>
-        </label>
-        <div class="field-grid">
           <div class="field">
-            <label><span>deduplicate method</span></label>
-            <select id="b_deduplicate_method">
-              <option value="svp" selected>svp</option>
-              <option value="rife">rife</option>
-              <option value="old">old (mvtools)</option>
+            <label><span>أقصى دقة محلية</span></label>
+            <select id="b_local_max_res">
+              <option value="1080" selected>1080p (مستقر)</option>
+              <option value="720">720p (سريع)</option>
+              <option value="orig">الأصلية</option>
             </select>
           </div>
-          <div class="field">
-            <label><span>quality (CRF 0-51)</span><span class="val" id="v_quality">16</span></label>
+
+          <div class="field full">
+            <label><span>الجودة (CRF أقل = أوضح)</span><span class="val" id="v_quality">16</span></label>
             <input type="range" id="b_quality" min="0" max="51" step="1" value="16" oninput="v_quality.textContent=this.value">
           </div>
-          <div class="field">
-            <label><span>encode preset</span></label>
-            <select id="b_encode_preset">
-              <option value="h264" selected>h264</option>
-              <option value="h265">h265</option>
-              <option value="vp9">vp9</option>
-              <option value="av1">av1</option>
-            </select>
-          </div>
-          <div class="field">
-            <label><span>video container</span></label>
-            <select id="b_video_container">
-              <option value="mp4" selected>mp4</option>
-              <option value="mkv">mkv</option>
-              <option value="mov">mov</option>
-              <option value="avi">avi</option>
-            </select>
-          </div>
         </div>
       </div>
 
-      <!-- Advanced Accordion (Timescale, Filters, Gaussian, SVP, Dedupe, Custom FFmpeg) -->
+      <!-- Advanced Accordion (Full f0e/blur parity) -->
       <details class="adv-accordion">
         <summary>
-          <span>الإعدادات المتقدمة (Gaussian / SVP / Timescale / Filters)</span>
-          <span style="font-size:11px;color:var(--text-dim);">▼</span>
+          <span>إعدادات متقدمة (توليد الفريمات / الألوان / السرعة / SVP)</span>
+          <span class="section-code">▼</span>
         </summary>
-        <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <label class="toggle-row">
+            <span>تفعيل البلور (blur)</span>
+            <span class="ios-switch"><input type="checkbox" id="b_blur" checked><span class="ios-slider"></span></span>
+          </label>
+          <label class="toggle-row">
+            <span>تفعيل التوليد (interpolate)</span>
+            <span class="ios-switch"><input type="checkbox" id="b_interpolate" checked><span class="ios-slider"></span></span>
+          </label>
+          <label class="toggle-row">
+            <span>معالجة التكرار (deduplicate)</span>
+            <span class="ios-switch"><input type="checkbox" id="b_deduplicate" checked><span class="ios-slider"></span></span>
+          </label>
+
           <div class="field-grid">
+            <div class="field">
+              <label><span>blur gamma</span><span class="val" id="v_blur_gamma">1.0</span></label>
+              <input type="range" id="b_blur_gamma" min="0.5" max="2.2" step="0.05" value="1.0" oninput="v_blur_gamma.textContent=this.value">
+            </div>
+            <div class="field">
+              <label><span>interpolated fps</span></label>
+              <input type="text" id="b_interpolated_fps" value="600" placeholder="600 أو 5x">
+            </div>
+            <div class="field">
+              <label><span>interpolation method</span></label>
+              <select id="b_interpolation_method">
+                <option value="svp" selected>svp</option>
+                <option value="rife">rife (AI)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label><span>pre-interpolated fps</span></label>
+              <input type="text" id="b_pre_interpolated_fps" value="360" placeholder="360 أو 3x">
+            </div>
+          </div>
+
+          <label class="toggle-row">
+            <span>pre-interpolate (RIFE قبل SVP)</span>
+            <span class="ios-switch"><input type="checkbox" id="b_pre_interpolate"><span class="ios-slider"></span></span>
+          </label>
+
+          <div class="field-grid">
+            <div class="field">
+              <label><span>deduplicate method</span></label>
+              <select id="b_deduplicate_method">
+                <option value="svp" selected>svp</option>
+                <option value="rife">rife</option>
+                <option value="old">old (mvtools)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label><span>encode preset (سحابي)</span></label>
+              <select id="b_encode_preset">
+                <option value="h264" selected>h264</option>
+                <option value="h265">h265</option>
+                <option value="vp9">vp9</option>
+                <option value="av1">av1</option>
+              </select>
+            </div>
+            <div class="field">
+              <label><span>video container</span></label>
+              <select id="b_video_container">
+                <option value="mp4" selected>mp4</option>
+                <option value="mkv">mkv</option>
+                <option value="mov">mov</option>
+                <option value="avi">avi</option>
+              </select>
+            </div>
             <div class="field">
               <label><span>gaussian std dev</span></label>
               <input type="number" id="b_gauss_std" value="1.0" step="0.1">
@@ -1082,11 +1303,10 @@
               <label><span>gaussian mean</span></label>
               <input type="number" id="b_gauss_mean" value="2.0" step="0.1">
             </div>
-            <div class="field full">
+            <div class="field">
               <label><span>gaussian bound</span></label>
               <input type="text" id="b_gauss_bound" value="[0,2]">
             </div>
-
             <div class="field">
               <label><span>svp preset</span></label>
               <select id="b_svp_preset">
@@ -1101,7 +1321,7 @@
             <div class="field">
               <label><span>svp algorithm</span></label>
               <select id="b_svp_algo">
-                <option value="13" selected>13 (الأفضل)</option>
+                <option value="13" selected>13</option>
                 <option value="23">23</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -1123,18 +1343,20 @@
               <input type="number" id="b_mask_area" value="0" min="0" max="500">
             </div>
             <div class="field">
-              <label><span>deduplicate range</span></label>
+              <label><span>dedup range</span></label>
               <input type="number" id="b_dedup_range" value="2" min="-1" max="20">
             </div>
             <div class="field">
-              <label><span>deduplicate threshold</span></label>
+              <label><span>dedup threshold</span></label>
               <input type="text" id="b_dedup_thresh" value="0.001">
             </div>
+          </div>
 
-            <label class="toggle-row" style="grid-column:1/-1;">
-              <span>timescale (تغيير السرعة)</span>
-              <input type="checkbox" id="b_timescale">
-            </label>
+          <label class="toggle-row">
+            <span>timescale (تغيير السرعة)</span>
+            <span class="ios-switch"><input type="checkbox" id="b_timescale"><span class="ios-slider"></span></span>
+          </label>
+          <div class="field-grid">
             <div class="field">
               <label><span>input timescale</span></label>
               <input type="number" id="b_in_ts" value="1.0" step="0.05">
@@ -1143,15 +1365,17 @@
               <label><span>output timescale</span></label>
               <input type="number" id="b_out_ts" value="1.0" step="0.05">
             </div>
-            <label class="toggle-row" style="grid-column:1/-1;">
-              <span>adjust timescaled audio pitch</span>
-              <input type="checkbox" id="b_ts_pitch">
-            </label>
+          </div>
+          <label class="toggle-row">
+            <span>adjust audio pitch</span>
+            <span class="ios-switch"><input type="checkbox" id="b_ts_pitch"><span class="ios-slider"></span></span>
+          </label>
 
-            <label class="toggle-row" style="grid-column:1/-1;">
-              <span>filters (ألوان وسطوع)</span>
-              <input type="checkbox" id="b_filters">
-            </label>
+          <label class="toggle-row">
+            <span>filters (ألوان وسطوع)</span>
+            <span class="ios-switch"><input type="checkbox" id="b_filters"><span class="ios-slider"></span></span>
+          </label>
+          <div class="field-grid">
             <div class="field">
               <label><span>brightness</span></label>
               <input type="number" id="b_bright" value="1.0" step="0.05">
@@ -1164,20 +1388,19 @@
               <label><span>contrast</span></label>
               <input type="number" id="b_cont" value="1.0" step="0.05">
             </div>
-
             <div class="field full">
               <label><span>custom ffmpeg filters (اختياري)</span></label>
               <input type="text" id="b_ffmpeg_override" placeholder="-c:v libx264 -crf 15">
             </div>
-            <label class="toggle-row" style="grid-column:1/-1;">
-              <span>debug overlay</span>
-              <input type="checkbox" id="b_debug">
-            </label>
           </div>
+
+          <label class="toggle-row">
+            <span>debug overlay</span>
+            <span class="ios-switch"><input type="checkbox" id="b_debug"><span class="ios-slider"></span></span>
+          </label>
         </div>
       </details>
 
-      <!-- Primary In-App Render Button -->
       <button class="btn-primary" id="btnBlurLocal" disabled onclick="runLocalBlur()">
         <span>معالجة البلور داخل التطبيق</span>
       </button>
@@ -1196,24 +1419,35 @@
         <span>إيقاف المعالجة</span>
       </button>
 
-      <a class="btn-download" id="btnBlurDownload" download="AbuAsrh_Blur.mp4">
-        <span>حفظ الفيديو بالبلور</span>
-      </a>
+      <div class="result-card" id="blurResultCard">
+        <div class="result-head">
+          <span class="result-badge">✓ البلور جاهز</span>
+          <span class="result-meta" id="blurResultMeta"></span>
+        </div>
+        <div class="preview-stage">
+          <video id="blurResultVideo" playsinline controls></video>
+        </div>
+        <div class="result-actions">
+          <button class="btn-share" id="btnBlurShare" type="button" onclick="shareBlurResult()">حفظ / مشاركة</button>
+          <a class="btn-download" id="btnBlurDownload" download="AbuAsrh_Blur.mp4">تنزيل الملف</a>
+        </div>
+        <button class="btn-secondary" type="button" onclick="resetBlurFile()">معالجة فيديو آخر</button>
+      </div>
 
-      <!-- Optional Cloud Dispatch / Export -->
+      <!-- Cloud & Config Export -->
       <details class="adv-accordion">
         <summary>
-          <span>خيارات إضافية: رندر سحابي (RIFE/SVP) أو تصدير Config</span>
-          <span style="font-size:11px;color:var(--text-dim);">▼</span>
+          <span>خيارات السحابة وتصدير الإعدادات (RIFE/SVP)</span>
+          <span class="section-code">CLOUD</span>
         </summary>
-        <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;flex-direction:column;gap:10px;">
           <div class="field-grid">
             <div class="field full">
-              <label><span>رابط الفيديو المباشر (للمقاطع الكبيرة سحابياً)</span></label>
+              <label><span>رابط الفيديو المباشر</span></label>
               <input type="text" id="b_video_url" placeholder="https://.../clip.mp4">
             </div>
             <div class="field full">
-              <label><span>GitHub PAT Token (يُحفظ في متصفحك فقط)</span></label>
+              <label><span>GitHub PAT Token</span></label>
               <input type="text" id="b_gh_token" placeholder="github_pat_...">
             </div>
           </div>
@@ -1225,31 +1459,42 @@
         </div>
       </details>
 
-      <div class="log-box" id="blurLogBox"></div>
+      <details class="log-drawer" id="blurLogDrawer">
+        <summary>
+          <span>سجل المحرك</span>
+          <span class="section-code">LOG</span>
+        </summary>
+        <div class="log-box" id="blurLogBox"></div>
+      </details>
     </section>
 
     <div class="pwa-hint">
-      لتثبيت التطبيق على الآيفون: <b>مشاركة ⬆️</b> ← <b>إضافة إلى الشاشة الرئيسية</b>
+      لتثبيت <b>أبو عسرة</b> كتطبيق آيفون يعمل بدون إنترنت: <b>مشاركة ⬆️</b> ← <b>إضافة إلى الشاشة الرئيسية</b>
     </div>
   </main>
 
   <script>
-    // ===== AbuAsrh Studio v3.0 Engine (100% Native Worker + Zero Re-encoding Remux) =====
+    // ===== AbuAsrh Pro Studio v3.1 =====
     'use strict';
 
     let currentFile = null;
     let selectedFps = 120;
     let lastUrl = null;
+    let lastBlob = null;
+    let instantPreviewUrl = null;
     let busy = false;
     let instantWorker = null;
 
     const $ = (id) => document.getElementById(id);
     const dropArea = $('dropArea'), mediaInput = $('mediaInput'), fileBox = $('fileBox'),
+          instantPreviewVideo = $('instantPreviewVideo'),
           labelName = $('labelName'), labelSize = $('labelSize'), btnCancel = $('btnCancel'),
           btnProcess = $('btnProcess'), btnDownload = $('btnDownload'), terminalBox = $('terminalBox'),
           instantProgressWrap = $('instantProgressWrap'), instantProgressBar = $('instantProgressBar'),
           instantProgressLabel = $('instantProgressLabel'), instantProgressPct = $('instantProgressPct'),
-          btnInstantCancel = $('btnInstantCancel');
+          btnInstantCancel = $('btnInstantCancel'), instantResultCard = $('instantResultCard'),
+          instantResultVideo = $('instantResultVideo'), instantResultMeta = $('instantResultMeta'),
+          instantLogDrawer = $('instantLogDrawer');
 
     function setLabel(t) { btnProcess.querySelector('span').textContent = t; }
     function idleLabel() {
@@ -1309,18 +1554,43 @@
       return parts.join(' · ');
     }
 
+    async function shareOrDownload(blob, filename, fallbackLinkEl) {
+      try {
+        const file = new File([blob], filename, { type: blob.type || 'video/mp4' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: filename });
+          return;
+        }
+      } catch (err) {
+        if (err && err.name === 'AbortError') return;
+      }
+      if (fallbackLinkEl) fallbackLinkEl.click();
+    }
+
+    function shareInstantResult() {
+      if (!lastBlob) return;
+      shareOrDownload(lastBlob, btnDownload.download || 'AbuAsrh_120fps.mp4', btnDownload);
+    }
+    window.shareInstantResult = shareInstantResult;
+
     function setFps(fps) {
       if (busy) return;
       selectedFps = fps;
       document.querySelectorAll('.fps-option').forEach(el =>
         el.classList.toggle('active', parseInt(el.dataset.fps, 10) === fps));
-      if (currentFile) { btnDownload.style.display = 'none'; btnProcess.style.display = 'flex'; btnProcess.disabled = false; }
+      if (currentFile) {
+        instantResultCard.style.display = 'none';
+        btnDownload.style.display = 'none';
+        btnProcess.style.display = 'flex';
+        btnProcess.disabled = false;
+      }
       idleLabel();
     }
     window.setFps = setFps;
 
     function appendLog(text, type = 'normal') {
       terminalBox.style.display = 'block';
+      if (type === 'warning') instantLogDrawer.open = true;
       const row = document.createElement('div');
       row.className = 'status-line ' + type;
       const dot = document.createElement('span'); dot.className = 'dot'; dot.textContent = '●';
@@ -1350,6 +1620,9 @@
       currentFile = file;
       labelName.textContent = file.name;
       labelSize.textContent = formatFileSummary(file, null);
+      if (instantPreviewUrl) URL.revokeObjectURL(instantPreviewUrl);
+      instantPreviewUrl = URL.createObjectURL(file);
+      instantPreviewVideo.src = instantPreviewUrl;
       inspectVideoFile(file, (meta) => {
         if (currentFile === file) labelSize.textContent = formatFileSummary(file, meta);
       });
@@ -1357,21 +1630,32 @@
       dropArea.style.display = 'none';
       btnProcess.style.display = 'flex';
       btnProcess.disabled = false;
+      instantResultCard.style.display = 'none';
+      instantResultVideo.removeAttribute('src');
       btnDownload.style.display = 'none';
       hideInstantProgress();
       terminalBox.innerHTML = ''; terminalBox.style.display = 'none';
+      instantLogDrawer.open = false;
       idleLabel();
     }
 
     function resetFile() {
       if (busy) return;
       currentFile = null; mediaInput.value = '';
+      if (instantPreviewUrl) { URL.revokeObjectURL(instantPreviewUrl); instantPreviewUrl = null; }
+      instantPreviewVideo.removeAttribute('src');
+      instantPreviewVideo.load();
+      instantResultVideo.removeAttribute('src');
+      instantResultVideo.load();
       fileBox.style.display = 'none'; dropArea.style.display = '';
       btnProcess.disabled = true; idleLabel(); btnProcess.style.display = 'flex';
+      instantResultCard.style.display = 'none';
       btnDownload.style.display = 'none';
       hideInstantProgress();
       terminalBox.innerHTML = ''; terminalBox.style.display = 'none';
+      instantLogDrawer.open = false;
     }
+    window.resetFile = resetFile;
 
     function buildInstantArgs(fpsNum, inName, outName, audioCopy) {
       const args = [];
@@ -1405,6 +1689,7 @@
       if (!currentFile || busy) return;
       busy = true;
       btnProcess.disabled = true;
+      instantResultCard.style.display = 'none';
       btnDownload.style.display = 'none';
       const fpsNum = selectedFps === 120 ? 120 : 60;
       const fpsLabel = String(fpsNum);
@@ -1446,14 +1731,18 @@
               try { instantWorker.terminate(); } catch (_) {}
               instantWorker = null;
               const blob = new Blob([msg.buffer], { type: 'video/mp4' });
+              lastBlob = blob;
               if (lastUrl) URL.revokeObjectURL(lastUrl);
               lastUrl = URL.createObjectURL(blob);
               btnDownload.href = lastUrl;
               btnDownload.download = `AbuAsrh_${fpsLabel}fps.mp4`;
               btnDownload.style.display = 'flex';
+              instantResultVideo.src = lastUrl;
+              const secs = ((performance.now() - tStart) / 1000).toFixed(2);
+              instantResultMeta.textContent = `${(blob.size / 1048576).toFixed(2)} MB · ${secs}s`;
+              instantResultCard.style.display = 'flex';
               btnProcess.style.display = 'none';
               hideInstantProgress();
-              const secs = ((performance.now() - tStart) / 1000).toFixed(2);
               appendLog(`✅ تم بنجاح (${secs}s) — ${(blob.size / 1048576).toFixed(2)} MB`, 'success');
               resolve();
             } else if (msg.type === 'error') {
@@ -1494,7 +1783,7 @@
     dropArea.addEventListener('drop', (e) => { e.preventDefault(); dropArea.classList.remove('dragover'); pickFile(e.dataTransfer.files[0]); });
     btnCancel.addEventListener('click', resetFile);
 
-    // ===== AbuAsrh Blur Tab Logic (isolated Worker WASM + Cloud) =====
+    // ===== AbuAsrh Blur Studio Logic =====
     function switchMainTab(tab) {
       document.querySelectorAll('.engine-tab').forEach(el =>
         el.classList.toggle('active', el.dataset.tab === tab));
@@ -1502,6 +1791,50 @@
       $('paneBlur').classList.toggle('active', tab === 'blur');
     }
     window.switchMainTab = switchMainTab;
+
+    function applyBlurPreset(name) {
+      document.querySelectorAll('.preset-chip').forEach(el =>
+        el.classList.toggle('active', el.dataset.preset === name));
+      if (name === 'tiktok') {
+        $('b_blur_amount').value = '1.0';
+        $('v_blur_amount').textContent = '1.0';
+        $('b_blur_output_fps').value = '60';
+        $('b_blur_weighting').value = 'gaussian_sym';
+        $('b_local_mode').value = 'fast';
+        $('b_local_max_res').value = '1080';
+        $('b_quality').value = '16';
+        $('v_quality').textContent = '16';
+      } else if (name === 'cinema') {
+        $('b_blur_amount').value = '1.4';
+        $('v_blur_amount').textContent = '1.4';
+        $('b_blur_output_fps').value = '60';
+        $('b_blur_weighting').value = 'gaussian_sym';
+        $('b_local_mode').value = 'fast';
+        $('b_local_max_res').value = '1080';
+        $('b_quality').value = '14';
+        $('v_quality').textContent = '14';
+      } else if (name === 'iphone') {
+        $('b_blur_amount').value = '0.9';
+        $('v_blur_amount').textContent = '0.9';
+        $('b_blur_output_fps').value = '60';
+        $('b_blur_weighting').value = 'pyramid';
+        $('b_local_mode').value = 'blend_only';
+        $('b_local_max_res').value = '720';
+        $('b_quality').value = '18';
+        $('v_quality').textContent = '18';
+      } else if (name === 'ultra120') {
+        $('b_blur_amount').value = '1.1';
+        $('v_blur_amount').textContent = '1.1';
+        $('b_blur_output_fps').value = '120';
+        $('b_blur_weighting').value = 'gaussian_sym';
+        $('b_local_mode').value = 'fast';
+        $('b_local_max_res').value = '720';
+        $('b_quality').value = '16';
+        $('v_quality').textContent = '16';
+      }
+      $('customWeightWrap').style.display = $('b_blur_weighting').value === 'custom' ? 'flex' : 'none';
+    }
+    window.applyBlurPreset = applyBlurPreset;
 
     const blurWeightSel = $('b_blur_weighting');
     const customWeightWrap = $('customWeightWrap');
@@ -1565,6 +1898,7 @@
     function appendBlurLog(text, type = 'normal') {
       const box = $('blurLogBox');
       box.style.display = 'block';
+      if (type === 'warning') $('blurLogDrawer').open = true;
       const row = document.createElement('div');
       row.className = 'status-line ' + type;
       const dot = document.createElement('span'); dot.className = 'dot'; dot.textContent = '●';
@@ -1574,19 +1908,22 @@
       box.scrollTop = box.scrollHeight;
     }
 
-    // ===== In-App f0e/blur WASM Engine (Worker-isolated, low-memory, zero server load) =====
     let blurFile = null;
     let blurOutUrl = null;
+    let blurOutBlob = null;
+    let blurPreviewUrl = null;
     let blurBusy = false;
     let blurWorker = null;
 
     const blurDropArea = $('blurDropArea'), blurMediaInput = $('blurMediaInput'),
-          blurFileBox = $('blurFileBox'), blurLabelName = $('blurLabelName'),
-          blurLabelSize = $('blurLabelSize'), blurBtnCancel = $('blurBtnCancel'),
-          btnBlurLocal = $('btnBlurLocal'), btnBlurDownload = $('btnBlurDownload'),
-          blurProgressWrap = $('blurProgressWrap'), blurProgressBar = $('blurProgressBar'),
-          blurProgressLabel = $('blurProgressLabel'), blurProgressPct = $('blurProgressPct'),
-          btnBlurCancelRun = $('btnBlurCancelRun');
+          blurFileBox = $('blurFileBox'), blurPreviewVideo = $('blurPreviewVideo'),
+          blurLabelName = $('blurLabelName'), blurLabelSize = $('blurLabelSize'),
+          blurBtnCancel = $('blurBtnCancel'), btnBlurLocal = $('btnBlurLocal'),
+          btnBlurDownload = $('btnBlurDownload'), blurProgressWrap = $('blurProgressWrap'),
+          blurProgressBar = $('blurProgressBar'), blurProgressLabel = $('blurProgressLabel'),
+          blurProgressPct = $('blurProgressPct'), btnBlurCancelRun = $('btnBlurCancelRun'),
+          blurResultCard = $('blurResultCard'), blurResultVideo = $('blurResultVideo'),
+          blurResultMeta = $('blurResultMeta'), blurLogDrawer = $('blurLogDrawer');
 
     function setBlurBtnText(t) { btnBlurLocal.querySelector('span').textContent = t; }
 
@@ -1602,6 +1939,12 @@
       btnBlurCancelRun.style.display = 'none';
       setBlurProgress(0, 'جارٍ التجهيز...');
     }
+
+    function shareBlurResult() {
+      if (!blurOutBlob) return;
+      shareOrDownload(blurOutBlob, btnBlurDownload.download || 'AbuAsrh_Blur.mp4', btnBlurDownload);
+    }
+    window.shareBlurResult = shareBlurResult;
 
     function cancelLocalBlur() {
       if (blurWorker) {
@@ -1623,6 +1966,9 @@
       blurFile = file;
       blurLabelName.textContent = file.name;
       blurLabelSize.textContent = formatFileSummary(file, null);
+      if (blurPreviewUrl) URL.revokeObjectURL(blurPreviewUrl);
+      blurPreviewUrl = URL.createObjectURL(file);
+      blurPreviewVideo.src = blurPreviewUrl;
       inspectVideoFile(file, (meta) => {
         if (blurFile === file) blurLabelSize.textContent = formatFileSummary(file, meta);
       });
@@ -1630,22 +1976,33 @@
       blurDropArea.style.display = 'none';
       btnBlurLocal.style.display = 'flex';
       btnBlurLocal.disabled = false;
+      blurResultCard.style.display = 'none';
+      blurResultVideo.removeAttribute('src');
       btnBlurDownload.style.display = 'none';
       hideBlurProgress();
       $('blurLogBox').innerHTML = ''; $('blurLogBox').style.display = 'none';
+      blurLogDrawer.open = false;
       setBlurBtnText('معالجة البلور داخل التطبيق');
     }
 
     function resetBlurFile() {
       if (blurBusy) return;
       blurFile = null; blurMediaInput.value = '';
+      if (blurPreviewUrl) { URL.revokeObjectURL(blurPreviewUrl); blurPreviewUrl = null; }
+      blurPreviewVideo.removeAttribute('src');
+      blurPreviewVideo.load();
+      blurResultVideo.removeAttribute('src');
+      blurResultVideo.load();
       blurFileBox.style.display = 'none'; blurDropArea.style.display = '';
       btnBlurLocal.disabled = true; btnBlurLocal.style.display = 'flex';
       setBlurBtnText('معالجة البلور داخل التطبيق');
+      blurResultCard.style.display = 'none';
       btnBlurDownload.style.display = 'none';
       hideBlurProgress();
       $('blurLogBox').innerHTML = ''; $('blurLogBox').style.display = 'none';
+      blurLogDrawer.open = false;
     }
+    window.resetBlurFile = resetBlurFile;
 
     blurDropArea.addEventListener('click', () => blurMediaInput.click());
     blurMediaInput.addEventListener('change', (e) => pickBlurFile(e.target.files && e.target.files[0]));
@@ -1692,7 +2049,6 @@
           w = Array(frames).fill(1 / frames);
         }
       }
-      // Convert float weights to clean integers for FFmpeg tmix
       return w.map(v => Math.max(1, Math.round(v * 1000))).join(' ');
     }
     window.computeBlurWeights = computeBlurWeights;
@@ -1701,6 +2057,7 @@
       if (!blurFile || blurBusy) return;
       blurBusy = true;
       btnBlurLocal.disabled = true;
+      blurResultCard.style.display = 'none';
       btnBlurDownload.style.display = 'none';
       const box = $('blurLogBox');
       box.innerHTML = '';
@@ -1728,10 +2085,10 @@
         const vFilters = [];
         const outFps = Math.max(15, Math.min(240, c.blur_output_fps || 60));
 
-        // 1. Resolution guard to prevent WASM OOM crashes on 4K / high-res portrait clips
+        // 1. Resolution guard to prevent WASM OOM crashes
         let maxLongSide = 0;
         if (localMode === 'mci') {
-          maxLongSide = localMaxRes === '720' ? 1280 : 1280;
+          maxLongSide = 1280;
         } else if (localMaxRes === '720') {
           maxLongSide = 1280;
         } else if (localMaxRes === '1080') {
@@ -1747,7 +2104,7 @@
           vFilters.push(`setpts=PTS/${c.input_timescale}`);
         }
 
-        // 3. Interpolation (safe modes)
+        // 3. Interpolation
         let workingFps = outFps;
         if (c.interpolate && localMode !== 'blend_only') {
           let targetFps = 180;
@@ -1772,7 +2129,7 @@
           appendBlurLog('# Mode: blend_only (skipping interpolation for minimal RAM)');
         }
 
-        // 4. Weighted Frame Blending (f0e/blur formula, capped at 13 frames for WASM stability)
+        // 4. Weighted Frame Blending
         if (c.blur && c.blur_amount > 0) {
           const frameGap = Math.max(2, Math.round(workingFps / outFps));
           let blurFrames = Math.max(3, Math.round(frameGap * c.blur_amount) + 1);
@@ -1789,13 +2146,13 @@
           appendBlurLog(`# Frame blending: ${blurFrames} frames | weighting=${c.blur_weighting}`);
         }
 
-        // 5. Exact output fps + output timescale
+        // 5. Output fps + timescale
         vFilters.push(`fps=${outFps}`);
         if (c.timescale && c.output_timescale > 0 && c.output_timescale !== 1.0) {
           vFilters.push(`setpts=PTS/${c.output_timescale}`);
         }
 
-        // 6. Color filters (brightness / saturation / contrast)
+        // 6. Color filters
         if (c.filters && (c.brightness !== 1.0 || c.saturation !== 1.0 || c.contrast !== 1.0)) {
           const br = (c.brightness - 1.0).toFixed(3);
           vFilters.push(`eq=brightness=${br}:saturation=${c.saturation}:contrast=${c.contrast}`);
@@ -1804,7 +2161,6 @@
         const cmdArgs = ['-i', inName];
         if (vFilters.length) cmdArgs.push('-vf', vFilters.join(','));
 
-        // Audio filters
         if (c.timescale && (c.input_timescale !== 1.0 || c.output_timescale !== 1.0)) {
           let totTs = (c.input_timescale || 1.0) * (c.output_timescale || 1.0);
           const af = [];
@@ -1861,14 +2217,18 @@
               try { blurWorker.terminate(); } catch (_) {}
               blurWorker = null;
               const blob = new Blob([msg.buffer], { type: ext === 'mkv' ? 'video/x-matroska' : 'video/mp4' });
+              blurOutBlob = blob;
               if (blurOutUrl) URL.revokeObjectURL(blurOutUrl);
               blurOutUrl = URL.createObjectURL(blob);
               btnBlurDownload.href = blurOutUrl;
               btnBlurDownload.download = `AbuAsrh_Blur_${outFps}fps.${ext}`;
               btnBlurDownload.style.display = 'flex';
+              blurResultVideo.src = blurOutUrl;
+              const secs = ((performance.now() - tStart) / 1000).toFixed(1);
+              blurResultMeta.textContent = `${(blob.size / 1048576).toFixed(2)} MB · ${secs}s`;
+              blurResultCard.style.display = 'flex';
               btnBlurLocal.style.display = 'none';
               hideBlurProgress();
-              const secs = ((performance.now() - tStart) / 1000).toFixed(1);
               appendBlurLog(`✅ تم الرندر داخل التطبيق (${secs}s) — ${(blob.size / 1048576).toFixed(2)} MB`, 'success');
               resolve();
             } else if (msg.type === 'error') {
@@ -2030,6 +2390,12 @@
       }
     }
     window.dispatchCloudBlur = dispatchCloudBlur;
+
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.protocol === 'http:')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
 
     window.__abuasrhReady = true;
   </script>

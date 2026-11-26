@@ -1,10 +1,10 @@
 {
   "name": "أبو عسرة · 120 FPS",
   "short_name": "أبو عسرة",
-  "start_url": "./?v=4",
+  "start_url": "./?v=5",
   "display": "standalone",
-  "background_color": "#05070B",
-  "theme_color": "#05070B",
+  "background_color": "#050608",
+  "theme_color": "#050608",
   "icons": [
     {
       "src": "icon-192.png?v=3",
