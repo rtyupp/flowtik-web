@@ -1477,7 +1477,7 @@
     // ===== AbuAsrh Pro Studio v4.0 (Cloud-First Railway + Offline Fallback) =====
     'use strict';
 
-    const CLOUD_API_URL = window.location.hostname.endsWith('github.io') ? '__RAILWAY_URL__' : '';
+    const CLOUD_API_URL = window.location.hostname.endsWith('github.io') ? 'https://abuasrh-cloud-production.up.railway.app' : '';
     let cloudOnline = false;
 
     function hasCloudEndpoint() {
