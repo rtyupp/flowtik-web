@@ -1,10 +1,9 @@
-const CACHE_NAME = 'abuasrh-studio-v5.1';
+const CACHE_NAME = 'abuasrh-studio-v5.2';
 const CORE_ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './abuasrh-worker.js',
-  './mp4-atom-patcher.js',
   './apple-touch-icon.png',
   './icon-192.png',
 ];

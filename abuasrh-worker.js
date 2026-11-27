@@ -17,7 +17,7 @@ function detectHdrFromLogs(lines) {
 function buildFfmpegArgs(opts, hdrDetected) {
   const inName = opts.inName || 'in_video.mp4';
   const outName = opts.outName || 'out_video.mp4';
-  const fpsNum = opts.fps === 60 ? 60 : 120;
+  const fpsNum = opts.fps === 120 ? 120 : 60;
   const slowMo = !!opts.slowMo;
   const casSharp = !!opts.casSharp;
   const reencode = !!(opts.reencode || casSharp);
@@ -32,7 +32,7 @@ function buildFfmpegArgs(opts, hdrDetected) {
         '-map', '0:a?',
         '-c:v', 'copy',
         ...(audioCopy ? ['-c:a', 'copy'] : ['-c:a', 'aac', '-ar', '48000', '-ac', '2', '-b:a', '192k']),
-        '-video_track_timescale', fpsNum === 120 ? '120000' : '60000',
+        '-video_track_timescale', fpsNum > 60 ? '120000' : '60000',
         '-color_primaries', 'bt709',
         '-color_trc', 'bt709',
         '-colorspace', 'bt709',
@@ -85,7 +85,7 @@ function buildFfmpegArgs(opts, hdrDetected) {
     '-preset', 'superfast',
     '-profile:v', 'high',
     '-level:v', level,
-    '-crf', '19',
+    '-crf', '18',
     '-maxrate', maxrate,
     '-bufsize', bufsize,
     '-g', gop,
@@ -130,8 +130,8 @@ self.onmessage = async (ev) => {
   const msg = ev.data || {};
   if (msg.type !== 'run') return;
 
-  let { coreUrl, wasmUrl, patcherUrl, fileBuffer, inName, outName, options } = msg;
-  const opts = Object.assign({ inName, outName, fps: 120, reencode: false, casSharp: false, autoHdr: true, slowMo: false, patchMultiplier: 10 }, options || {});
+  let { coreUrl, wasmUrl, fileBuffer, inName, outName, options } = msg;
+  const opts = Object.assign({ inName, outName, fps: 60, reencode: true, casSharp: true, autoHdr: true, slowMo: false }, options || {});
   let core = null;
   let dur = 0;
   let lastProgressAt = 0;
@@ -142,9 +142,6 @@ self.onmessage = async (ev) => {
     self.postMessage({ type: 'status', text: '# Loading AbuAsrh WASM core (~32MB)...' });
     if (typeof createFFmpegCore !== 'function') {
       importScripts(coreUrl);
-    }
-    if (opts.patchMultiplier > 1 && typeof self.patchMp4ForTikTok !== 'function' && patcherUrl) {
-      importScripts(patcherUrl);
     }
 
     core = await createFFmpegCore({
@@ -166,7 +163,7 @@ self.onmessage = async (ev) => {
           if (now - lastProgressAt >= 200) {
             lastProgressAt = now;
             const cur = parseTime(m[1]);
-            const pct = dur > 0 ? Math.min(96, Math.max(1, Math.round((cur / dur) * 95))) : 0;
+            const pct = dur > 0 ? Math.min(99, Math.max(1, Math.round((cur / dur) * 98))) : 0;
             self.postMessage({ type: 'progress', pct, timeStr: m[1] });
           }
         }
@@ -192,8 +189,8 @@ self.onmessage = async (ev) => {
     self.postMessage({
       type: 'status',
       text: plan.mode === 'copy'
-        ? `# Stream Copy ${opts.fps} FPS (BT.709 · ${opts.fps === 120 ? '120K' : '60K'} timescale)...`
-        : `# Pro CFR Encode ${opts.fps} FPS${opts.casSharp ? ' + CAS' : ''}${hdrDetected ? ' + HDR->SDR' : ''}...`,
+        ? `# Clean Fast Remux ${opts.fps} FPS (isom · BT.709 · ${opts.fps > 60 ? '120K' : '60K'} timescale)...`
+        : `# TikTok-Pro CFR Encode ${opts.fps} FPS (High@L${opts.fps <= 60 ? '4.2' : '5.1'}${opts.casSharp ? ' + CAS' : ''}${hdrDetected ? ' + HDR->SDR' : ''})...`,
     });
 
     let rc = core.exec(...plan.primary);
@@ -209,7 +206,7 @@ self.onmessage = async (ev) => {
       try { core.FS.unlink(outName); } catch (_) {}
       const detailText = tailLogs.slice(-8).join('\n');
       const hint = isOomMessage(detailText)
-        ? ' (نفدت الذاكرة — جرّب وضع النسخ السريع بدون إعادة ترميز)'
+        ? ' (نفدت الذاكرة — أغلق خيار إعادة الترميز واستخدم النسخ السريع للملفات الكبيرة)'
         : '';
       self.postMessage({
         type: 'error',
@@ -220,45 +217,17 @@ self.onmessage = async (ev) => {
     }
 
     try { core.FS.unlink(inName); } catch (_) {}
-    const rawU8 = core.FS.readFile(outName);
+    const outU8 = core.FS.readFile(outName);
     try { core.FS.unlink(outName); } catch (_) {}
 
-    // Copy out before freeing the WASM heap so Atom Patcher runs with minimal peak RAM
-    let finalU8 = (rawU8.buffer !== core.HEAPU8.buffer && rawU8.byteOffset === 0 && rawU8.byteLength === rawU8.buffer.byteLength)
-      ? rawU8
-      : rawU8.slice();
+    const outBuf = (outU8.buffer !== core.HEAPU8.buffer && outU8.byteOffset === 0 && outU8.byteLength === outU8.buffer.byteLength)
+      ? outU8.buffer
+      : outU8.slice().buffer;
     try { core.exit && core.exit(); } catch (_) {}
     core = null;
 
-    let patchInfo = null;
-    if (opts.patchMultiplier > 1 && typeof self.patchMp4ForTikTok === 'function') {
-      self.postMessage({ type: 'status', text: `# Patching MP4 Atoms (${opts.patchMultiplier}x TikTok FPS protection)...` });
-      self.postMessage({ type: 'progress', pct: 98, timeStr: 'MP4 Atom' });
-      const res = self.patchMp4ForTikTok(finalU8, opts.patchMultiplier);
-      if (res && res.bytes) {
-        finalU8 = res.bytes;
-        patchInfo = {
-          originalFrames: res.originalFrames,
-          declaredFrames: res.declaredFrames,
-          multiplier: res.multiplier,
-          codec: res.codec,
-        };
-        if (res.originalFrames > 0) {
-          self.postMessage({
-            type: 'status',
-            text: `# MP4 Atom Patch: ${res.originalFrames} -> ${res.declaredFrames} frames (${res.multiplier}x · ${res.codec})`,
-            level: 'success',
-          });
-        }
-      }
-    }
-
-    const outBuf = (finalU8.byteOffset === 0 && finalU8.byteLength === finalU8.buffer.byteLength)
-      ? finalU8.buffer
-      : finalU8.slice().buffer;
-
     self.postMessage(
-      { type: 'done', buffer: outBuf, ext: 'mp4', patchInfo },
+      { type: 'done', buffer: outBuf, ext: 'mp4', mode: plan.mode },
       [outBuf]
     );
   } catch (err) {
@@ -271,7 +240,7 @@ self.onmessage = async (ev) => {
     } catch (_) {}
     const errMsg = err && err.message ? err.message : String(err);
     const hint = isOomMessage(errMsg)
-      ? ' (نفدت ذاكرة المتصفح — جرّب إغلاق التبويبات أو استخدام النسخ السريع)'
+      ? ' (نفدت ذاكرة المتصفح — أغلق إعادة الترميز واستخدم النسخ السريع)'
       : '';
     self.postMessage({
       type: 'error',

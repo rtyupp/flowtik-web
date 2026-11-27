@@ -15,7 +15,7 @@
 
   <link rel="icon" type="image/png" href="icon-192.png?v=3">
   <link rel="apple-touch-icon" sizes="512x512" href="apple-touch-icon.png?v=3">
-  <link rel="manifest" href="manifest.json?v=10">
+  <link rel="manifest" href="manifest.json?v=11">
 
   <style>
     :root {
@@ -434,44 +434,6 @@
       color: var(--text-3);
     }
 
-    .mult-pills {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: var(--r-sm);
-      background: var(--bg);
-      border: 1px solid var(--hairline);
-      font-size: 11.5px;
-      color: var(--text-2);
-    }
-
-    .mult-group {
-      display: inline-flex;
-      gap: 6px;
-      direction: ltr;
-    }
-
-    .mult-btn {
-      border: 1px solid var(--hairline);
-      background: var(--surface-2);
-      color: var(--text-2);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.16s ease;
-    }
-
-    .mult-btn.active {
-      background: var(--accent-soft);
-      border-color: var(--accent-border);
-      color: var(--accent);
-    }
-
     .ios-switch {
       position: relative;
       display: inline-block;
@@ -822,7 +784,7 @@
           <p class="brand-sub">TIKTOK 120 FPS STUDIO</p>
         </div>
       </div>
-      <div class="ver-pill" id="verPill">v5.1 · محلي</div>
+      <div class="ver-pill" id="verPill">v5.2 · محلي</div>
     </header>
 
     <section class="studio-card" id="paneMain">
@@ -834,7 +796,7 @@
         </div>
         <div>
           <div class="drop-title">اختر فيديو من الألبوم أو الملفات</div>
-          <div class="drop-hint">MP4 · MOV · ATOM PATCH · BT.709</div>
+          <div class="drop-hint">MP4 · MOV · TIKTOK PRO CFR · BT.709</div>
         </div>
       </div>
       <input type="file" id="mediaInput" accept="video/mp4,video/quicktime,video/*">
@@ -854,24 +816,24 @@
 
       <div>
         <div class="section-head" style="margin-bottom:8px;">
-          <span>اختر التوقيت والإخراج</span>
-          <span class="section-code">TIMESCALE · MP4 ATOM · BT.709</span>
+          <span>اختر معدل الفريمات</span>
+          <span class="section-code">ISOM · HIGH@L4.2 · BT.709</span>
         </div>
         <div class="mode-grid">
-          <div class="fps-option active" data-fps="120" onclick="setFps(120)">
-            <div class="fps-top">
-              <span class="fps-num">120 FPS</span>
-              <span class="fps-tag">أسلوب 120</span>
-            </div>
-            <div class="fps-desc">توقيت 120K · حاوية isom · ترقيع Atom 10× بدون فقد جودة</div>
-          </div>
-
-          <div class="fps-option" data-fps="60" onclick="setFps(60)">
+          <div class="fps-option active" data-fps="60" onclick="setFps(60)">
             <div class="fps-top">
               <span class="fps-num">60 FPS</span>
-              <span class="fps-tag">مستقر</span>
+              <span class="fps-tag">مُختبَر لتيك توك</span>
             </div>
-            <div class="fps-desc">توقيت 60K · حاوية isom · ترقيع Atom 4× بدون فقد جودة</div>
+            <div class="fps-desc">High@L4.2 · 60 CFR · 12M VBV · آمن 100%</div>
+          </div>
+
+          <div class="fps-option" data-fps="120" onclick="setFps(120)">
+            <div class="fps-top">
+              <span class="fps-num">120 FPS</span>
+              <span class="fps-tag">ألترا</span>
+            </div>
+            <div class="fps-desc">High@L5.1 · توقيت 120K · ألوان BT.709</div>
           </div>
         </div>
       </div>
@@ -879,35 +841,18 @@
       <div class="options-box">
         <label class="toggle-row">
           <span class="toggle-info">
-            <span>حماية فريمات تيك توك (MP4 Atom Patch)</span>
-            <span class="toggle-sub">تعديل ذرّات الحاوية stts/stsz لمنع الضغط لـ 30 فريم بدون تبطيء</span>
+            <span>ترميز تيك توك الاحترافي (CFR + 12M VBV + HDR→SDR)</span>
+            <span class="toggle-sub">إصلاح التقطيع وهبوط 30 فريم (أغلقه للنسخ السريع للملفات +80MB على الجوال)</span>
           </span>
-          <span class="ios-switch"><input type="checkbox" id="optAtomPatch" checked onchange="syncAtomUi()"><span class="ios-slider"></span></span>
-        </label>
-
-        <div class="mult-pills" id="atomMultWrap">
-          <span>مضاعفة ترويسة الفريمات (Ghost Frames)</span>
-          <div class="mult-group">
-            <button type="button" class="mult-btn" data-mult="4" onclick="setAtomMult(4)">4×</button>
-            <button type="button" class="mult-btn active" data-mult="10" onclick="setAtomMult(10)">10×</button>
-            <button type="button" class="mult-btn" data-mult="15" onclick="setAtomMult(15)">15×</button>
-          </div>
-        </div>
-
-        <label class="toggle-row">
-          <span class="toggle-info">
-            <span>إعادة ترميز CFR + HDR→SDR (إصلاح التقطيع)</span>
-            <span class="toggle-sub">تحويل VFR و HDR الآيفون إلى High@L4.2 BT.709 ثابت</span>
-          </span>
-          <span class="ios-switch"><input type="checkbox" id="optReencode"><span class="ios-slider"></span></span>
+          <span class="ios-switch"><input type="checkbox" id="optReencode" checked onchange="if(!this.checked) $('optCas').checked=false;"><span class="ios-slider"></span></span>
         </label>
 
         <label class="toggle-row">
           <span class="toggle-info">
             <span>حدة تيك توك الذكية (CAS Sharpen)</span>
-            <span class="toggle-sub">إبراز التفاصيل لمقاومة تنعيم تيك توك (يفعّل إعادة الترميز)</span>
+            <span class="toggle-sub">إبراز التفاصيل لمقاومة تنعيم ضغط تيك توك</span>
           </span>
-          <span class="ios-switch"><input type="checkbox" id="optCas" onchange="if(this.checked) $('optReencode').checked=true;"><span class="ios-slider"></span></span>
+          <span class="ios-switch"><input type="checkbox" id="optCas" checked onchange="if(this.checked) $('optReencode').checked=true;"><span class="ios-slider"></span></span>
         </label>
 
         <label class="toggle-row">
@@ -920,7 +865,7 @@
       </div>
 
       <button class="btn-primary" id="btnProcess" disabled onclick="runProcess()">
-        <span>بدء معالجة 120 FPS</span>
+        <span>بدء معالجة 60 FPS</span>
       </button>
 
       <div class="progress-wrap" id="progressWrap">
@@ -947,7 +892,7 @@
         </div>
         <div class="result-actions">
           <button class="btn-share" id="btnShare" type="button" onclick="shareResult()">حفظ / مشاركة</button>
-          <a class="btn-download" id="btnDownload" download="AbuAsrh_120fps.mp4">تنزيل الملف</a>
+          <a class="btn-download" id="btnDownload" download="AbuAsrh_60fps.mp4">تنزيل الملف</a>
         </div>
         <button class="btn-secondary" type="button" onclick="resetFile()">معالجة فيديو آخر</button>
       </div>
@@ -971,12 +916,11 @@
   </main>
 
   <script>
-    // ===== AbuAsrh Studio v5.1 (GitHub Pages · isom 10x MP4 Atom Patch + CAS + HDR->SDR) =====
+    // ===== AbuAsrh Studio v5.2 (Account-Safe TikTok-Pro 60/120fps + CAS + HDR->SDR) =====
     'use strict';
 
     let currentFile = null;
-    let selectedFps = 120;
-    let atomMultiplier = 10;
+    let selectedFps = 60;
     let lastUrl = null;
     let lastBlob = null;
     let previewUrl = null;
@@ -1010,26 +954,12 @@
       setProgress(0, 'جارٍ التجهيز...');
     }
 
-    function setAtomMult(m) {
-      atomMultiplier = m;
-      document.querySelectorAll('.mult-btn').forEach((el) => {
-        el.classList.toggle('active', parseInt(el.dataset.mult, 10) === m);
-      });
-    }
-    window.setAtomMult = setAtomMult;
-
-    function syncAtomUi() {
-      $('atomMultWrap').style.display = $('optAtomPatch').checked ? 'flex' : 'none';
-    }
-    window.syncAtomUi = syncAtomUi;
-
     function setFps(fps) {
       if (busy) return;
       selectedFps = fps;
       document.querySelectorAll('.fps-option').forEach((el) => {
         el.classList.toggle('active', parseInt(el.dataset.fps, 10) === fps);
       });
-      setAtomMult(fps === 120 ? 10 : 4);
       if (currentFile) {
         resultCard.style.display = 'none';
         btnDownload.style.display = 'none';
@@ -1090,7 +1020,7 @@
     }
 
     async function shareResult() {
-      const name = btnDownload.download || 'AbuAsrh_120fps.mp4';
+      const name = btnDownload.download || 'AbuAsrh_60fps.mp4';
       if (!lastBlob) return;
       try {
         const file = new File([lastBlob], name, { type: 'video/mp4' });
@@ -1176,11 +1106,10 @@
       previewVideo.parentElement.style.display = 'none';
       if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = null; }
 
-      const fpsNum = selectedFps === 60 ? 60 : 120;
+      const fpsNum = selectedFps === 120 ? 120 : 60;
       const slowMo = !!$('optSlowMo').checked;
       const casSharp = !!$('optCas').checked;
       const reencode = !!($('optReencode').checked || casSharp);
-      const patchMultiplier = $('optAtomPatch').checked ? atomMultiplier : 1;
 
       setLabel('جارٍ المعالجة...');
       terminalBox.innerHTML = '';
@@ -1190,20 +1119,22 @@
 
       try {
         const tStart = performance.now();
+        if (reencode && currentFile.size > 70 * 1024 * 1024) {
+          appendLog('تنبيه: حجم الفيديو أكبر من 70MB؛ إذا امتلأت ذاكرة الجوال أغلق خيار إعادة الترميز واستخدم النسخ السريع.', 'normal');
+        }
         let fileBuffer = await currentFile.arrayBuffer();
         const inName = 'in_video.mp4';
         const outName = 'out_video.mp4';
         const coreUrl = new URL('ffmpeg-core.js', location.href).href;
         const wasmUrl = new URL('ffmpeg-core.wasm', location.href).href;
-        const patcherUrl = new URL('mp4-atom-patcher.js?v=10', location.href).href;
 
-        appendLog(`# AbuAsrh v5.1 · ${fpsNum} FPS · Atom=${patchMultiplier}x · Reencode=${reencode} · CAS=${casSharp}`);
+        appendLog(`# AbuAsrh v5.2 · ${fpsNum} FPS · TikTokPro=${reencode} · CAS=${casSharp}`);
 
         if (worker) {
           try { worker.terminate(); } catch (_) {}
           worker = null;
         }
-        worker = new Worker('abuasrh-worker.js?v=10');
+        worker = new Worker('abuasrh-worker.js?v=11');
 
         await new Promise((resolve, reject) => {
           worker.onmessage = (ev) => {
@@ -1239,14 +1170,12 @@
 
               const secs = ((performance.now() - tStart) / 1000).toFixed(2);
               const mb = (blob.size / 1048576).toFixed(2);
-              const atomTag = msg.patchInfo && msg.patchInfo.declaredFrames > 0
-                ? ` · Atom ${msg.patchInfo.multiplier}x`
-                : '';
-              resultMeta.textContent = `${mb} MB · ${secs}s${atomTag}`;
+              const modeTag = msg.mode === 'reencode' ? ' · TikTok Pro' : ' · Fast Remux';
+              resultMeta.textContent = `${mb} MB · ${secs}s${modeTag}`;
               resultCard.style.display = 'flex';
               btnProcess.style.display = 'none';
               hideProgress();
-              appendLog(`✅ اكتمل بنجاح (${secs}s) — ${mb} MB${atomTag}`, 'success');
+              appendLog(`✅ اكتمل بنجاح (${secs}s) — ${mb} MB${modeTag}`, 'success');
               resolve();
             } else if (msg.type === 'error') {
               try { worker.terminate(); } catch (_) {}
@@ -1267,7 +1196,6 @@
               type: 'run',
               coreUrl,
               wasmUrl,
-              patcherUrl,
               fileBuffer,
               inName,
               outName,
@@ -1279,7 +1207,6 @@
                 casSharp,
                 autoHdr: true,
                 slowMo,
-                patchMultiplier,
               },
             },
             [fileBuffer]
